@@ -1,6 +1,7 @@
 <?php namespace Gecche\Cupparis\App;
 
 use Illuminate\Support\ServiceProvider;
+use Spatie\Activitylog\Models\Activity;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -11,6 +12,9 @@ class AppServiceProvider extends ServiceProvider {
     public function boot()
     {
 
+        Activity::saving(function (Activity $activity) {
+            $activity->properties->put('ip', request()->getClientIp());
+        });
     }
 
 	/**
