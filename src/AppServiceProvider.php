@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider {
     {
 
         Activity::saving(function (Activity $activity) {
-            $activity->properties->put('ip', request()->getClientIp());
+            $activity->properties = $activity->properties->put('ip', request()->getClientIp());
+            $activity->properties = $activity->properties->put('user_agent', request()->userAgent());
         });
     }
 

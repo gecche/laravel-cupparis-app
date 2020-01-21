@@ -1,4 +1,4 @@
-<?php namespace Cupparis\App\Listeners;
+<?php namespace Gecche\Cupparis\App\Listeners;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -58,12 +58,12 @@ class UserEventSubscriber {
     {
         $events->listen(
             'Illuminate\Auth\Events\Login',
-            'Cupparis\App\Listeners\UserEventSubscriber@onUserLogin'
+            'Gecche\Cupparis\App\Listeners\UserEventSubscriber@onUserLoggedIn'
         );
 
         $events->listen(
             'Illuminate\Auth\Events\Logout',
-            'Cupparis\App\Listeners\UserEventSubscriber@onUserLogout'
+            'Gecche\Cupparis\App\Listeners\UserEventSubscriber@onUserLoggedOut'
         );
     }
 
