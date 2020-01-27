@@ -183,7 +183,7 @@ class UploadService {
 
 // TODO creare una copia per copy()
         return [
-            'resource_id' => $tempFileName,
+            'id' => $tempFileName,
             'mimetype' => $file->getClientMimeType(),
 
             'url' => $this->getUrl($type,$tempFileName),
