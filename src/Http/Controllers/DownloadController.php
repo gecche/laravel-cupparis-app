@@ -25,7 +25,7 @@ class DownloadController extends BaseController {
 
         $mediableModel = $this->getMediableModel($mediableModelName, $mediablePk);
         
-        if (!File::exists($mediableModel->full_filename)) {
+        if (!$mediableModel->fileExists()) {
             return redirect('/')->withErrors('file_not_found');
         }
 
