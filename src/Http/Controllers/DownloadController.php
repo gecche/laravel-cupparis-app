@@ -24,6 +24,10 @@ class DownloadController extends BaseController {
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
         $mediableModel = $this->getMediableModel($mediableModelName, $mediablePk);
+        
+        if (!File::exists($mediableModel->full_filename)) {
+            return redirect('/')->withErrors('file_not_found');
+        }
 
         $template = $template ?: Config::get('imagecache.default_template','small');
 
