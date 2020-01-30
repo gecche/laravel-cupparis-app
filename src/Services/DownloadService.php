@@ -207,6 +207,6 @@ class DownloadService {
     }
 
     public function getUrlAttachment($tempFileName) {
-        return '/downloadtempfile/'.$tempFileName;
+        return '/downloadtemp/'.$tempFileName;
     }
 }
