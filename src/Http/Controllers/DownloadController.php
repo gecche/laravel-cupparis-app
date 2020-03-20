@@ -16,6 +16,9 @@ use App\Models\Foto;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Response as IlluminateResponse;
 
+use Illuminate\Support\Str;
+
+
 class DownloadController extends BaseController {
 
 
@@ -79,7 +82,7 @@ class DownloadController extends BaseController {
     protected function getMediableModel($mediableModelName, $mediablePk, $errorMsg = 'file_not_found') {
         $modelsNamespace = rtrim(app()->getNamespace() . Config::get('breeze.namespace'),"\\");
 
-        $fullUploadableModelName = $modelsNamespace . '\\' . studly_case($mediableModelName);
+        $fullUploadableModelName = $modelsNamespace . '\\' . Str::studly($mediableModelName);
         $mediableModel = $fullUploadableModelName::find($mediablePk);
 
         if (!($mediableModel->getKey() == $mediablePk)) {

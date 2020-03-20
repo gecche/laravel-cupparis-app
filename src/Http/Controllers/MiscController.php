@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Response;
 //use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request as RequestFacade;
 use igaster\laravelTheme\Facades\Theme;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +16,9 @@ use App\Models\Foto;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Response as IlluminateResponse;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 
 /*
@@ -144,7 +147,7 @@ class MiscController extends BaseController {
                 if (is_array($mimetype))
                     $mimetype = current($mimetype);
                 */
-                $iconaName = array_get($mimes_to_icon,$nome,false);
+                $iconaName = Arr::get($mimes_to_icon,$nome,false);
                 if (!$iconaName) {
                     $iconaName = File::get_icona_mime($nome,true);
                 }
@@ -154,7 +157,7 @@ class MiscController extends BaseController {
             case 'upload':
 
                 $paths  =  Config::get('filesystems.upload_path_keys');
-                $path_key = Input::get('path_key','default');
+                $path_key = RequestFacade::get('path_key','default');
                 $path_key = $path_key?$path_key:'default';
                 $path =$paths[$path_key];
 
@@ -186,7 +189,7 @@ class MiscController extends BaseController {
 
 
     public function downloadfileonce($filename) {
-        $path_key = Input::get('path_key',null);
+        $path_key = RequestFacade::get('path_key',null);
         $path_key = $path_key?$path_key:'default';
         $path = Config::get('filesystems.upload_path_keys')[$path_key];
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
@@ -198,7 +201,7 @@ class MiscController extends BaseController {
 
         $datafilemodels_namespace = Config::get('app.datafilemodels_namespace') . "\\";
         $datafileproviders_namespace = Config::get('app.datafileproviders_namespace') . "\\";
-        $datafileProviderName = $datafileproviders_namespace . studly_case($modelName);
+        $datafileProviderName = $datafileproviders_namespace . Str::studly($modelName);
         $datafileProvider = new $datafileProviderName;
 
         $path = storage_temp_path();

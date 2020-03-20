@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Str;
 
 class Init extends Command
 {
@@ -56,7 +57,7 @@ class Init extends Command
                 continue;
             }
 
-            if (starts_with($cmd, 'php')) {
+            if (Str::startsWith($cmd, 'php')) {
                 $cmd = $phpPath . substr($cmd, 3);
             }
 

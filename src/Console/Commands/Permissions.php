@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Support\Str;
 
 class Permissions extends Command
 {
@@ -69,7 +70,7 @@ class Permissions extends Command
     {
 
         foreach ($this->configKeysToBuild as $key) {
-            $methodName = 'build'.studly_case($key);
+            $methodName = 'build'.Str::studly($key);
             $this->config[$key] = $this->$methodName();
         }
 

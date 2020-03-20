@@ -2,7 +2,9 @@
 
 namespace Gecche\Cupparis\App\Breeze\Concerns;
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 
 trait HasFoormHelpers
 {
@@ -25,7 +27,7 @@ trait HasFoormHelpers
             $builder = $this->newQuery();
         }
 
-        $key = array_get($params,'key',$this->getKeyName());
+        $key = Arr::get($params,'key',$this->getKeyName());
 
         if (is_string($columns)) {
             $columns = [$columns];
@@ -35,10 +37,10 @@ trait HasFoormHelpers
         }
         $columns = [-1 => $key . ' as '.$this->keynameInList] + $columns;
 
-        $separator = array_get($params,'separator',$this->getSeparatorForSelectList());
-        $maxItems = array_get($params,'max_items',$this->getMaxItemsForSelectList());
-        $distinct = array_get($params,'distinct',false);
-        $orderColumns = array_get($params,'order',$this->getDefaultOrderColumns());
+        $separator = Arr::get($params,'separator',$this->getSeparatorForSelectList());
+        $maxItems = Arr::get($params,'max_items',$this->getMaxItemsForSelectList());
+        $distinct = Arr::get($params,'distinct',false);
+        $orderColumns = Arr::get($params,'order',$this->getDefaultOrderColumns());
 
 
         //IMPOSTO ORDINAMENTO
@@ -173,7 +175,7 @@ trait HasFoormHelpers
         if ($separator === null) {
             $separator = $model->getFieldsSeparator();
         }
-        $term = Input::get('term', '');
+        $term = Request::get('term', '');
 
         $startBuilder = $builder ? $builder : $model;
         $modelBuilder = clone $startBuilder;

@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Str;
+
+
 /*
  * CLASSE PER GESTIRE LA FASE DI UPLOADI UN FILE.
  * EVENTUALMENTE DA FARE COME PROVIDER E FACADE IN FUTURO.
@@ -70,7 +73,7 @@ class UploadService {
         $maxFileSize = $this->getMaxSize($type);
 
 
-        $methodName = 'getUploadValidationRules'.studly_case($type);
+        $methodName = 'getUploadValidationRules'.Str::studly($type);
 
         return $this->$methodName($maxFileSize);
 
@@ -79,7 +82,7 @@ class UploadService {
 
     protected function getMaxSize($type) {
         $maxSystemSize = ini_get('upload_max_filesize');
-        if (ends_with($maxSystemSize,'M')) {
+        if (Str::endsWith($maxSystemSize,'M')) {
             $maxSystemSize = substr($maxSystemSize,0,-1);
             $maxSystemSize = intval($maxSystemSize) * 1000;
         } elseif (is_numeric($maxSystemSize)) {
@@ -148,7 +151,7 @@ class UploadService {
 
     public function saveTempFile($type, $file) {
 
-        $methodName = 'saveTempFile' . studly_case($type);
+        $methodName = 'saveTempFile' . Str::studly($type);
 
         if (method_exists($this,$methodName)) {
             return $this->$methodName($file);
@@ -175,7 +178,7 @@ class UploadService {
 
     public function getTempFileArray($type,$file,$tempFileName) {
 
-        $methodName = 'getTempFileArray' . studly_case($type);
+        $methodName = 'getTempFileArray' . Str::studly($type);
 
         if (method_exists($this,$methodName)) {
             return $this->$methodName($file,$tempFileName);
@@ -192,7 +195,7 @@ class UploadService {
 
     public function getUrl($type,$tempFileName) {
 
-        $methodName = 'getUrl' . studly_case($type);
+        $methodName = 'getUrl' . Str::studly($type);
 
         if (method_exists($this,$methodName)) {
             return $this->$methodName($tempFileName);
