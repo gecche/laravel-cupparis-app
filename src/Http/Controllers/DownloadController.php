@@ -80,7 +80,7 @@ class DownloadController extends BaseController {
 
 
     protected function getMediableModel($mediableModelName, $mediablePk, $errorMsg = 'file_not_found') {
-        $modelsNamespace = rtrim(app()->getNamespace() . Config::get('breeze.namespace'),"\\");
+        $modelsNamespace = rtrim(Config::get('breeze.namespace'),"\\");
 
         $fullUploadableModelName = $modelsNamespace . '\\' . Str::studly($mediableModelName);
         $mediableModel = $fullUploadableModelName::find($mediablePk);
