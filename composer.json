@@ -11,7 +11,9 @@
     ],
     "require": {
         "laravel/framework": "^6.0",
-        "gecche/laravel-cupparis-helpers": "v2.x-dev"
+        "gecche/laravel-cupparis-helpers": "v2.x-dev",
+
+        "mews/captcha" : "^3.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",

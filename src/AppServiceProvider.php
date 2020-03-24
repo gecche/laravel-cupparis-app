@@ -1,6 +1,7 @@
 <?php namespace Gecche\Cupparis\App;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
 
@@ -22,6 +23,8 @@ class AppServiceProvider extends ServiceProvider {
         $this->bootBlade();
 
         $this->bootActivityLog();
+
+        $this->bootValidationRules();
     }
 
 	/**
@@ -50,5 +53,14 @@ class AppServiceProvider extends ServiceProvider {
             $activity->properties = $activity->properties->put('ip', request()->getClientIp());
             $activity->properties = $activity->properties->put('user_agent', request()->userAgent());
         });
+    }
+
+    protected function bootValidationRules() {
+
+        Validator::extend('captcha', 'Gecche\Cupparis\App\Validation\Rules@captcha');
+        Validator::extend('exists_or', 'Gecche\Cupparis\App\Validation\Rules@existsOr');
+        Validator::extend('partita_iva', 'Gecche\Cupparis\App\Validation\Rules@partitaIva');
+        Validator::extend('codice_fiscale', 'Gecche\Cupparis\App\Validation\Rules@codiceFiscale');
+        Validator::extend('codice_fiscale_professional', 'Gecche\Cupparis\App\Validation\Rules@codiceFiscaleProfessional');
     }
 }

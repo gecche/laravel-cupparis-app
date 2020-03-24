@@ -19,6 +19,7 @@ use Illuminate\Http\Response as IlluminateResponse;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Mews\Captcha\Facades\Captcha;
 
 
 /*
@@ -26,12 +27,27 @@ use Illuminate\Support\Arr;
  */
 class MiscController extends BaseController {
 
+
+
     public function __construct(Request $request) {
         $this->result = array(
             "msg" 	=> "",
             "error"	=> 0,
             "result"	=> []
         );
+    }
+
+
+    public function captchajs() {
+
+        return response(captcha_img(),200);
+
+    }
+
+    public function captchajs6() {
+
+        return response(Captcha::create('default',true),200);
+
     }
 
     public function faIcons() {
@@ -78,16 +94,16 @@ class MiscController extends BaseController {
         return redirect()->back()->withCookie($cookie);
     }
 
-    public function captchajs() {
-        return view('captcha');
-    }
     public function captchajs_img() {
+
         return view('captcha_img');
+
     }
 
     public function viewimage($nome,$location,$template = null) {
         if (!is_string($nome)) {
             return redirect('/')->withErrors('image not found'); //->withErrors();
+
         }
 
         /*
@@ -99,6 +115,7 @@ class MiscController extends BaseController {
         */
 
         switch ($location) {
+
             case 'asset':
                 return Response::file(asset('images/' . $nome));
             case 'imagecacheanteprima':
