@@ -29,12 +29,11 @@ trait HasFoormHelpers
 
         $key = Arr::get($params,'key',$this->getKeyName());
 
-        if (is_string($columns)) {
-            $columns = [$columns];
-        }
-        if ($columns === null) {
+        if (is_null($columns)) {
             $columns = $this->getColumnsForSelectList();
         }
+        $columns = Arr::wrap($columns);
+
         $columns = [-1 => $key . ' as '.$this->keynameInList] + $columns;
 
         $separator = Arr::get($params,'separator',$this->getSeparatorForSelectList());
@@ -152,7 +151,7 @@ trait HasFoormHelpers
         }
 
         return $this->columnsSearchAutoComplete;
-        return $this->setCurrentLangFields($this->columnsSearchAutoComplete);
+//        return $this->setCurrentLangFields($this->columnsSearchAutoComplete);
     }
 
 
