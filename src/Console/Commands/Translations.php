@@ -116,7 +116,7 @@ class Translations extends Command
             'search',
         ];
 
-        $formManagerClass = Config::get('json_rest.form-manager');
+        $formManagerClass = Config::get('foorm.form-manager');
 
 
         foreach ($foorms as $foormLabel) {

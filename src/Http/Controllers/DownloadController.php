@@ -3,18 +3,10 @@
 use App\Http\Controllers\Controller as BaseController;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Response;
-
 use Illuminate\Support\Facades\File;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
-
-
-use App\Models\Foto;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Http\Response as IlluminateResponse;
 
 use Illuminate\Support\Str;
 
