@@ -2,6 +2,7 @@
 namespace Gecche\Cupparis\App\Console\Commands;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -168,7 +169,7 @@ class Translations extends Command
         echo $foorm->getModelName() . ' --- ' . $foorm->getModelRelativeName() . "\n";
 
         $formMetadata = $foorm->getFormMetadata();
-        $mainModelName = snake_case($foorm->getModelRelativeName());
+        $mainModelName = Str::snake($foorm->getModelRelativeName());
         $mainModelFields = array_keys(Arr::get($formMetadata,'fields',[]));
         $relations =  Arr::get($formMetadata,'relations',[]);
 
@@ -184,7 +185,7 @@ class Translations extends Command
 
         foreach ($relations as $relationName => $relation) {
 
-            $relationModelName = snake_case(Arr::get($relation,'modelRelativeName',$relationName));
+            $relationModelName = Str::snake(Arr::get($relation,'modelRelativeName',$relationName));
 
             $relationFields = Arr::get($relation,'fields', []);
 
