@@ -1,15 +1,13 @@
 <?php
 namespace Gecche\Cupparis\App\Console\Commands;
 
-use Gecche\Foorm\FormManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Lang;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
+
 use Illuminate\Console\Command;
 
 use Illuminate\Filesystem\Filesystem;
