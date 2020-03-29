@@ -1,5 +1,6 @@
 <?php namespace Gecche\Cupparis\App;
 
+use Gecche\Cupparis\App\Foorm\FoormManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -34,6 +35,11 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+
+        $this->app->bind('foorm', function($app)
+        {
+            return new FoormManager($app['config']->get('foorm'));
+        });
 
 	}
 
