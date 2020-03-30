@@ -1,14 +1,11 @@
 <?php namespace Gecche\Cupparis\App\Breeze;
 
-use Gecche\Breeze\Breeze as GeccheBreeze;
+use Gecche\Foorm\Breeze\Breeze as GeccheFoormBreeze;
 
 /**
  * Breeze - Eloquent model base class with some pluses!
  *
  */
-abstract class Breeze extends GeccheBreeze {
-
-
-    use Concerns\HasFoormHelpers;
+abstract class Breeze extends GeccheFoormBreeze {
 
 }
