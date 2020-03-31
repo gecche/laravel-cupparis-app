@@ -15,6 +15,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Gecche\Bannable\Contracts\Bannable as BannableContract;
+use App\Models\Foto;
+use App\Models\Attachment;
 
 class User extends Breeze implements
     AuthenticatableContract,

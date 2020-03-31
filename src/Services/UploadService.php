@@ -20,6 +20,8 @@ class UploadService {
 
     protected $config = [];
 
+    protected $validationRules = [];
+
     /**
      * Returns the *Singleton* instance of this class.
      *
@@ -66,21 +68,29 @@ class UploadService {
     {
     }
 
+    public function setUploadValidationRules($type,$maxSize = null,$exts = null) {
 
-    public function getUploadValidationRules($type) {
-
-
-        $maxFileSize = $this->getMaxSize($type);
+        $maxFileSize = $this->getMaxSize($type,$maxSize);
 
 
-        $methodName = 'getUploadValidationRules'.Str::studly($type);
+        $methodName = 'setUploadValidationRules'.Str::studly($type,$exts);
 
         return $this->$methodName($maxFileSize);
+    }
+    public function getUploadValidationRules($type,$maxSize = null,$exts = null) {
+
+        if (is_array($this->validationRules) && $this->validationRules[$type]) {
+            return $this->validationRules[$type];
+        }
+
+        $this->setUploadValidationRules($type,$maxSize, $exts);
+
+        return $this->validationRules[$type];
 
     }
 
 
-    protected function getMaxSize($type) {
+    protected function getMaxSize($type,$maxSize = null) {
         $maxSystemSize = ini_get('upload_max_filesize');
         if (Str::endsWith($maxSystemSize,'M')) {
             $maxSystemSize = substr($maxSystemSize,0,-1);
@@ -89,9 +99,13 @@ class UploadService {
             $maxSystemSize = (int) ($maxSystemSize / 1024);
         }
 
-        $typeConfig = $this->getConfig($type);
+        if ($maxSize) {
+            $typeMaxSize = $maxSize;
+        } else {
+            $typeConfig = $this->getConfig($type);
 
-        $typeMaxSize = Arr::get($typeConfig,'max_size',$maxSystemSize);
+            $typeMaxSize = Arr::get($typeConfig,'max_size',$maxSystemSize);
+        }
 
         return ($typeMaxSize > $maxSystemSize) ? $maxSystemSize : $typeMaxSize;
 
@@ -108,27 +122,28 @@ class UploadService {
         return Arr::get($this->config,$type,[]);
     }
 
-    public function getUploadValidationRulesFoto($maxFileSize) {
-        $allowedExts = Arr::get($this->getConfig('foto'),'exts','jpeg,bmp,png');
+    protected function setUploadValidationRulesFoto($maxFileSize,$exts = null) {
+        $allowedExts = $exts ?: Arr::get($this->getConfig('foto'),'exts','jpeg,bmp,png');
         $rules = [
             'max:'.$maxFileSize,
             'mimes:'.$allowedExts,
         ];
-        return [
+        $this->validationRules['foto'] = [
                 'file' => implode('|',$rules),
         ];
     }
 
-    public function getUploadValidationRulesAttachment($maxFileSize) {
-        $allowedExts = Arr::get($this->getConfig('attachment'),'exts','pdf,zip,rar,doc,docx,xls,xlsx,ppt,pptx,odf,ods,txt,csv');
+    protected function setUploadValidationRulesAttachment($maxFileSize,$exts = null) {
+        $allowedExts = $exts ?: Arr::get($this->getConfig('attachment'),'exts','pdf,zip,rar,doc,docx,xls,xlsx,ppt,pptx,odf,ods,txt,csv');
         $rules = [
             'max:'.$maxFileSize,
             'mimes:'.$allowedExts,
         ];
-        return [
+        $this->validationRules['attachment'] = [
             'file' => implode('|',$rules),
         ];
     }
+
 
     public function validate($type,$input,$throwException = true) {
 
