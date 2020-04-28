@@ -12,7 +12,7 @@ class Uploadfile extends FoormAction
 
     protected $uploadService;
 
-    protected $fieldtoUpload;
+    protected $fieldToUpload;
 
     protected $file;
 
