@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
 
 
     /**
@@ -35,7 +36,16 @@ class AppServiceProvider extends ServiceProvider {
             __DIR__ . '/../config-packages/foorms/user.php' => config_path('foorms/user.php'),
         ], 'public');
 
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+
+        $this->publishes([
+            __DIR__ . '/../app/Console/Commands' => app_path('Console/Commands'),
+            __DIR__ . '/../app/Foorm' => app_path('Foorm'),
+            __DIR__ . '/../app/Models' => app_path('Models'),
+            __DIR__ . '/../app/Policies' => app_path('Policies'),
+            __DIR__ . '/../app/Services' => app_path('Services'),
+        ], 'public');
+
+        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
         $this->bootBlade();
 
@@ -44,40 +54,42 @@ class AppServiceProvider extends ServiceProvider {
         $this->bootValidationRules();
     }
 
-	/**
-	 * Register the commands
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+    /**
+     * Register the commands
+     *
+     * @return void
+     */
+    public function register()
+    {
 
-        $this->app->bind('foorm', function($app)
-        {
+        $this->app->bind('foorm', function ($app) {
             return new FoormManager($app['config']->get('foorm'));
         });
 
-	}
+    }
 
 
-	protected function bootBlade() {
-        Blade::directive('datetime', function($expression) {
+    protected function bootBlade()
+    {
+        Blade::directive('datetime', function ($expression) {
             return "<?php echo with{$expression}->format('m/d/Y H:i'); ?>";
         });
 
-        Blade::extend(function($value) {
+        Blade::extend(function ($value) {
             return preg_replace('/\@define(.+)/', '<?php ${1}; ?>', $value);
         });
     }
 
-    protected function bootActivityLog() {
+    protected function bootActivityLog()
+    {
         Activity::saving(function (Activity $activity) {
             $activity->properties = $activity->properties->put('ip', request()->getClientIp());
             $activity->properties = $activity->properties->put('user_agent', request()->userAgent());
         });
     }
 
-    protected function bootValidationRules() {
+    protected function bootValidationRules()
+    {
 
         Validator::extend('captcha', 'Gecche\Cupparis\App\Validation\Rules@captcha');
         Validator::extend('exists_or', 'Gecche\Cupparis\App\Validation\Rules@existsOr');

@@ -152,10 +152,6 @@ return [
         //I modelli su cui creare i permessi (potrebbero anche essere messi in breeze.php)
         'models' => [
             'user',
-            'nazione',
-            'regione',
-            'provincia',
-            'prova',
         ],
 
         'models_permissions_prefixes' => [
@@ -172,8 +168,8 @@ return [
 
         'other_permissions' => [
             'web' => [
-                'permission_1',
-                'permission_2',
+//                'permission_1',
+//                'permission_2',
             ]
             //Altri permessi non correlati ai singoli modelli
         ],
