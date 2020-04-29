@@ -16,7 +16,23 @@ class AppServiceProvider extends ServiceProvider {
     {
 
         $this->publishes([
-            __DIR__ . '/../../config/cupparis-app.php' => config_path('cupparis-app.php'),
+            __DIR__ . '/../config/cupparis-app.php' => config_path('cupparis-app.php'),
+        ], 'public');
+
+        if (!is_dir(config_path('foorms'))) {
+            mkdir(config_path('foorms'));
+        }
+
+        $this->publishes([
+            __DIR__ . '/../config-packages/auth.php' => config_path('auth.php'),
+            __DIR__ . '/../config-packages/breeze.php' => config_path('breeze.php'),
+            __DIR__ . '/../config-packages/filesystems.php' => config_path('filesystems.php'),
+            __DIR__ . '/../config-packages/foorm.php' => config_path('foorm.php'),
+            __DIR__ . '/../config-packages/image.php' => config_path('image.php'),
+            __DIR__ . '/../config-packages/imagecache.php' => config_path('imagecache.php'),
+            __DIR__ . '/../config-packages/permission.php' => config_path('permission.php'),
+            __DIR__ . '/../config-packages/themes.php' => config_path('themes.php'),
+            __DIR__ . '/../config-packages/foorms/user.php' => config_path('foorms/user.php'),
         ], 'public');
 
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');

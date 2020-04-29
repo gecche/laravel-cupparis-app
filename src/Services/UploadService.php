@@ -44,7 +44,7 @@ class UploadService {
      */
     protected function __construct()
     {
-        $this->config = config('uploads',[]);
+        $this->config = config('cupparis-app.uploads',[]);
 
     }
 
