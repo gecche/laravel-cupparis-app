@@ -56,6 +56,27 @@ class AppServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeds' => database_path('seeds'),
         ], 'public');
 
+        //Publishing and overwriting resources folders
+        $this->publishes([
+            __DIR__ . '/../resources/documenti' => base_path('resources/documenti'),
+            __DIR__ . '/../resources/lang' => base_path('resources/lang'),
+            __DIR__ . '/../resources/views/bootstrap4/includes' => base_path('resources/views/bootstrap4/includes'),
+            __DIR__ . '/../resources/views/bootstrap4/app.blade.php' => base_path('resources/views/bootstrap4/app.blade.php'),
+            __DIR__ . '/../resources/views/bootstrap4/home.blade.php' => base_path('resources/views/bootstrap4/home.blade.php'),
+            __DIR__ . '/../resources/views/bootstrap4/dashboard.blade.php' => base_path('resources/views/bootstrap4/dashboard.blade.php'),
+            __DIR__ . '/../resources/views/bootstrap4/manage.blade.php' => base_path('resources/views/bootstrap4/manage.blade.php'),
+        ], 'public');
+
+        //Publishing and overwriting public folders
+        $this->publishes([
+            __DIR__ . '/../public/bootstrap4' => public_path('bootstrap4'),
+            __DIR__ . '/../public/images' => public_path('images'),
+            __DIR__ . '/../public/js/edit_area' => public_path('js/edit_area'),
+            __DIR__ . '/../public/crud-vue/components' => public_path('crud-vue/components'),
+            __DIR__ . '/../public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
+            __DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
+        ], 'public');
+
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
         $this->bootBlade();

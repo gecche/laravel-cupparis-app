@@ -1,0 +1,60 @@
+<template id="c-manage-template">
+    <div class="card">
+        <div class="card-header">
+            <h4>Gestione modello {{modelName}}</h4>
+        </div>
+        <p class="card-description">
+
+        </p>
+        <div class="card-body">
+            <div class="collapse show" c-collapse-list>
+                <div >
+                    <div >
+                        <div c-search-container>
+                        </div>
+                        <div c-list-container>
+<!--                            <v-list ref="list-view" :c-model="modelName" :c-conf="listConf"></v-list>-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" c-collapse-edit>
+                <div  class="">
+                    <div class="">{{updateTitle}}</div>
+                    <div class="" c-edit-container>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div c-view_dialog class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{modelName}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div c-view-container class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button crud-button="cancel" type="button" class="btn btn-primary "
+                                data-dismiss="modal">Annulla
+                        </button>
+                        <button crud-button="ok" type="button" class="btn btn-primary"
+                                data-dismiss="modal">Ok
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+</template>
