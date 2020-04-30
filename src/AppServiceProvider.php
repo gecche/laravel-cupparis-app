@@ -20,10 +20,11 @@ class AppServiceProvider extends ServiceProvider
             __DIR__ . '/../config/cupparis-app.php' => config_path('cupparis-app.php'),
         ], 'public');
 
+
+        //Publishing configs
         if (!is_dir(config_path('foorms'))) {
             mkdir(config_path('foorms'));
         }
-
         $this->publishes([
             __DIR__ . '/../config-packages/auth.php' => config_path('auth.php'),
             __DIR__ . '/../config-packages/breeze.php' => config_path('breeze.php'),
@@ -37,12 +38,22 @@ class AppServiceProvider extends ServiceProvider
         ], 'public');
 
 
+        //Publishing and overwriting app folders
         $this->publishes([
             __DIR__ . '/../app/Console/Commands' => app_path('Console/Commands'),
             __DIR__ . '/../app/Foorm' => app_path('Foorm'),
             __DIR__ . '/../app/Models' => app_path('Models'),
             __DIR__ . '/../app/Policies' => app_path('Policies'),
             __DIR__ . '/../app/Services' => app_path('Services'),
+            __DIR__ . '/../app/Providers/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
+            __DIR__ . '/../app/Providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
+            __DIR__ . '/../app/Providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+        ], 'public');
+
+        //Publishing and overwriting databases folders
+        $this->publishes([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../database/seeds' => database_path('seeds'),
         ], 'public');
 
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
