@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
         //Publishing and overwriting app folders
         $this->publishes([
+            __DIR__ . '/../bootstrap/app.php' => base_path('bootstrap/app.php'),
             __DIR__ . '/../app/Console/Kernel.php' => app_path('Console/Kernel.php'),
             __DIR__ . '/../app/Console/Commands' => app_path('Console/Commands'),
             __DIR__ . '/../app/Foorm' => app_path('Foorm'),
