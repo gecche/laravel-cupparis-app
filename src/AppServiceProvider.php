@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
         //Publishing and overwriting app folders
         $this->publishes([
+            __DIR__ . '/../app/Console/Kernel.php' => app_path('Console/Kernel.php'),
             __DIR__ . '/../app/Console/Commands' => app_path('Console/Commands'),
             __DIR__ . '/../app/Foorm' => app_path('Foorm'),
             __DIR__ . '/../app/Models' => app_path('Models'),
@@ -48,6 +49,16 @@ class AppServiceProvider extends ServiceProvider
             __DIR__ . '/../app/Providers/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
             __DIR__ . '/../app/Providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
             __DIR__ . '/../app/Providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
+            __DIR__ . '/../app/Http/Kernel.php' => app_path('Http/Kernel.php'),
+            __DIR__ . '/../app/Http/Controllers/Controller.php' => app_path('Http/Controllers/Controller.php'),
+            __DIR__ . '/../app/Http/Controllers/DownloadController.php' => app_path('Http/Controllers/DownloadController.php'),
+            __DIR__ . '/../app/Http/Controllers/FoormActionController.php' => app_path('Http/Controllers/FoormActionController.php'),
+            __DIR__ . '/../app/Http/Controllers/FoormController.php' => app_path('Http/Controllers/FoormController.php'),
+            __DIR__ . '/../app/Http/Controllers/HomeController.php' => app_path('Http/Controllers/HomeController.php'),
+            __DIR__ . '/../app/Http/Controllers/MiscController.php' => app_path('Http/Controllers/MiscController.php'),
+            __DIR__ . '/../app/Http/Controllers/ModelSkeletonController.php' => app_path('Http/Controllers/ModelSkeletonController.php'),
+            __DIR__ . '/../app/Http/Controllers/TestController.php' => app_path('Http/Controllers/TestController.php'),
+            __DIR__ . '/../app/Http/Kernel.php' => app_path('Http/Kernel.php'),
         ], 'public');
 
         //Publishing and overwriting databases folders
