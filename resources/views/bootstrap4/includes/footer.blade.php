@@ -6,12 +6,10 @@
     jQuery( function() {
         app = new CrudApp({
             data : {
-            //     return {
             //         templatesFile : '/crud-vue/crud-vue.html',
             //         pluginsPath : '/bootstrap4/plugins/',
             //         el : '#app',
-                     appConfig : '/bootstrap4/CrudConf.js',
-            //     }
+                appConfig : '/bootstrap4/CrudConf.js',
             },
         });
     });
