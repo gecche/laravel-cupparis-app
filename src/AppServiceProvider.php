@@ -83,10 +83,10 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../public/bootstrap4' => public_path('bootstrap4'),
             __DIR__ . '/../public/images' => public_path('images'),
-            __DIR__ . '/../public/js/edit_area' => public_path('js/edit_area'),
-            __DIR__ . '/../public/crud-vue/components' => public_path('crud-vue/components'),
-            __DIR__ . '/../public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
-            __DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
+            //__DIR__ . '/../public/js/edit_area' => public_path('js/edit_area'),
+            //__DIR__ . '/../public/crud-vue/components' => public_path('crud-vue/components'),
+            //__DIR__ . '/../public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
+            //__DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
         ], 'public');
 
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
