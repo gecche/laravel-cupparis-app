@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
 
         //Publishing and overwriting databases folders
         $this->publishes([
+            __DIR__ . '/../database/factories' => database_path('factories'),
             __DIR__ . '/../database/migrations' => database_path('migrations'),
             __DIR__ . '/../database/seeds' => database_path('seeds'),
         ], 'public');
