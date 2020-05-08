@@ -16,7 +16,7 @@ trait AttachmentTrait {
 //        $ext = $this->ext();
 //        $name = $this->nome;
 //        $name = str_slug($name);
-//        if (ends_with($name, $ext))
+//        if (Str::endsWith($name, $ext))
 //           return $name;
 //        return $name . $ext;
 //    }

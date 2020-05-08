@@ -82,7 +82,7 @@ class DownloadService {
 
     protected function getMaxSize($type) {
         $maxSystemSize = ini_get('upload_max_filesize');
-        if (ends_with($maxSystemSize,'M')) {
+        if (Str::endsWith($maxSystemSize,'M')) {
             $maxSystemSize = substr($maxSystemSize,0,-1);
             $maxSystemSize = intval($maxSystemSize) * 1000;
         } elseif (is_numeric($maxSystemSize)) {
