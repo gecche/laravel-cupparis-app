@@ -5,8 +5,9 @@ namespace Gecche\Cupparis\App\Breeze;
 
 use Gecche\Cupparis\Datafile\Breeze\Concerns\BreezeDatafileTrait;
 use Gecche\Cupparis\Datafile\Breeze\Concerns\HasDatafileValidation;
+use Gecche\Cupparis\Datafile\Breeze\Contracts\DatafileBreezeInterface;
 
-class BreezeDatafile extends Breeze {
+class BreezeDatafile extends Breeze implements DatafileBreezeInterface {
 
     use HasDatafileValidation;
     use BreezeDatafileTrait;
