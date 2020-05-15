@@ -3,6 +3,7 @@
 namespace Gecche\Cupparis\App\Breeze;
 
 
+use Gecche\Cupparis\App\Models\DatafileError;
 use Gecche\Cupparis\Datafile\Breeze\Concerns\BreezeDatafileTrait;
 use Gecche\Cupparis\Datafile\Breeze\Concerns\HasDatafileValidation;
 use Gecche\Cupparis\Datafile\Breeze\Contracts\DatafileBreezeInterface;
