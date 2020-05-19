@@ -6,6 +6,7 @@ use Gecche\Foorm\FoormList as BaseFoormList;
 
 class FoormList extends BaseFoormList
 {
+    use CupparisFoormTrait;
 
     protected function applyListBuilder()
     {

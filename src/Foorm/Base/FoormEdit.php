@@ -7,5 +7,6 @@ use Gecche\Foorm\FoormEdit as BaseFoormEdit;
 class FoormEdit extends BaseFoormEdit
 {
 
+    use CupparisFoormTrait;
 
 }

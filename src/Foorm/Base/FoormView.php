@@ -7,5 +7,6 @@ use Gecche\Foorm\FoormView as BaseFoormView;
 class FoormView extends BaseFoormView
 {
 
+    use CupparisFoormTrait;
 
 }
