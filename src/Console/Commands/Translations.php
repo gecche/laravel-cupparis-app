@@ -1,6 +1,7 @@
 <?php
 namespace Gecche\Cupparis\App\Console\Commands;
 
+use Gecche\Foorm\Facades\Foorm;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -126,9 +127,8 @@ class Translations extends Command
 
                 $this->comment("".$foormLabel);
 
-                $foormManager = new $formManagerClass($foormLabel.".".$formType, request());
-
-                $foorm = $foormManager->getForm();
+                $params = [];
+                $foorm = Foorm::getFoorm($foormLabel.".".$formType, request(),$params);
 
                 $foormTranslations = $this->getFoormTranslations($foorm);
 
@@ -145,13 +145,13 @@ class Translations extends Command
         }
 
 
-        $translations = array_dot($translations);
+        $translations = Arr::dot($translations);
 
         $filename = public_path($this->dirjs . "/" . $lang . '-translations.js');
 
         echo $filename;
 
-        $this->files->put($filename, "$.langDefs = " . cupparis_json_encode($translations));
+        $this->files->put($filename, "crud.lang = " . cupparis_json_encode($translations));
 
         $this->comment('Traduzioni completate');
 
