@@ -128,7 +128,14 @@ class Translations extends Command
                 $this->comment("".$foormLabel);
 
                 $params = [];
-                $foorm = Foorm::getFoorm($foormLabel.".".$formType, request(),$params);
+
+                try {
+                    $foorm = Foorm::getFoorm($foormLabel.".".$formType, request(),$params);
+                } catch (\Exception $e) {
+                    if (!Str::startsWith($e->getMessage(),'Configuration of foorm')) {
+                        throw $e;
+                    }
+                }
 
                 $foormTranslations = $this->getFoormTranslations($foorm);
 
