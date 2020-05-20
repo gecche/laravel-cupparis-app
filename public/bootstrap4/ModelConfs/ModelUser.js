@@ -51,7 +51,7 @@ var ModelUser = {
                     fields : ['resource'],
                     fieldsConfig : {
                         resource : {
-                            template : 'c-tpl-no',
+                            template : 'tpl-no',
                             type : 'w-preview'
                         }
                     }
@@ -64,7 +64,7 @@ var ModelUser = {
                     fieldsConfig : {
                         resource : {
                             type : 'w-preview',
-                            template : 'c-tpl-no',
+                            template : 'tpl-no',
                         }
                     }
                 }

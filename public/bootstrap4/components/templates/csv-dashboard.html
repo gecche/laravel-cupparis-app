@@ -4,7 +4,7 @@
             <h4 class="alert-heading">Importazione csv</h4>
             <p>Importazione modello <strong>{{cProviderName}}</strong> da file csv.</p>
             <hr>
-            <p class="mb-0">L'importazione avverrà in due fase, la lettura del file csv e check degli errori e salvataggio del csv importato</p>
+            <p class="mb-0">L'importazione avverrà in due fasi, la lettura del file csv e check degli errori e salvataggio del csv importato</p>
         </div>
         <div v-if="uploadEnabled" class="panel panel-default" >
             <div>Seleziona file csv da importare</div>
@@ -19,8 +19,8 @@
         </div>
         <div v-if="saveEnabled">
             <div>File csv caricato e controllato</div>
-            <v-list :c-model="cProviderName" :c-conf="datafileConf"></v-list>
-            <v-action c-name="action-base" :c-action="saveAction"></v-action>
+            <v-list-data :c-model="cProviderName" :c-conf="datafileConf"></v-list-data>
+<!--            <v-action c-name="action-base" :c-action="saveAction"></v-action>-->
         </div>
     </div>
 </script>

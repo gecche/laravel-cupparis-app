@@ -54,11 +54,11 @@ crud.components.cManage = Vue.component('c-manage',{
                         //return s;
                     },
                     execute : function () {
-                        jQuery('[c-collapse-edit]').collapse('hide');
-                        jQuery('[c-collapse-list]').collapse('show');
+                        thisManage.jQe('[c-collapse-edit]').collapse('hide');
+                        thisManage.jQe('[c-collapse-list]').collapse('show');
                         this.view.$destroy();
                         thisManage.listComp.reload();
-                        jQuery('[c-edit-container]').html(' ');
+                        thisManage.jQe('[c-edit-container]').html(' ');
                     },
                     afterExecute: function () {
                         //this.$crud.messageDialog('tornato indiestro');
@@ -71,10 +71,10 @@ crud.components.cManage = Vue.component('c-manage',{
             customActions : {
                 'action-back' : {
                     execute : function () {
-                        jQuery('[c-collapse-edit]').collapse('hide');
-                        jQuery('[c-collapse-list]').collapse('show');
+                        thisManage.jQe('[c-collapse-edit]').collapse('hide');
+                        thisManage.jQe('[c-collapse-list]').collapse('show');
                         this.view.$destroy();
-                        jQuery('[c-edit-container]').html(' ');
+                        thisManage.jQe('[c-edit-container]').html(' ');
                     }
                 }
             }
@@ -92,7 +92,7 @@ crud.components.cManage = Vue.component('c-manage',{
                                 thisManage.editComp.$destroy();
                                 thisManage.editComp = null;
                             }
-                            jQuery('[c-edit-container]').html('<div id="'+id+'"></div>');
+                            thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
                             if (editConf.inlineTemplate) {
                                 var v = Vue.component(id,{
                                     extends : thisManage.$options.components['v-edit'],
@@ -121,8 +121,8 @@ crud.components.cManage = Vue.component('c-manage',{
                                 thisManage.editComp.$mount('#'+id);
                             }
 
-                            jQuery('[c-collapse-edit]').collapse('show');
-                            jQuery('[c-collapse-list]').collapse('hide');
+                            thisManage.jQe('[c-collapse-edit]').collapse('show');
+                            thisManage.jQe('[c-collapse-list]').collapse('hide');
                         }
                     },
                     'action-view' : {
@@ -136,7 +136,7 @@ crud.components.cManage = Vue.component('c-manage',{
                             var pk = that.modelData[viewConf.primaryKey];
                             //console.log('VIEWDATA',pk);
                             //viewConf.pk = pk;
-                            jQuery('[c-view-container]').html('<div id="'+id+'"></div>');
+                            thisManage.jQe('[c-view-container]').html('<div id="'+id+'"></div>');
                             thisManage.viewComp  = new that.$options.components['v-view']({
                                 propsData : {
                                     cModel : modelName,
@@ -145,7 +145,7 @@ crud.components.cManage = Vue.component('c-manage',{
                                 }
                             });
                             thisManage.viewComp.$mount('#'+id);
-                            jQuery('[c-view_dialog]').modal('show');
+                            thisManage.jQe('[c-view_dialog]').modal('show');
                         }
                     },
                     'action-insert' : {
@@ -153,7 +153,7 @@ crud.components.cManage = Vue.component('c-manage',{
                             var that = this;
                             thisManage.updateTitle = 'Inserimento ' + modelName;
                             var id= 'd' + (new Date().getTime());
-                            jQuery('[c-edit-container]').html('<div id="'+id+'"></div>');
+                            thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
                             if (thisManage.insertComp)
                                 thisManage.insertComp.$destroy();
                             if (insertConf.inlineTemplate) {
@@ -178,8 +178,8 @@ crud.components.cManage = Vue.component('c-manage',{
                                 });
                             }
                             thisManage.insertComp.$mount('#'+id);
-                            jQuery('[c-collapse-edit]').collapse('show');
-                            jQuery('[c-collapse-list]').collapse('hide');
+                            thisManage.jQe('[c-collapse-edit]').collapse('show');
+                            thisManage.jQe('[c-collapse-list]').collapse('hide');
                         }
                     }
                 }
@@ -193,7 +193,7 @@ crud.components.cManage = Vue.component('c-manage',{
                         execute : function () {
                             var that = this;
                             var id= 'd' + (new Date().getTime());
-                            jQuery('[c-view-container]').html('<div id="'+id+'"></div>');
+                            thisManage.jQe('[c-view-container]').html('<div id="'+id+'"></div>');
                             var v = new that.$options.components['v-view']({
                                 propsData : {
                                     cModel : modelName,
@@ -202,7 +202,7 @@ crud.components.cManage = Vue.component('c-manage',{
                                 }
                             });
                             v.$mount('#'+id);
-                            jQuery('[c-view_dialog]').modal('show');
+                            thisManage.jQe('[c-view_dialog]').modal('show');
                         }
                     },
                     'action-insert' : {
@@ -210,7 +210,7 @@ crud.components.cManage = Vue.component('c-manage',{
                             var that = this;
                             thisManage.updateTitle = 'Inserimento ' + modelName;
                             var id= 'd' + (new Date().getTime());
-                            jQuery('[c-edit-container]').html('<div id="'+id+'"></div>');
+                            thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
                             if (thisManage.insertComp)
                                 thisManage.insertComp.$destroy();
                             if (insertConf.inlineTemplate) {
@@ -235,8 +235,8 @@ crud.components.cManage = Vue.component('c-manage',{
                                 });
                             }
                             thisManage.insertComp.$mount('#'+id);
-                            jQuery('[c-collapse-edit]').collapse('show');
-                            jQuery('[c-collapse-list]').collapse('hide');
+                            thisManage.jQe('[c-collapse-edit]').collapse('show');
+                            thisManage.jQe('[c-collapse-list]').collapse('hide');
                         }
                     }
                 }
@@ -266,7 +266,7 @@ crud.components.cManage = Vue.component('c-manage',{
             var that = this;
             // monto la lista
             var id= 'd' + (new Date().getTime());
-            jQuery('[c-list-container]').html('<div id="'+id+'"></div>');
+            that.jQe('[c-list-container]').html('<div id="'+id+'"></div>');
             if (that.listComp)
                 that.listComp.$destroy();
             if (that.listConf) {
@@ -309,7 +309,7 @@ crud.components.cManage = Vue.component('c-manage',{
                 return ;
             // monto la lista
             var id= 'd' + (new Date().getTime());
-            jQuery('[c-search-container]').html('<div id="'+id+'"></div>');
+            that.jQe('[c-search-container]').html('<div id="'+id+'"></div>');
             if (that.searchComp)
                 that.searchComp.$destroy();
             if (that.searchConf.inlineTemplate) {
