@@ -88,7 +88,7 @@ class AppServiceProvider extends ServiceProvider
             //__DIR__ . '/../public/crud-vue/components' => public_path('crud-vue/components'),
             //__DIR__ . '/../public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
             //__DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
-        ], 'public');
+        ], 'public-js');
 
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
