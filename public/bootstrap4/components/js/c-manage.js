@@ -27,6 +27,16 @@ crud.components.cManage = Vue.component('c-manage',{
         searchConf = thisManage.confMerge(searchConf,{
             customActions : {
                 'action-search' : {
+                    // beforeExecute : function( callback ) {
+                    //     var act = this;
+                    //     act.confirmDialog('sei sicuro',{
+                    //         ok:function () {
+                    //             return callback();
+                    //         }
+                    //     })
+                    //
+                    //     return true;
+                    // },
                     beforeExecute : function() {
                         return true;
                     },
@@ -38,20 +48,28 @@ crud.components.cManage = Vue.component('c-manage',{
                         return ;
                     },
                     afterExecute: function () {
-                        //this.$crud.messageDialog('tornato indiestro');
+
                     }
                 }
             }
         });
+        var actionSaveBack = thisManage.merge(thisManage.$crud.collectionActions['action-save'], {
+                text : 'Salva e Torna alla lista',
+                afterExecute: function () {
+                    thisManage.jQe('[c-collapse-edit]').collapse('hide');
+                    thisManage.jQe('[c-collapse-list]').collapse('show');
+                    this.view.$destroy();
+                    thisManage.listComp.reload();
+                    thisManage.jQe('[c-edit-container]').html(' ');
+                }
+            });
 
         editConf = thisManage.confMerge(editConf,{
             customActions : {
+                'action-save-back' : actionSaveBack,
                 'action-back' : {
                     beforeExecute : function() {
                         return true;
-                        //var s =  confirm('Sei sicuro?');
-                        //console.log('risposta',s);
-                        //return s;
                     },
                     execute : function () {
                         thisManage.jQe('[c-collapse-edit]').collapse('hide');
@@ -66,20 +84,25 @@ crud.components.cManage = Vue.component('c-manage',{
                 }
             }
         });
+        if (editConf.actions.indexOf('action-save-back') < 0)
+            editConf.actions.push('action-save-back');
 
         insertConf = thisManage.confMerge(insertConf,{
             customActions : {
+                'action-save-back' : actionSaveBack,
                 'action-back' : {
                     execute : function () {
                         thisManage.jQe('[c-collapse-edit]').collapse('hide');
                         thisManage.jQe('[c-collapse-list]').collapse('show');
                         this.view.$destroy();
+                        thisManage.listComp.reload();
                         thisManage.jQe('[c-edit-container]').html(' ');
                     }
                 }
             }
         })
-
+        if (insertConf.actions.indexOf('action-save-back') < 0)
+            insertConf.actions.push('action-save-back');
         if (listConf) {
             listConf = thisManage.confMerge(listConf,{
                 customActions : {
