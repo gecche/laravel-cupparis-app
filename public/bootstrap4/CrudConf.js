@@ -90,17 +90,17 @@ crud.components.libs = {
         js : '/bootstrap4/components/js/csv-dashboard.js',
         tpl : '/bootstrap4/components/templates/csv-dashboard.html'
     },
-    'c-menu' : {
+    'c-router' : {
         js : '/bootstrap4/components/js/c-router.js'
     },
     'c-manage': {
         js  : '/bootstrap4/components/js/c-manage.js',
         tpl : '/bootstrap4/components/templates/c-manage.html'
     },
-    'c-test' : {
-        js  : '/bootstrap4/components/js/c-test.js',
-        tpl : '/bootstrap4/components/templates/c-test.html'
-    }
+    // 'c-test' : {
+    //     js  : '/bootstrap4/components/js/c-test.js',
+    //     tpl : '/bootstrap4/components/templates/c-test.html'
+    // }
 }
 
 console.log('APPLICATION CONFIG LOADED');
