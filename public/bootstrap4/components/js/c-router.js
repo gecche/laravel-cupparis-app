@@ -60,6 +60,35 @@ crud.components.cRouter = Vue.component('c-router',{
             console.log('COMMAND ',command);
 
             var tmp = command.split('?');
+            if (tmp[0] == 'page') {
+                if (that.lastComponent)
+                    that.lastComponent.$destroy();
+
+                var params = that.getAllUrlParams(command);
+
+                var route = that.createRoute('pages');
+                route.setValues({
+                    path : params['path']
+                })
+                delete params['path'];
+                route.setParams(params);
+                Server.route(route,function (html) {
+
+                    var cdef = Vue.component('async-comp', {
+                            extends : crud.components.cComponent,
+                            template : html
+                    });
+
+                    var id= 'd' + (new Date().getTime());
+                    jQuery(that.contentId).html('<div id="'+id+'" ></div>');
+                    var componente = new cdef();
+                    componente.$mount('#'+id);
+                    that.lastComponent = componente;
+                    //jQuery(that.contentId).html(html);
+                })
+                return ;
+            }
+
             var componentName = tmp[0];
             var params = that.getAllUrlParams(command);
             console.log('componente',componentName,'params',params);
@@ -80,6 +109,7 @@ crud.components.cRouter = Vue.component('c-router',{
             jQuery(that.contentId).html('<div id="'+id+'" ></div>');
             componente.$mount('#'+id);
             that.lastComponent = componente;
+
             return;
 
 
