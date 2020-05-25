@@ -4,7 +4,45 @@ crud.components.cRouter = Vue.component('c-router',{
     extends : crud.components.cComponent,
     mounted : function() {
         var that = this;
-        var _f = function() {
+        // var _f = function() {
+        //     var hash = window.location.hash.substr(1);
+        //     if (!hash && !that.defaultCommand)
+        //         return ;
+        //     if (!hash)
+        //         hash = that.defaultCommand
+        //     that.doCmd(hash);
+        //     that.lastHash = hash;
+        //     var path = that.getCmdPath(hash);
+        //     // var path = [
+        //     //     { label : 'Dashboard'}
+        //     // ];
+        //     // console.log('emit event set-path ',path);
+        //     eventParams = {
+        //         path : path,
+        //         hash : hash
+        //     }
+        //     that.$crud.instance.$emit('set-path',eventParams);
+        //     //app.$emit('set-path',path);
+        // }
+        jQuery( window ).on( 'hashchange', function( e ) {
+            //_f()
+            that.getHash();
+        } );
+        //_f();
+        that.getHash();
+    },
+    data : function() {
+        return {
+            lastComponent : null,
+            defaultCommand : this.cDefaultCommand?this.cDefaultCommand:null,
+            contentId : this.cContentId?this.cContentId:'app-content',
+            lastHash : null
+        }
+    },
+    methods : {
+
+        getHash : function() {
+            var that = this;
             var hash = window.location.hash.substr(1);
             if (!hash && !that.defaultCommand)
                 return ;
@@ -22,23 +60,8 @@ crud.components.cRouter = Vue.component('c-router',{
                 hash : hash
             }
             that.$crud.instance.$emit('set-path',eventParams);
-            //app.$emit('set-path',path);
-        }
-        jQuery( window ).on( 'hashchange', function( e ) {
-            _f()
-        } );
-        _f();
-    },
-    data : function() {
-        return {
-            lastComponent : null,
-            defaultCommand : this.cDefaultCommand?this.cDefaultCommand:null,
-            contentId : this.cContentId?this.cContentId:'app-content',
-            lastHash : null
-        }
-    },
-    methods : {
-
+            window.location.hash = '';
+        },
         getCmdPath : function(cmd) {
             if (!cmd)
                 return
