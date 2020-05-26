@@ -4,31 +4,9 @@ crud.components.cRouter = Vue.component('c-router',{
     extends : crud.components.cComponent,
     mounted : function() {
         var that = this;
-        // var _f = function() {
-        //     var hash = window.location.hash.substr(1);
-        //     if (!hash && !that.defaultCommand)
-        //         return ;
-        //     if (!hash)
-        //         hash = that.defaultCommand
-        //     that.doCmd(hash);
-        //     that.lastHash = hash;
-        //     var path = that.getCmdPath(hash);
-        //     // var path = [
-        //     //     { label : 'Dashboard'}
-        //     // ];
-        //     // console.log('emit event set-path ',path);
-        //     eventParams = {
-        //         path : path,
-        //         hash : hash
-        //     }
-        //     that.$crud.instance.$emit('set-path',eventParams);
-        //     //app.$emit('set-path',path);
-        // }
         jQuery( window ).on( 'hashchange', function( e ) {
-            //_f()
             that.getHash();
         } );
-        //_f();
         that.getHash();
     },
     data : function() {
@@ -43,24 +21,31 @@ crud.components.cRouter = Vue.component('c-router',{
 
         getHash : function() {
             var that = this;
-            var hash = window.location.hash.substr(1);
-            if (!hash && !that.defaultCommand)
+            var hash = "";
+            if (window.location.hash.indexOf('!') >= 0) {
+                hash = window.location.hash.split('!')[1];
+            } else
+                hash = window.location.hash.substr(1);
+            if (!hash && !that.defaultCommand && !window.localStorage.getItem('myHash'))
                 return ;
-            if (!hash)
-                hash = that.defaultCommand
+
+            if (!hash) {
+                if (window.localStorage.getItem('myHash'))
+                    hash = window.localStorage.getItem('myHash');
+                else
+                    hash = that.defaultCommand
+            }
+
             that.doCmd(hash);
             that.lastHash = hash;
             var path = that.getCmdPath(hash);
-            // var path = [
-            //     { label : 'Dashboard'}
-            // ];
-            // console.log('emit event set-path ',path);
             eventParams = {
                 path : path,
                 hash : hash
             }
             that.$crud.instance.$emit('set-path',eventParams);
-            window.location.hash = '';
+            window.location.hash = '';//'#'+Math.random(1000)+"!"+hash;
+            window.localStorage.setItem('myHash',hash);
         },
         getCmdPath : function(cmd) {
             if (!cmd)
