@@ -3,6 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Services\PermissionsHelper;
+use Gecche\PolicyBuilder\Facades\PolicyBuilder;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -19,11 +21,7 @@ class UserPolicy
     public function view(User $user, User $model)
     {
         //
-        if ($user->can('view users')) {
-            return true;
-        }
-
-        return false;
+        return $this->_aclCheck($user,$model);
 
     }
 
@@ -36,7 +34,7 @@ class UserPolicy
     public function create(User $user)
     {
         //
-        if ($user->can('create users')) {
+        if ($user && $user->can('create user')) {
             return true;
         }
 
@@ -53,11 +51,7 @@ class UserPolicy
     public function update(User $user, User $model)
     {
         //
-        if ($user->can('edit users')) {
-            return true;
-        }
-
-        return false;
+        return $this->_aclCheck($user,$model);
     }
 
     /**
@@ -70,18 +64,14 @@ class UserPolicy
     public function delete(User $user, User $model)
     {
         //
-        if ($user->can('delete users')) {
-            return true;
-        }
-
-        return false;
+        return $this->_aclCheck($user,$model);
     }
 
 
-    public function abilita(User $user, User $model) {
-        return $this->update($user, $model);
-
-    }
+//    public function abilita(User $user, User $model) {
+//        return $this->update($user, $model);
+//
+//    }
 
     /**
      * Determine whether the user can delete the model.
@@ -93,9 +83,9 @@ class UserPolicy
     public function listing(User $user)
     {
         //
-//        if ($user->can('delete users')) {
-//            return true;
-//        }
+        if ($user && $user->can('list user')) {
+            return true;
+        }
 
         return true;
     }
@@ -109,10 +99,29 @@ class UserPolicy
      */
     public function acl(User $user, $builder)
     {
+        if (!$user || !$user->mainrole) {
+            return PolicyBuilder::none($builder,User::class);
+        }
+        switch ($user->mainrole->name) {
+            case 'Admin':
+                $usersIds = PermissionsHelper::getUsersIdsbyRoles(['Operatore']);
+                return $builder->whereIn('id',$usersIds + [$user->getKey()]);
+            default:
+                return PolicyBuilder::none($builder,User::class);
+        }
+    }
 
-        if ($user->hasRole('Admin')) {
-            return $builder->where('id','>',9);
-        } else return $builder->where('id',8);
 
+    protected function _aclCheck(User $user, User $model) {
+        if (!$user || !$user->mainrole) {
+            return false;
+        }
+        switch ($user->mainrole->name) {
+            case 'Admin':
+                $usersIds = PermissionsHelper::getUsersIdsbyRoles(['Operatore']) + [$user->getKey()];
+                return in_array($model->getKey(),$usersIds);
+            default:
+                return false;
+        }
     }
 }

@@ -54,7 +54,13 @@ class Permissions extends Command
         }
 
 
+//        print_r($this->config);
+
+//        echo "*******\n\n";
+
         $this->setInitialValues();
+
+//        print_r($this->config);
 
 //        print_r($this->stubInitialValues);
         $permissionsService = new \App\Services\Permissions($this->config);
