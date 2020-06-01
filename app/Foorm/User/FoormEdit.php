@@ -49,9 +49,9 @@ class FoormEdit extends BaseFoormEdit
 
         if (!$this->hasPasswordCompiled) {
             unset($input['password']);
-            unset($input['password_confirmation']);
         }
 
+        unset($input['password_confirmation']);
         unset($input['mainrole']);
         parent::setFieldsToModel($model, $configFields, $input);
 
