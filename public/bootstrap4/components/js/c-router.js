@@ -26,13 +26,13 @@ crud.components.cRouter = Vue.component('c-router',{
                 hash = window.location.hash.split('!')[1];
             } else
                 hash = window.location.hash.substr(1);
-            if (!hash && !that.defaultCommand && !window.localStorage.getItem('myHash'))
+            if (!hash && !that.defaultCommand)
                 return ;
 
             if (!hash) {
-                if (window.localStorage.getItem('myHash'))
-                    hash = window.localStorage.getItem('myHash');
-                else
+                // if (window.localStorage.getItem('myHash'))
+                //     hash = window.localStorage.getItem('myHash');
+                // else
                     hash = that.defaultCommand
             }
 
@@ -44,8 +44,9 @@ crud.components.cRouter = Vue.component('c-router',{
                 hash : hash
             }
             that.$crud.instance.$emit('set-path',eventParams);
-            window.location.hash = '';//'#'+Math.random(1000)+"!"+hash;
-            window.localStorage.setItem('myHash',hash);
+            //window.location.hash = '';//'#'+Math.random(1000)+"!"+hash;
+            //window.localStorage.setItem('myHash',hash);
+            that._updateLinks(window.location.hash);
         },
         getCmdPath : function(cmd) {
             if (!cmd)
@@ -125,19 +126,15 @@ crud.components.cRouter = Vue.component('c-router',{
 
 
         },
-        // pushHash : function (hashString) {
-        //     var hash = '#'+hashString
-        //     window.location.replace(hash);
-        //     history.replaceState(undefined, undefined,hash);
-        //     return ;
-        //     if(window.history.pushState) {
-        //         console.log('pushState')
-        //         window.history.pushState(null, null, hash);
-        //     }
-        //     else {
-        //         window.location.hash = hash;
-        //     }
-        // }
+        _updateLinks : function (href) {
+            var that = this;
+            var newHref = href.substr(1);  // tolgo la #
+            if (href.indexOf('!') >= 0 ) {
+                newHref = href.split("!")[1];
+            }
+            newHref = '#'+ Math.floor(Math.random(100000)*100000) + "!" + newHref;
+            that.jQe('[href="' + href + '"]').attr('href',newHref);
+        }
     },
     template : '<span></span>'
 })
