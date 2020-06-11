@@ -6,7 +6,9 @@ namespace Gecche\Cupparis\App\Foorm\Base\Actions;
 use App\Services\UploadService;
 use Gecche\Foorm\FoormAction;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CsvExport extends FoormAction
@@ -19,6 +21,7 @@ class CsvExport extends FoormAction
     protected $fields = [];
 
     protected $separator;
+    protected $separatorReplacer;
 
     protected $endline;
 
@@ -37,6 +40,7 @@ class CsvExport extends FoormAction
         $this->csvSettings = Arr::get($this->config, $this->csvType, []);
 
         $this->separator = Arr::get($this->csvSettings, 'separator', ';');
+        $this->separatorReplacer = Arr::get($this->csvSettings, 'separatorReplacer', ',');
         $this->endline = Arr::get($this->csvSettings, 'endline', "\n");
         $this->csvModelName = Str::snake($this->foorm->getModelRelativeName());
 
@@ -72,22 +76,26 @@ class CsvExport extends FoormAction
             $csvStream .= $this->getCsvRowHeaders();
         }
 
+        $transUc = trans_choice_uc('model.'.$this->csvModelName,2);
+        $relativeFilename = str_replace(' ','_',$transUc)
+            . '_' . date('Ymd_His') . ".csv";
+        $filename = storage_temp_path($relativeFilename);
+        File::append($filename,$csvStream);
         switch ($this->formType) {
             case 'list':
-                $csvStream = $this->performActionList($csvStream);
+                $csvStream .= $this->performActionList($csvStream,$filename);
                 break;
             default:
                 break;
         }
 
-
-        $this->actionResult = $csvStream;
+        $this->actionResult = ['link' => '/downloadtemp/'.$relativeFilename];
         return $this->actionResult;
 
     }
 
 
-    protected function performActionList($csvStream) {
+    protected function performActionList($csvStream,$filename = null) {
         $builder = $this->foorm->getFormBuilder();
         $clonedBuilder = clone($builder);
 
@@ -104,9 +112,13 @@ class CsvExport extends FoormAction
             $chunkData = $builder->toArray();
 
             if (count($chunkData) >= 1) {
-                $csvStream .= $this->getDataFromChunk($chunkData);
+                $chunkStream = $this->getDataFromChunk($chunkData);
+                $csvStream .= $chunkStream;
 
                 $builder = $clonedBuilder;
+                if ($filename) {
+                    File::append($filename,$chunkStream);
+                }
             } else {
                 $finito = true;
             }
@@ -130,12 +142,19 @@ class CsvExport extends FoormAction
 
     public function getCsvFieldStandard($key,$value)
     {
-        if ($this->csvSettings['decimalTo'] && is_numeric($value)) {
-            return str_replace($this->csvSettings['decimalFrom'],
-                $this->csvSettings['decimalTo'],
-                $value);
+        if (is_numeric($value)) {
+            if ($this->csvSettings['decimalTo']) {
+                return str_replace($this->csvSettings['decimalFrom'],
+                    $this->csvSettings['decimalTo'],
+                    $value);
+            }
+        } else {
+            $value = str_replace('"','',$value);
+            $value = str_replace("'",'',$value);
+            return str_replace($this->separator,$this->separatorReplacer,$value);
+//            return str_replace($this->separator,'"'.$this->separator.'"',$value);
         }
-        return $value;
+
     }
 
     protected function getDataFromChunk($chunkData)
@@ -207,33 +226,6 @@ class CsvExport extends FoormAction
     }
 
 
-    public static function getCsvExport($models = null, $modelParams = [], $type = 'default', $params = [])
-    {
-        if (is_null($models)) {
-            $models = static::all();
-        }
-
-        $csvStream = '';
-
-        $newModel = new static;
-
-        $writeHeader = true;
-        if (
-            !Arr::get($newModel->csvExportSettings[$type], 'headers', true) ||
-            !Arr::get($params, 'headers', true)
-        ) {
-            $writeHeader = false;
-        }
-        if ($writeHeader) {
-            $csvStream .= $newModel->getCsvRowHeadersExport($type, $modelParams);
-        }
-
-        foreach ($models as $model) {
-            $csvStream .= $model->getCsvRowExport($type, $modelParams);
-        }
-
-        return $csvStream;
-    }
 
     /*
      * Fine metodi per esportazione CSV
