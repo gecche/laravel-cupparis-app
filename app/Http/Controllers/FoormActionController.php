@@ -8,13 +8,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\UploadService;
-use Carbon\Carbon;
 use Gecche\Foorm\Facades\Foorm;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class FoormActionController extends Controller
 {
@@ -33,39 +28,46 @@ class FoormActionController extends Controller
     public function postSet($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('set',$foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('set', $foormName, $foormType, $params);
         return $this->_json();
     }
 
     public function delete($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('delete',$foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('delete', $foormName, $foormType, $params);
         return $this->_json();
     }
 
     public function postMultiDelete($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('multi-delete',$foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('multi-delete', $foormName, $foormType, $params);
         return $this->_json();
     }
 
     public function postAutocomplete($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('autocomplete',$foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('autocomplete', $foormName, $foormType, $params);
         return $this->_json();
     }
 
     public function postUploadfile($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('uploadfile',$foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('uploadfile', $foormName, $foormType, $params);
         return $this->_json();
     }
 
-    protected function buildAndGetFoormActionResult($action,$foormName, $foormType, $params)
+    public function postCsvExport($foormName, $foormType, $pk = null)
+    {
+        $params = $pk ? ['id' => $pk] : [];
+        $this->buildAndGetFoormActionResult('csv-export', $foormName, $foormType, $params);
+        return $this->_json();
+    }
+
+    protected function buildAndGetFoormActionResult($action, $foormName, $foormType, $params)
     {
 
         try {
@@ -77,19 +79,18 @@ class FoormActionController extends Controller
     }
 
 
-
     protected function buildFoormAction($action, $foormName, $foormType, $params)
     {
-        $this->foormAction  = Foorm::getFoormAction($action,"$foormName.$foormType", request(), $params);
+        $this->foormAction = Foorm::getFoormAction($action, "$foormName.$foormType", request(), $params);
     }
 
-    protected function getFoormActionResult() {
+    protected function getFoormActionResult()
+    {
 
         $this->foormAction->validateAction();
         $this->json['result'] = $this->foormAction->performAction();
 
     }
-
 
 
     protected function _error($msg)
