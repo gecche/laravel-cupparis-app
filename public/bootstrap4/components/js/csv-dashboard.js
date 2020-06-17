@@ -119,7 +119,6 @@ Vue.component('csv-dashboard', {
         },
         progress : function (json) {
             var that = this;
-            console.log('PROGRESS',json);
             var checkError = that.checkJobError(json);
 
             if (checkError.error ) {
@@ -186,7 +185,7 @@ Vue.component('csv-dashboard', {
             }
             if (!conf) {
                 console.trace();
-                throw "Nessuna configurazione trovata per questa csv-dashboard " + that.cProviderName;
+                throw "Nessuna configurazione trovata per questa csv-dashboard " + that.pascalCase(providerName);
             }
 
             for (var k in conf) {

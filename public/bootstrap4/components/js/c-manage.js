@@ -53,7 +53,7 @@ crud.components.cManage = Vue.component('c-manage',{
                 }
             }
         });
-        var actionSaveBack = thisManage.merge(thisManage.$crud.collectionActions['action-save'], {
+        var actionSaveBack = thisManage.merge(thisManage.$crud.actions['action-save'], {
                 text : 'Salva e Torna alla lista',
                 afterExecute: function () {
                     thisManage.jQe('[c-collapse-edit]').collapse('hide');
