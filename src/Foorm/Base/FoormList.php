@@ -3,6 +3,7 @@
 namespace Gecche\Cupparis\App\Foorm\Base;
 
 use Gecche\Foorm\FoormList as BaseFoormList;
+use Illuminate\Support\Arr;
 
 class FoormList extends BaseFoormList
 {
@@ -10,8 +11,8 @@ class FoormList extends BaseFoormList
 
     protected function applyListBuilder()
     {
-        if ($this->listBuilder instanceof \Closure) {
-            $builder = $this->listBuilder;
+        if (Arr::get($this->customFuncs,'listBuilder') instanceof \Closure) {
+            $builder = $this->customFuncs['listBuilder'];
             $this->formBuilder = $builder($this->model);
             return;
         }
