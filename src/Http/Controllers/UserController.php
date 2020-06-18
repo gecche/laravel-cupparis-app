@@ -13,9 +13,7 @@ class UserController extends AppController {
     public function getProfile() {
 
         $userId = Auth::id();
-
         $user = User::find($userId);
-
         return view("user.profile", ['user' => $user]);
     }
 

@@ -83,7 +83,7 @@ class User extends Breeze implements
     ];
 
     public static $rules = array(
-        'name' => 'required|between:4,255|unique:users,name',
+        'name' => 'required|between:4,255|unique:users,name|username_email',
         'email' => 'required|email|unique:users,email',
         'password' => ['required', 'string', 'min:8', 'confirmed'],
 //        'password' => 'required|alpha_num|between:4,16|confirmed',
