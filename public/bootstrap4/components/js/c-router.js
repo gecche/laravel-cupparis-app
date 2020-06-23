@@ -133,7 +133,7 @@ crud.components.cRouter = Vue.component('c-router',{
                 newHref = href.split("!")[1];
             }
             newHref = '#'+ Math.floor(Math.random(100000)*100000) + "!" + newHref;
-            that.jQe('[href="' + href + '"]').attr('href',newHref);
+            jQuery('[href="' + href + '"]').attr('href',newHref);
         }
     },
     template : '<span></span>'

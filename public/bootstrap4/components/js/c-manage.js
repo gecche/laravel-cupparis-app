@@ -5,13 +5,22 @@ crud.components.cManage = Vue.component('c-manage',{
         this.createList();
         this.createSearch();
     },
+    beforeDestroy () {
+        if (this.listComp) this.listComp.$destroy();
+        if (this.listEditComp) this.listEditComp.$destroy();
+        if (this.editComp) this.editComp.$destroy();
+        if (this.searchComp) this.searchComp.$destroy();
+        if (this.viewComp) this.viewComp.$destroy();
+        if (this.insertComp) this.insertComp.$destroy();
+    },
+
     data : function () {
         var thisManage = this;
         var _conf = this._getConf() || {};
         var modelName = thisManage.cModel?thisManage.cModel:_conf.modelName;
         if (!modelName)
             throw 'model Name not found!';
-        console.log('CONF MANAGE',_conf);
+        //console.log('CONF MANAGE',_conf);
         var d = {
             modelName   : modelName,
             updateTitle : '',
@@ -22,18 +31,18 @@ crud.components.cManage = Vue.component('c-manage',{
         d = Object.assign(d,thisManage._getEditConfiguration(_conf,modelName))
         d = Object.assign(d,thisManage._getInsertConfiguration(_conf,modelName))
         d = Object.assign(d,thisManage._getViewConfiguration(_conf,modelName))
-        console.log('ddddd',d);
+        //console.log('ddddd',d);
         return d;
     },
 
     methods : {
         createList : function () {
             var that = this;
+            if (that.listComp)
+                that.listComp.$destroy();
             // monto la lista
             var id= 'd' + (new Date().getTime());
             that.jQe('[c-list-container]').html('<div id="'+id+'"></div>');
-            if (that.listComp)
-                that.listComp.$destroy();
             if (that.listConf) {
                 if (that.listConf.inlineTemplate) {
                     var v = Vue.component(id,{
@@ -72,11 +81,11 @@ crud.components.cManage = Vue.component('c-manage',{
             var that = this;
             if (that.searchConf.fields.length == 0)
                 return ;
-            // monto la lista
-            var id= 'd' + (new Date().getTime());
-            that.jQe('[c-search-container]').html('<div id="'+id+'"></div>');
             if (that.searchComp)
                 that.searchComp.$destroy();
+            // monto la search
+            var id= 'd' + (new Date().getTime());
+            that.jQe('[c-search-container]').html('<div id="'+id+'"></div>');
             if (that.searchConf.inlineTemplate) {
                 var v = Vue.component(id,{
                     extends : that.$options.components[that.searchComponentName],
@@ -100,13 +109,13 @@ crud.components.cManage = Vue.component('c-manage',{
         },
         _createEdit : function(action) {
             var thisManage = this;
-            //var that = this;
-            thisManage.updateTitle = 'Modifica ' + thisManage.modelName;
-            var id= 'd' + (new Date().getTime());
             if (thisManage.editComp) {
                 thisManage.editComp.$destroy();
                 thisManage.editComp = null;
             }
+
+            thisManage.updateTitle = 'Modifica ' + thisManage.modelName;
+            var id= 'd' + (new Date().getTime());
             thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
             if (thisManage.editConf.inlineTemplate) {
                 var v = Vue.component(id,{
@@ -224,14 +233,6 @@ crud.components.cManage = Vue.component('c-manage',{
             var originalConf = window[modelConf]?window[modelConf]:{};
             //console.log('modelName',modelName,modelConf,originalConf);
             var listConf = null;
-            // var listEditConf = null;
-            // if (thisManage.cInlineEdit) {
-            //     listEditConf = thisManage.confMerge(thisManage.$crud.conf.listEdit,(originalConf.listEdit || {}));
-            // } else {
-            //     listConf = thisManage.confMerge(thisManage.$crud.conf.list,(originalConf.list || {}));
-            // }
-
-
 
             if (! thisManage.cInlineEdit && ! conf.inlineEdit) {
                 listConf = conf.listConf || originalConf.list || {};
