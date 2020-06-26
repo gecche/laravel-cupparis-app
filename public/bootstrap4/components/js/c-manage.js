@@ -44,19 +44,19 @@ crud.components.cManage = Vue.component('c-manage',{
             var id= 'd' + (new Date().getTime());
             that.jQe('[c-list-container]').html('<div id="'+id+'"></div>');
             if (that.listConf) {
-                if (that.listConf.inlineTemplate) {
-                    var v = Vue.component(id,{
-                        extends : that.$options.components[that.listComponentName],
-                        template : jQuery(that.listConf.inlineTemplate).html()
-                    });
-                    that.listComp = new v({
-                        propsData: {
-                            cModel: that.modelName,
-                            cConf : that.listConf,
-                            cRef : 'list-view'
-                        }
-                    });
-                } else {
+                // if (that.listConf.inlineTemplate) {
+                //     var v = Vue.component(id,{
+                //         extends : that.$options.components[that.listComponentName],
+                //         template : jQuery(that.listConf.inlineTemplate).html()
+                //     });
+                //     that.listComp = new v({
+                //         propsData: {
+                //             cModel: that.modelName,
+                //             cConf : that.listConf,
+                //             cRef : 'list-view'
+                //         }
+                //     });
+                // } else {
                     that.listComp = new that.$options.components[that.listComponentName]({
                         propsData : {
                             cModel : that.modelName,
@@ -64,7 +64,7 @@ crud.components.cManage = Vue.component('c-manage',{
                             cRef : 'list-view'
                         }
                     });
-                }
+                //}
             } else {
                 that.listComp = new that.$options.components[that.listEditComponentName]({
                     propsData : {
@@ -86,25 +86,25 @@ crud.components.cManage = Vue.component('c-manage',{
             // monto la search
             var id= 'd' + (new Date().getTime());
             that.jQe('[c-search-container]').html('<div id="'+id+'"></div>');
-            if (that.searchConf.inlineTemplate) {
-                var v = Vue.component(id,{
-                    extends : that.$options.components[that.searchComponentName],
-                    template : jQuery(that.searchConf.inlineTemplate).html()
-                });
-                that.searchComp = new v({
-                    propsData: {
-                        cModel: that.cModel,
-                        cConf : that.searchConf,
-                    }
-                });
-            } else {
+            // if (that.searchConf.inlineTemplate) {
+            //     var v = Vue.component(id,{
+            //         extends : that.$options.components[that.searchComponentName],
+            //         template : jQuery(that.searchConf.inlineTemplate).html()
+            //     });
+            //     that.searchComp = new v({
+            //         propsData: {
+            //             cModel: that.cModel,
+            //             cConf : that.searchConf,
+            //         }
+            //     });
+            // } else {
                 that.searchComp = new that.$options.components[that.searchComponentName]({
                     propsData : {
                         cModel : that.cModel,
                         cConf : that.searchConf,
                     }
                 });
-            }
+            //}
             that.searchComp.$mount('#'+id);
         },
         _createEdit : function(action) {
@@ -117,23 +117,23 @@ crud.components.cManage = Vue.component('c-manage',{
             thisManage.updateTitle = 'Modifica ' + thisManage.modelName;
             var id= 'd' + (new Date().getTime());
             thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
-            if (thisManage.editConf.inlineTemplate) {
-                var v = Vue.component(id,{
-                    extends : thisManage.$options.components[thisManage.editComponentName],
-                    template : jQuery(thisManage.insertConf.inlineTemplate).html()
-                });
-
-
-                thisManage.editComp = new v({
-                    propsData: {
-                        cModel: thisManage.modelName,
-                        cPk : action.modelData[thisManage.editConf.primaryKey],
-                        cConf : thisManage.editConf
-                    }
-                });
-                thisManage.editComp.$mount('#'+id);
-            } else {
-                console.log('EditConf',action.modelData);
+            // if (thisManage.editConf.inlineTemplate) {
+            //     var v = Vue.component(id,{
+            //         extends : thisManage.$options.components[thisManage.editComponentName],
+            //         template : jQuery(thisManage.insertConf.inlineTemplate).html()
+            //     });
+            //
+            //
+            //     thisManage.editComp = new v({
+            //         propsData: {
+            //             cModel: thisManage.modelName,
+            //             cPk : action.modelData[thisManage.editConf.primaryKey],
+            //             cConf : thisManage.editConf
+            //         }
+            //     });
+            //     thisManage.editComp.$mount('#'+id);
+            // } else {
+                //console.log('EditConf',action.modelData);
                 thisManage.editComp = new thisManage.$options.components[thisManage.editComponentName]({
 
                     propsData : {
@@ -143,7 +143,7 @@ crud.components.cManage = Vue.component('c-manage',{
                     }
                 });
                 thisManage.editComp.$mount('#'+id);
-            }
+            //}
 
             thisManage.jQe('[c-collapse-edit]').collapse('show');
             thisManage.jQe('[c-collapse-list]').collapse('hide');
@@ -177,27 +177,27 @@ crud.components.cManage = Vue.component('c-manage',{
             thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
             if (thisManage.insertComp)
                 thisManage.insertComp.$destroy();
-            if (thisManage.insertConf.inlineTemplate) {
-                var v = Vue.component(id,{
-                    extends : thisManage.$options.components[thisManage.insertComponentName],
-                    template : jQuery(thisManage.insertConf.inlineTemplate).html()
-                });
-
-
-                thisManage.insertComp = new v({
-                    propsData: {
-                        cModel: thisManage.modelName,
-                        cConf: thisManage.insertConf
-                    }
-                });
-            } else {
+            // if (thisManage.insertConf.inlineTemplate) {
+            //     var v = Vue.component(id,{
+            //         extends : thisManage.$options.components[thisManage.insertComponentName],
+            //         template : jQuery(thisManage.insertConf.inlineTemplate).html()
+            //     });
+            //
+            //
+            //     thisManage.insertComp = new v({
+            //         propsData: {
+            //             cModel: thisManage.modelName,
+            //             cConf: thisManage.insertConf
+            //         }
+            //     });
+            // } else {
                 thisManage.insertComp = new thisManage.$options.components[thisManage.insertComponentName]({
                     propsData : {
                         cModel : thisManage.modelName,
                         cConf : thisManage.insertConf
                     }
                 });
-            }
+            //}
             thisManage.insertComp.$mount('#'+id);
             thisManage.jQe('[c-collapse-edit]').collapse('show');
             thisManage.jQe('[c-collapse-list]').collapse('hide');
