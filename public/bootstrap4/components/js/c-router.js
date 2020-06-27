@@ -74,6 +74,7 @@ crud.components.cRouter = Vue.component('c-router',{
                     that._loadPage(params);
                     break;
                 case 'modal':
+                case 'modal-big':
                     that._loadModal(componentName,params);
                     break;
                 default:
@@ -166,7 +167,7 @@ crud.components.cRouter = Vue.component('c-router',{
             })
         },
 
-        _loadModal : function(componentName,params) {
+        _loadModal : function(modalType,params) {
             var that = this;
             if (that.lastComponent)
                 that.lastComponent.$destroy();
@@ -174,12 +175,14 @@ crud.components.cRouter = Vue.component('c-router',{
             //var params = that.getAllUrlParams(command);
 
             var componentName = params['component'];
+            var cTitle = params['dialog-title'] || '';
             delete params['component'];
+            delete params['dialog-title'];
             var divId= 'd' + (new Date().getTime());
             that.customDialog({
-                cTitle : '',
+                cTitle : cTitle,
                 cContent : '<div id="' + divId + '"></div>',
-                cBig : true,
+                cBig : (modalType=='modal-big'),
             })
             that._loadComponent(componentName,params,divId);
         },
