@@ -22,6 +22,7 @@ crud.components.cRouter = Vue.component('c-router',{
         getHash : function() {
             var that = this;
             var hash = "";
+            //controllo che non ci sia ! che sta per il numero casuale generato per poter riattivare l'evento change
             if (window.location.hash.indexOf('!') >= 0) {
                 hash = window.location.hash.split('!')[1];
             } else
@@ -30,10 +31,7 @@ crud.components.cRouter = Vue.component('c-router',{
                 return ;
 
             if (!hash) {
-                // if (window.localStorage.getItem('myHash'))
-                //     hash = window.localStorage.getItem('myHash');
-                // else
-                    hash = that.defaultCommand
+                hash = that.defaultCommand
             }
 
             that.doCmd(hash);
@@ -67,36 +65,51 @@ crud.components.cRouter = Vue.component('c-router',{
         doCmd : function (command) {
             var that = this;
             console.log('COMMAND ',command);
-
             var tmp = command.split('?');
-            if (tmp[0] == 'page') {
-                if (that.lastComponent)
-                    that.lastComponent.$destroy();
-
-                var params = that.getAllUrlParams(command);
-
-                var route = that.createRoute('pages');
-                route.setValues({
-                    path : params['path']
-                })
-                delete params['path'];
-                route.setParams(params);
-                Server.route(route,function (html) {
-
-                    var cdef = Vue.component('async-comp', {
-                            extends : crud.components.cComponent,
-                            template : html
-                    });
-
-                    var id= 'd' + (new Date().getTime());
-                    jQuery(that.contentId).html('<div id="'+id+'" ></div>');
-                    var componente = new cdef();
-                    componente.$mount('#'+id);
-                    that.lastComponent = componente;
-                    //jQuery(that.contentId).html(html);
-                })
-                return ;
+            var params = that.getAllUrlParams(command);
+            tmp = tmp[0].split(':');  // per comandi complessi ci possono essere i :
+            var componentName = tmp[0];
+            switch (componentName) {
+                case 'page':
+                    that._loadPage(params);
+                    break;
+                case 'modal':
+                    that._loadModal(componentName,params);
+                    break;
+                default:
+                    that._loadComponent(componentName,params);
+                    break;
             }
+
+
+            // if (tmp[0] == 'page') {
+            //     if (that.lastComponent)
+            //         that.lastComponent.$destroy();
+            //
+            //     var params = that.getAllUrlParams(command);
+            //
+            //     var route = that.createRoute('pages');
+            //     route.setValues({
+            //         path : params['path']
+            //     })
+            //     delete params['path'];
+            //     route.setParams(params);
+            //     Server.route(route,function (html) {
+            //
+            //         var cdef = Vue.component('async-comp', {
+            //             extends : crud.components.cComponent,
+            //             template : html
+            //         });
+            //
+            //         var id= 'd' + (new Date().getTime());
+            //         jQuery(that.contentId).html('<div id="'+id+'" ></div>');
+            //         var componente = new cdef();
+            //         componente.$mount('#'+id);
+            //         that.lastComponent = componente;
+            //         //jQuery(that.contentId).html(html);
+            //     })
+            //     return ;
+            // }
 
             var componentName = tmp[0];
             var params = that.getAllUrlParams(command);
@@ -123,11 +136,82 @@ crud.components.cRouter = Vue.component('c-router',{
 
             return;
 
-
-
-
-
         },
+        _loadPage : function(params) {
+            var that = this;
+            if (that.lastComponent)
+                that.lastComponent.$destroy();
+
+            //var params = that.getAllUrlParams(command);
+
+            var route = that.createRoute('pages');
+            route.setValues({
+                path : params['path']
+            })
+            delete params['path'];
+            route.setParams(params);
+            Server.route(route,function (html) {
+
+                var cdef = Vue.component('async-comp', {
+                    extends : crud.components.cComponent,
+                    template : html
+                });
+
+                var id= 'd' + (new Date().getTime());
+                jQuery(that.contentId).html('<div id="'+id+'" ></div>');
+                var componente = new cdef();
+                componente.$mount('#'+id);
+                that.lastComponent = componente;
+                //jQuery(that.contentId).html(html);
+            })
+        },
+
+        _loadModal : function(componentName,params) {
+            var that = this;
+            if (that.lastComponent)
+                that.lastComponent.$destroy();
+
+            //var params = that.getAllUrlParams(command);
+
+            var componentName = params['component'];
+            delete params['component'];
+            var divId= 'd' + (new Date().getTime());
+            that.customDialog({
+                cTitle : '',
+                cContent : '<div id="' + divId + '"></div>',
+                cBig : true,
+            })
+            that._loadComponent(componentName,params,divId);
+        },
+
+        _loadComponent : function(componentName,params,elementId) {
+            var that = this;
+            console.log('componente',componentName,'params',params);
+
+            console.log('that',that);
+            if (!that.$options.components[componentName]) {
+                // potrebbe essere un'ancora percio' nessuna eccezione, semplicemente non faccio nulla
+                return ;
+                //throw 'Componente non trovato ' + componentName;
+            }
+
+            if (that.lastComponent)
+                that.lastComponent.$destroy();
+
+            var componente = new that.$options.components[componentName]({
+                propsData : params,
+                ref : componentName
+            });
+            if (elementId) {
+                componente.$mount('#'+elementId);
+            } else {
+                var id= 'd' + (new Date().getTime());
+                jQuery(that.contentId).html('<div id="'+id+'" ></div>');
+                componente.$mount('#'+id);
+            }
+            that.lastComponent = componente;
+        },
+
         _updateLinks : function (href) {
             var that = this;
             var newHref = href.substr(1);  // tolgo la #
