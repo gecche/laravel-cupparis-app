@@ -104,7 +104,9 @@ crud.components.cRouter = Vue.component('c-router',{
 
             console.log('that',that);
             if (!that.$options.components[componentName]) {
-                throw 'Componente non trovato ' + componentName;
+                // potrebbe essere un'ancora percio' nessuna eccezione, semplicemente non faccio nulla
+                return ;
+                //throw 'Componente non trovato ' + componentName;
             }
 
             if (that.lastComponent)
