@@ -7,7 +7,9 @@ crud.components.cRouter = Vue.component('c-router',{
         jQuery( window ).on( 'hashchange', function( e ) {
             that.getHash();
         } );
-        that.getHash();
+        jQuery( window ).on( 'crud-app-loaded', function( e ) {
+            that.getHash();
+        } );
     },
     data : function() {
         return {
@@ -81,7 +83,7 @@ crud.components.cRouter = Vue.component('c-router',{
                     that._loadComponent(componentName,params);
                     break;
             }
-
+            return ;
 
             // if (tmp[0] == 'page') {
             //     if (that.lastComponent)
@@ -217,12 +219,13 @@ crud.components.cRouter = Vue.component('c-router',{
 
         _updateLinks : function (href) {
             var that = this;
+            //console.log('updateLink',href)
             var newHref = href.substr(1);  // tolgo la #
             if (href.indexOf('!') >= 0 ) {
                 newHref = href.split("!")[1];
             }
-            newHref = '#'+ Math.floor(Math.random(100000)*100000) + "!" + newHref;
-            jQuery('[href="' + href + '"]').attr('href',newHref);
+            newHref = '#'+ Math.floor(Math.random(100000)*100000) + "!" + decodeURI(newHref);
+            jQuery('[href="' + decodeURI(href) + '"]').attr('href',newHref);
         }
     },
     template : '<span></span>'
