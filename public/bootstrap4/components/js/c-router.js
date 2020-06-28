@@ -225,7 +225,9 @@ crud.components.cRouter = Vue.component('c-router',{
                 newHref = href.split("!")[1];
             }
             newHref = '#'+ Math.floor(Math.random(100000)*100000) + "!" + decodeURI(newHref);
-            jQuery('[href="' + decodeURI(href) + '"]').attr('href',newHref);
+            var decodeHref = decodeURI(href).replace(/"/g,'\\"');
+            //console.log('STroinga escaèata',decodeHref.replace(/"/g,'\"'));
+            jQuery('[href="' + decodeHref + '"]').attr('href',newHref);
         }
     },
     template : '<span></span>'
