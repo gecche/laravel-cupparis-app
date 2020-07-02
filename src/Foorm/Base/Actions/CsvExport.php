@@ -189,9 +189,18 @@ class CsvExport extends FoormAction
 
             $itemDotted = Arr::dot($item);
             $fieldKey = str_replace('|', '.', $key);
+            $methodKey = str_replace('|', '', $key);
             $itemValue = Arr::get($itemDotted, $fieldKey);
-            $methodName = 'getCsvField' . Str::studly($key);
+
+            if (!$itemValue && array_key_exists($key,$item) && is_array($item[$key])) {
+                $itemValue = $item[$key];
+            }
+
+            $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
+                \Log::info($methodName);
+//                \Log::info(print_r($item,true));
+//                \Log::info(print_r($itemDotted,true));
                 $row[] = $this->$methodName($itemValue);
             } else {
                 $row[] = $this->getCsvFieldStandard($key, $itemValue);
@@ -242,7 +251,7 @@ class CsvExport extends FoormAction
             $relation = $fieldKeyParts[0];
             $field = $fieldKeyParts[1];
             $relationModel = Arr::get($this->relations,$relation,$relation);
-            return trans_choice_uc('model.'.$relationModel,1) .
+            return trans_choice('model.'.$relationModel,1) .
                 ' - ' . Lang::getMFormField($field, $relationModel);
         }, $this->fields);
     }
