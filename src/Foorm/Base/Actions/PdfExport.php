@@ -18,6 +18,7 @@ class PdfExport extends FoormAction
     protected $pdfType;
 
     protected $pdfSettings = [];
+    protected $pdfFieldsParams = [];
 
     protected $fields = [];
 
@@ -44,6 +45,7 @@ class PdfExport extends FoormAction
 
         $this->pdfType = Arr::get($this->input, 'pdfType', 'list');
         $this->pdfSettings = Arr::get($this->config, $this->pdfType, []);
+        $this->pdfFieldsParams = Arr::get($this->pdfSettings, 'fieldsParams', []);
 
         $this->pdfModelName = Str::snake($this->foorm->getModelRelativeName());
 
@@ -186,12 +188,25 @@ class PdfExport extends FoormAction
 
     }
 
+    protected function guessItemValue($key,$itemDotted,$item) {
 
-    public function getPdfField($key,$itemDotted)
+        if (array_key_exists('item',Arr::get($this->pdfFieldsParams,$key,[]))) {
+            return $item[$this->pdfFieldsParams[$key]['item']];
+        }
+
+        $fieldKey = str_replace('|', '.', $key);
+        $itemValue = Arr::get($itemDotted, $fieldKey);
+        if (!$itemValue && array_key_exists($key,$item) && is_array($item[$key])) {
+            $itemValue = $item[$key];
+        }
+
+        return $itemValue;
+    }
+
+    public function getPdfField($key,$itemDotted,$item)
     {
 
-            $fieldKey = str_replace('|', '.', $key);
-            $itemValue = Arr::get($itemDotted, $fieldKey);
+            $itemValue = $this->guessItemValue($key,$itemDotted,$item);
             $methodName = 'getPdfField' . Str::studly($key);
             if (method_exists($this, $methodName)) {
                 return $this->$methodName($itemValue);

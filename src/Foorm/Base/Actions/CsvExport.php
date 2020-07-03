@@ -17,6 +17,7 @@ class CsvExport extends FoormAction
     protected $csvType;
 
     protected $csvSettings = [];
+    protected $csvFieldsParams = [];
 
     protected $fields = [];
 
@@ -40,6 +41,7 @@ class CsvExport extends FoormAction
 
         $this->csvType = Arr::get($this->input, 'csvType', 'default');
         $this->csvSettings = Arr::get($this->config, $this->csvType, []);
+        $this->csvFieldsParams = Arr::get($this->csvSettings, 'fieldsParams', []);
 
         $this->separator = Arr::get($this->csvSettings, 'separator', ';');
         $this->separatorReplacer = Arr::get($this->csvSettings, 'separatorReplacer', ',');
@@ -152,6 +154,54 @@ class CsvExport extends FoormAction
          * Metodi per esportazione CSV
          */
 
+    protected function getDataFromChunk($chunkData)
+    {
+        $csvChunkStream = '';
+
+        foreach ($chunkData as $item) {
+            $csvItem = $this->getCsvRow($item);
+            $csvChunkStream .= rtrim(implode($this->separator, $csvItem), $this->separator) . $this->endline;
+        }
+
+        return $csvChunkStream;
+
+    }
+
+    public function getCsvRow($item)
+    {
+        $row = [];
+        $itemDotted = Arr::dot($item);
+        foreach ($this->fields as $key) {
+            $methodKey = str_replace('|', '', $key);
+
+            $itemValue = $this->guessItemValue($key,$itemDotted,$item);
+
+            $methodName = 'getCsvField' . Str::studly($methodKey);
+            if (method_exists($this, $methodName)) {
+                $row[] = $this->$methodName($itemValue);
+            } else {
+                $row[] = $this->getCsvFieldStandard($key, $itemValue);
+            }
+        }
+        return $row;
+    }
+
+    protected function guessItemValue($key,$itemDotted,$item) {
+
+        if (array_key_exists('item',Arr::get($this->csvFieldsParams,$key,[]))) {
+            return $item[$this->csvFieldsParams[$key]['item']];
+        }
+
+        $fieldKey = str_replace('|', '.', $key);
+        $itemValue = Arr::get($itemDotted, $fieldKey);
+        if (!$itemValue && array_key_exists($key,$item) && is_array($item[$key])) {
+            $itemValue = $item[$key];
+        }
+
+        return $itemValue;
+    }
+
+
     public function getCsvFieldStandard($key, $value)
     {
         if (is_numeric($value)) {
@@ -169,45 +219,10 @@ class CsvExport extends FoormAction
 
     }
 
-    protected function getDataFromChunk($chunkData)
-    {
-        $csvChunkStream = '';
 
-        foreach ($chunkData as $item) {
-            $csvItem = $this->getCsvRow($item);
-            $csvChunkStream .= rtrim(implode($this->separator, $csvItem), $this->separator) . $this->endline;
-        }
-
-        return $csvChunkStream;
-
-    }
-
-    public function getCsvRow($item)
-    {
-        $row = [];
-        foreach ($this->fields as $key) {
-
-            $itemDotted = Arr::dot($item);
-            $fieldKey = str_replace('|', '.', $key);
-            $methodKey = str_replace('|', '', $key);
-            $itemValue = Arr::get($itemDotted, $fieldKey);
-
-            if (!$itemValue && array_key_exists($key,$item) && is_array($item[$key])) {
-                $itemValue = $item[$key];
-            }
-
-            $methodName = 'getCsvField' . Str::studly($methodKey);
-            if (method_exists($this, $methodName)) {
-                \Log::info($methodName);
-//                \Log::info(print_r($item,true));
-//                \Log::info(print_r($itemDotted,true));
-                $row[] = $this->$methodName($itemValue);
-            } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue);
-            }
-        }
-        return $row;
-    }
+    /*
+     * METODI STANDARD PER HEADERS (PLAIN - TRANSLATE)
+     */
 
     public function getCsvRowHeaders()
     {
@@ -221,6 +236,9 @@ class CsvExport extends FoormAction
 
     public function checkHeaderMethod($key)
     {
+        if (array_key_exists('header',Arr::get($this->csvFieldsParams,$key,[]))) {
+            return $this->csvFieldsParams[$key]['header'];
+        }
         $methodName = 'getCsvHeader' . Str::studly($key);
         if (method_exists($this, $methodName)) {
             return $this->$methodName();
@@ -257,8 +275,10 @@ class CsvExport extends FoormAction
     }
 
     /*
-     * Fine metodi per esportazione CSV
-    */
+     * // METODI STANDARD PER HEADERS (PLAIN - TRANSLATE)
+     */
+
+
 
 
 }
