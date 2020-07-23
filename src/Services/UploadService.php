@@ -203,6 +203,7 @@ class UploadService {
         return [
             'id' => $tempFileName,
             'mimetype' => $file->getClientMimeType(),
+            'filename' => $file->getClientOriginalName(),
 
             'url' => $this->getUrl($type,$tempFileName),
         ];
