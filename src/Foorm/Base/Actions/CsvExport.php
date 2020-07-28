@@ -189,7 +189,14 @@ class CsvExport extends FoormAction
     protected function guessItemValue($key,$itemDotted,$item) {
 
         if (array_key_exists('item',Arr::get($this->csvFieldsParams,$key,[]))) {
-            return $item[$this->csvFieldsParams[$key]['item']];
+            $itemKey = $this->csvFieldsParams[$key]['item'];
+            if (array_key_exists($itemKey,$item))
+                return $item[$itemKey];
+            $itemKey = str_replace('|', '.', $itemKey);
+            if (array_key_exists($itemKey,$itemDotted))
+                return $itemDotted[$itemKey];
+            return '';
+
         }
 
         $fieldKey = str_replace('|', '.', $key);
