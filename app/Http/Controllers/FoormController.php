@@ -11,11 +11,14 @@ namespace App\Http\Controllers;
 use App\Services\UploadService;
 
 use Gecche\Foorm\Facades\Foorm;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class FoormController extends Controller
@@ -112,7 +115,19 @@ class FoormController extends Controller
     protected function _error($msg)
     {
         $this->json['error'] = 1;
-        $this->json['msg'] = $msg;
+        if (Config::get('cupparis-app.array_to_string',false) && is_array($msg)) {
+            $separator = Config::get('cupparis-app.separator','<br/>');
+            $stringMsg = "";
+            $msg = Arr::flatten($msg);
+            foreach ($msg as $line) {
+                $stringMsg .= $line . $separator;
+            }
+            $stringMsg = substr($stringMsg,0,-(strlen($separator)));
+            $this->json['msg'] = $stringMsg;
+        } else {
+            $this->json['msg'] = $msg;
+        }
+
     }
 
     protected function _json()
@@ -143,6 +158,8 @@ class FoormController extends Controller
             $this->foormAuthorization($pk);
             $this->performFurtherActionsOnFoorm($furtherActions);
             $this->getFoormResult();
+        } catch (ValidationException $e) {
+            $this->_error($e->errors());
         } catch (\Exception $e) {
             $this->_error($e->getMessage());
         }
