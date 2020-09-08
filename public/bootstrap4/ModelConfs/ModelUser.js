@@ -34,11 +34,11 @@ var ModelUser = {
         },
         fieldsConfig : {
             email_verified_at : {
-                type : 'w-swap2',
+                type : 'w-swap',
                 model : 'user',
             },
             banned : {
-                type : 'w-swap2',
+                type : 'w-swap',
                 model : 'user',
                 domainValues : {
                     1 : 'fa fa-circle text-danger',

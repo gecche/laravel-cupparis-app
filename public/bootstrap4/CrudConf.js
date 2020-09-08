@@ -1,8 +1,4 @@
 
-crud.routes['pages'] = {
-    url : '/bootstrap4/pages/{path}',
-}
-
 crud.routes.delete.url = "/foormaction/delete/{modelName}/list";
 crud.actions['action-mia'] = {
     text : 'action mia',
@@ -41,10 +37,6 @@ crud.components.libs = {
     'c-manage': {
         js  : '/bootstrap4/components/js/c-manage.js',
         tpl : '/bootstrap4/components/templates/c-manage.html'
-    },
-    'v-edit-anagrafica' : {
-        js  : '/bootstrap4/custom-components/v-edit-anagrafica.js',
-        tpl : '/bootstrap4/custom-components/v-edit-anagrafica.html'
     },
     'c-wizard': {
         js  : '/bootstrap4/components/js/c-wizard.js',
