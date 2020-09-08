@@ -98,6 +98,13 @@ class AppServiceProvider extends ServiceProvider
             //__DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
         ], 'public-js');
 
+        $this->publishes([
+            __DIR__ . '/../public/bootstrap4' => public_path('bootstrap4'),
+            __DIR__ . '/../public/smarty3' => public_path('smarty3'),
+            __DIR__ . '/../resources/views/bootstrap4' => resource_path('views/bootstrap4'),
+            __DIR__ . '/../resources/views/smarty3' => resource_path('views/smarty3'),
+        ], 'templates');
+
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
         $this->bootBlade();
