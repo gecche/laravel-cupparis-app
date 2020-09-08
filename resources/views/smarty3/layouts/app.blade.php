@@ -37,7 +37,7 @@
             {!! Theme::js('js/vue.js')  !!}
         @endif
         <!-- crud-vue.js -->
-        <script src="{!! Theme::url('crud-vue.js') !!}"></script>
+        <script src="/crud-vue/crud-vue.js"></script>
 
         {!! Theme::js('js/it-translations.js')  !!}
 

@@ -60,17 +60,13 @@ crud.components.libs = {
     'supplementari' : {
         js  : appThemePath+'custom-components/supplementari.js',
     },
-    'v-list-istituto' : {
-        js  : appThemePath+'custom-components/v-list-istituto.js',
-        tpl : appThemePath+'custom-components/v-list-istituto.html'
+    'c-wizard' : {
+        js  : appThemePath+'components/c-wizard.js',
+        tpl : appThemePath+'components/c-wizard.html'
     },
-    'v-mattonelle-istituto' : {
-        js  : appThemePath+'custom-components/v-mattonelle-istituto.js',
-        tpl : appThemePath+'custom-components/v-mattonelle-istituto.html'
-    },
-    'v-info-istituto' : {
-        js  : appThemePath+'custom-components/v-info-istituto.js',
-        tpl : appThemePath+'custom-components/v-info-istituto.html'
+    'c-drag-drop' : {
+        js  : appThemePath+'components/c-drag-drop.js',
+        tpl : appThemePath+'components/c-drag-drop.html'
     }
 }
 
