@@ -61,12 +61,12 @@ crud.components.libs = {
         js  : appThemePath+'custom-components/supplementari.js',
     },
     'c-wizard' : {
-        js  : appThemePath+'components/c-wizard.js',
-        tpl : appThemePath+'components/c-wizard.html'
+        js  : appThemePath+'components/js/c-wizard.js',
+        tpl : appThemePath+'components/templates/c-wizard.html'
     },
     'c-drag-drop' : {
-        js  : appThemePath+'components/c-drag-drop.js',
-        tpl : appThemePath+'components/c-drag-drop.html'
+        js  : appThemePath+'components/js/c-drag-drop.js',
+        tpl : appThemePath+'components/templates/c-drag-drop.html'
     }
 }
 
