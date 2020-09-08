@@ -10,6 +10,7 @@
             //         pluginsPath : '/bootstrap4/plugins/',
             //         el : '#app',
                 appConfig : '/bootstrap4/CrudConf.js',
+                appComponents : "{{Theme::url('crud-vue-components.js')}}"
             },
         });
     });

@@ -1,6 +1,17 @@
 
+crud.routes['pages'] = {
+    url : '/bootstrap4/pages/{path}',
+}
+
 crud.routes.delete.url = "/foormaction/delete/{modelName}/list";
-crud.recordActions['action-delete'].setRouteValues = function(route) {
+crud.actions['action-mia'] = {
+    text : 'action mia',
+    execute : function () {
+        alert('mia '+ this.view.getWidget('email').getValue());
+    }
+}
+
+crud.actions['action-delete'].setRouteValues = function(route) {
     var that = this;
     route.setValues({
         modelName: that.view.cModel
@@ -16,74 +27,8 @@ crud.routes['uploadfile'].url = "/foormaction/uploadfile/{modelName}/edit";
 
 
 crud.routes.set.url = "/foormaction/set/{modelName}/list";
-crud.components.widgets.wSwap2 = Vue.component('w-swap2',{
-    extends : crud.components.widgets.wSwap,
-    methods : {
-        setRouteValues : function(route) {
-            var that = this;
-            console.log('rswap RIDEFINITO')
-            var dV = that.getDV();
-            var keys = Object.keys(dV);
-            var value = that.value?that.value:keys[0];
-            var vs = keys.map(String);
-            var index = vs.indexOf(""+value);
-            index = (index + 1) % vs.length;
-            console.log('rswap',that);
-            route.setValues({
-                modelName: that.conf.model,
-                //field : that.name, //that.conf.key?that.conf.key:that.cKey,
-                //value : keys[index]
-            });
-            route.setParams({
-                id:that.conf.modelData.id,
-                field : that.name,
-                value : keys[index]
-            });
-            return route;
-        }
-    }
-})
-
 crud.routes['autocomplete'].url = "/foormaction/autocomplete/{modelName}/edit";
 crud.routes['autocomplete'].method = 'post';
-crud.components.widgets.wAutocomplete2 = Vue.component('w-autocomplete2',{
-    extends : crud.components.widgets.wAutocomplete,
-    methods : {
-        setRouteValues : function(route,term) {
-            var that = this;
-            //var r = that.$crud.createRoute(that.conf.routeName);
-            route.setValues({modelName:that.modelName});
-            //var r = new Route(routeConf);
-
-            //var url = that.url?that.url:"/api/json/autocomplete/" + that.metadata.autocompleteModel + "?";
-            var url = that.url?that.url:route.getUrl();
-            url+= '?value='+term+'&';
-            route.setParams({
-                field : that.name
-            })
-
-            // if (that.conf.fields) {
-            //     for(var f in that.conf.fields) {
-            //         url+="field[]="+that.conf.fields[f]+"&";
-            //     }
-            // }
-            /* @TODO se metto la description diventa difficile cambiare la
-             if (that.model_description) {
-             for(var f in that.model_description) {
-             url+="description[]="+that.model_description[f]+"&";
-             }
-             }
-             */
-            url += that.conf.separator ? '&separator=' + that.conf.separator : '';
-            url += that.conf.n_items ? '&n_items=' + that.conf.n_items : '';
-            url += that.conf.method ? '&method=' + that.conf.method: '';
-            route.setUrl(url);
-            return route;
-            //return url;
-        }
-    }
-})
-
 
 crud.components.libs = {
     'csv-dashboard' : {
@@ -97,6 +42,19 @@ crud.components.libs = {
         js  : '/bootstrap4/components/js/c-manage.js',
         tpl : '/bootstrap4/components/templates/c-manage.html'
     },
+    'v-edit-anagrafica' : {
+        js  : '/bootstrap4/custom-components/v-edit-anagrafica.js',
+        tpl : '/bootstrap4/custom-components/v-edit-anagrafica.html'
+    },
+    'c-wizard': {
+        js  : '/bootstrap4/components/js/c-wizard.js',
+        tpl : '/bootstrap4/components/templates/c-wizard.html'
+    },
+    'c-drag-drop': {
+        js  : '/bootstrap4/components/js/c-drag-drop.js',
+        tpl : '/bootstrap4/components/templates/c-drag-drop.html'
+    },
+
     // 'c-test' : {
     //     js  : '/bootstrap4/components/js/c-test.js',
     //     tpl : '/bootstrap4/components/templates/c-test.html'
@@ -104,3 +62,62 @@ crud.components.libs = {
 }
 
 console.log('APPLICATION CONFIG LOADED');
+
+crud.actions['action-insert'].execute = function () {
+    var that = this;
+    var id = that.modelData[that.view.primaryKey];
+    document.location.href = '#v-insert?cModel='+that.view.modelName;
+}
+
+
+crud.actions['action-edit'].execute = function () {
+    var that = this;
+    var id = that.modelData[that.view.primaryKey];
+    document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
+}
+
+crud.actions['action-view'].execute = function () {
+    var that = this;
+    var id = that.modelData[that.view.primaryKey];
+    var view = that.createModalView('v-view',{
+        cModel : that.view.modelName,
+        cPk : id
+    })
+
+    //document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
+}
+
+crud.actions['action-search'].execute = function () {
+    var that = this;
+    var params = that.view.getViewData();
+    console.log('params',params);
+    crud.instance.viewRouteConf = {
+        params : params
+    };
+    var s =  encodeURI(crud.instance.viewRouteConf.toString());
+    document.location.href = '#v-list?cModel='+that.view.modelName+'&cRouteConf='+s;
+    //document.location.href = '#v-list?cModel='+that.view.modelName+'&cRouteConf='+'instance.viewRouteConf';
+    // var id = that.modelData[that.view.primaryKey];
+    // document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
+}
+
+crud.actions['action-previous'] = {
+    text : '<<',
+    title : 'Precedente',
+    execute : function () {
+        this.view._backward();
+    }
+}
+crud.actions['action-next'] = {
+    text : '>>',
+    title : 'Successivo',
+    execute : function () {
+        this.view._forward();
+    }
+}
+crud.routes['wizard'] = {
+    url : '/test-passo/{passo}',
+    method : 'get',
+    type : 'record',
+    protocol : 'record',
+}

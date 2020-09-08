@@ -6,6 +6,8 @@
 
     <!-- minimal crud-vue css -->
     <link href="/crud-vue/crud-vue.css" rel="stylesheet">
+    <!-- bootstrap4 application css -->
+    {!! Theme::css('app.css')  !!}
     <!-- font-awesome -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -19,12 +21,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <!-- Vue js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+{{--    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>--}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
     <!-- crud-vue.js -->
-    <script src="/crud-vue/crud-vue.js"></script>
+    <script src="/crud-vue/crud-vue.js"  ></script>
 
     {!! Theme::js('translations.js')  !!}
 
     <!-- configurazione modelli -->
     {!! Theme::js('ModelConfs/ModelUser.js')  !!}
+    {!! Theme::js('ModelConfs/ModelProvincia.js')  !!}
+    {!! Theme::js('ModelConfs/ModelComune.js')  !!}
+    {!! Theme::js('ModelConfs/ModelAnagrafica.js')  !!}
+    {!! Theme::js('ModelConfs/M_CostanteFatturazione.js')  !!}
+    {!! Theme::js('ModelConfs/ModelNazione.js')  !!}
+
+    {!! Theme::js('CsvConfs.js')  !!}
+
 </head>
