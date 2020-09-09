@@ -201,3 +201,23 @@ crud.actions['action-delete'].execute = function () {
         });
 }
 
+crud.actions['action-previous'] = {
+    text : '<<',
+    title : 'Precedente',
+    execute : function () {
+        this.view._backward();
+    }
+}
+crud.actions['action-next'] = {
+    text : '>>',
+    title : 'Successivo',
+    execute : function () {
+        this.view._forward();
+    }
+}
+crud.routes['wizard'] = {
+    url : '/test-passo/{passo}',
+    method : 'get',
+    type : 'record',
+    protocol : 'record',
+}
