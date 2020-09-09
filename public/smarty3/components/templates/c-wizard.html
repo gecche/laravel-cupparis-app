@@ -8,8 +8,8 @@
                 <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">
                     <v-widget :c-widget="widget" :key="key"></v-widget>
                 </template>
-                <div  v-for="(widget, key) in widgets" v-if="!isHiddenField(key)">
-                    <v-widget :c-widget="widget"></v-widget>
+                <div class="row">
+                    <v-widget v-for="(widget, key) in widgets" v-if="!isHiddenField(key)" :c-widget="widget"></v-widget>
                 </div>
             </form>
             <div class="p-3 clearfix" v-if="actions.length">
@@ -25,11 +25,11 @@
                     <v-action v-if="actionsClass['action-next']" :c-action="actionsClass['action-next']"></v-action>
                 </div>
             </div>
-<!--            <div class="p-3" v-if="actions.length">-->
-<!--                <template v-for="(action,name) in actionsClass">-->
-<!--                    <v-action  :c-action="action"></v-action>-->
-<!--                </template>-->
-<!--            </div>-->
+            <!--            <div class="p-3" v-if="actions.length">-->
+            <!--                <template v-for="(action,name) in actionsClass">-->
+            <!--                    <v-action  :c-action="action"></v-action>-->
+            <!--                </template>-->
+            <!--            </div>-->
         </div>
     </div>
 
