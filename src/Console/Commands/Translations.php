@@ -91,6 +91,17 @@ class Translations extends Command
 
     }
 
+    protected function transUc($translations = []) {
+        foreach ($translations as $translationKey => $translationValue) {
+            if (is_array($translationValue)) {
+                $translations[$translationKey] = $this->transUc($translationValue);
+            } else {
+                $translations[$translationKey] = ucfirst($translationValue);
+            }
+        }
+        return $translations;
+    }
+
     protected function createFile($lang)
     {
 
@@ -107,6 +118,7 @@ class Translations extends Command
         $translations['pagination'] = trans('pagination');
         $translations['validation'] = trans('validation');
 
+        $translations = $this->transUc($translations);
 
         $foorms = Config::get('foorm.foorms', []);
 
@@ -115,6 +127,7 @@ class Translations extends Command
             'insert',
             'list',
             'search',
+            'view',
         ];
 
         $formManagerClass = Config::get('foorm.form-manager');
