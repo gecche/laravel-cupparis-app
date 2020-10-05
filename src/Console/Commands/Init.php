@@ -16,12 +16,12 @@ class Init extends Command
      *
      * @var string
      */
-    protected $signature = 'init 
+    protected $signature = 'init
                             {--force : it forces initialization without prompting (default: no)}
                             {--stopOnException=0 : stop execution at the first exception (default: no)}
                             {--type=standard : the initialization type (default: standard)}
-                            {--composer=0 : runs shell commands labeled as "composer" (default: no)} 
-                            {--mig=1 : it runs shell commands labeled either as "mig" or "seed" (default: yes)} 
+                            {--composer=0 : runs shell commands labeled as "composer" (default: no)}
+                            {--mig=1 : it runs shell commands labeled either as "mig" or "seed" (default: yes)}
                             {--seed=1 : it runs shell commands labeled as "seed" (default: yes)}
                             {--storage=1 : it runs shell commands labeled as "storage" (default: yes)}';
 
@@ -203,5 +203,14 @@ class Init extends Command
                 return $this->handleAfterConfirmation();
             }
         }
+
+        if (env('CRUD_ENV', '') == 'develop') {
+            $crudVersion = env('CRUD_VERSION', '1.0');
+            $this->laravel->make('files')->link(public_path('bootstrap4'), __DIR__ . "/../public/crud-$crudVersion/bootstrap4");
+            $this->laravel->make('files')->link(public_path('smarty3'), __DIR__ . "/../public/crud-$crudVersion/smarty3");
+            $this->laravel->make('files')->link(resource_path('views/bootstrap4'), __DIR__ . "/../resources/views/crud-$crudVersion/bootstrap4");
+            $this->laravel->make('files')->link(resource_path('views/smarty3'), __DIR__ . "/../resources/views/crud-$crudVersion/smarty3");
+        }
+
     }
 }
