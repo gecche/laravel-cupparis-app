@@ -140,12 +140,12 @@ var ModelUser = {
         customActions : {
             'action-test' : {
                 visible : function () {
-                    return false;
+                    return this.modelData.id % 2;
                 },
                 //enabled : false,
-                enabled : function() {
-                    return false;
-                },
+                // enabled : function() {
+                //     return Math.random() % 2;
+                // },
                 text : 'test'
             }
         }

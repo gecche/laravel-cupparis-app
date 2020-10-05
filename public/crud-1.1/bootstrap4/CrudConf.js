@@ -1,13 +1,13 @@
 
 crud.routes.delete.url = "/foormaction/delete/{modelName}/list";
-crud.actions['action-mia'] = {
+crud.conf['action-mia'] = {
     text : 'action mia',
     execute : function () {
         alert('mia '+ this.view.getWidget('email').getValue());
     }
 }
 
-crud.actions['action-delete'].setRouteValues = function(route) {
+crud.conf['action-delete'].setRouteValues = function(route) {
     var that = this;
     route.setValues({
         modelName: that.view.cModel
@@ -55,20 +55,20 @@ crud.components.libs = {
 
 console.log('APPLICATION CONFIG LOADED');
 
-crud.actions['action-insert'].execute = function () {
+crud.conf['action-insert'].execute = function () {
     var that = this;
     var id = that.modelData[that.view.primaryKey];
     document.location.href = '#v-insert?cModel='+that.view.modelName;
 }
 
 
-crud.actions['action-edit'].execute = function () {
+crud.conf['action-edit'].execute = function () {
     var that = this;
     var id = that.modelData[that.view.primaryKey];
     document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
 }
 
-crud.actions['action-view'].execute = function () {
+crud.conf['action-view'].execute = function () {
     var that = this;
     var id = that.modelData[that.view.primaryKey];
     var view = that.createModalView('v-view',{
@@ -79,7 +79,7 @@ crud.actions['action-view'].execute = function () {
     //document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
 }
 
-crud.actions['action-search'].execute = function () {
+crud.conf['action-search'].execute = function () {
     var that = this;
     var params = that.view.getViewData();
     console.log('params',params);
@@ -93,14 +93,14 @@ crud.actions['action-search'].execute = function () {
     // document.location.href = '#v-edit?cModel='+that.view.modelName+'&cPk='+id;
 }
 
-crud.actions['action-previous'] = {
+crud.conf['action-previous'] = {
     text : '<<',
     title : 'Precedente',
     execute : function () {
         this.view._backward();
     }
 }
-crud.actions['action-next'] = {
+crud.conf['action-next'] = {
     text : '>>',
     title : 'Successivo',
     execute : function () {

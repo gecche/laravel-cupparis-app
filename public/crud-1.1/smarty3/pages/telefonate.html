@@ -1,0 +1,192 @@
+<div>
+    <div class="row mb-4">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4 page-title bg-transparent b-0">
+            <h1 class="text-green-800 h4 mt-0 mb-1 px-1 font-weight-normal">
+                <i class="fa fa-phone"></i> Gestione telefonate
+            </h1>
+        </div>
+        <div class="col-12 col-md-6 col-lg-7 col-xl-8 telefonate-select2">
+            <!--<h6>Seleziona Istituto</h6>-->
+            <w-b2-select2 c-conf="b2SelectIstituti" inline-template>
+                <select c-select2 class="form-control m-select2
+                                bg-transparent"
+                        v-bind:name="getFieldName()" v-model="value" v-bind:c-marker="cMarker" v-on:change="change">
+                </select>
+            </w-b2-select2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <v-info-istituto c-conf="ModelTelefonata.istitutoInfo"
+                             :c-pk="getAllUrlParams()['T_ANAGIST_ID']"></v-info-istituto>
+<!--            <v-info-contatto c-conf="ModelTelefonata.istitutoInfo"-->
+<!--                             :c-pk="getAllUrlParams()['T_ANAGIST_ID']"></v-info-contatto>-->
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="container-fluid p-0 mb-1">
+                <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top
+                        h-100 border-success bl-0 br-0 bb-0 bw--2 p-0">
+
+                    <div class="card-header text-green-700">
+                        Registro telefonate
+                    </div>
+
+                    <v-list-constraint c-model="telefonata" inline-template>
+                        <div v-if="!loading">
+
+                            <div class="table-responsive p-2" style="white-space:nowrap;">
+                                <table class="table table-framed table-striped">
+                                    <thead>
+                                    <tr v-if="widgets.length == 0">
+                                        <th v-show="recordActionsName.length" class="text-gray-500 w--50">
+                                            Nessuna telefonata registrata al momento
+                                        </th>
+                                    </tr>
+                                    <tr v-else>
+                                        <th></th>
+                                        <th v-for="key in keys" v-if="!isHiddenField(key)"
+                                            class="text-gray-500 font-weight-normal fs--14">
+                                                    <span style="cursor:default"
+                                                          class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14">
+                                                        {{key+'.label' | translate(langContext) }}</span>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(row,index) in widgets" :key="index">
+                                        <td>
+                                            <template v-for="(action,name) in recordActions[index]">
+                                                <v-action :c-action="action"></v-action>
+                                            </template>
+                                        </td>
+                                        <td v-for="(widget, key) in row" v-if="!isHiddenField(key)">
+                                            <v-widget :c-widget="widget" :key="key"></v-widget>
+                                        </td>
+                                        <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                                            <v-widget :c-widget="widget" :key="key"></v-widget>
+                                        </template>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="text-center mb-2">
+                                <v-action :c-action="collectionActions['action-insert']">
+                                </v-action>
+                            </div>
+                        </div>
+
+                    </v-list-constraint>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <c-manage c-conf="ManageProgetti" inline-template>
+
+                <div class="portlet">
+
+                    <div class="portlet-header border-bottom mb-0" :class="manageHeaderClass">
+									<span class="d-block text-truncate font-weight-medium"
+                                          :class="manageHeaderTextClass">
+										    Gestione progetti
+									</span>
+                    </div>
+
+                    <div class="portlet-body pb-0 pt-0">
+                        <div class="collapse show" c-collapse-list>
+                            <div >
+                                <div >
+                                    <div c-search-container>
+                                    </div>
+                                    <div c-list-container>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collapse" c-collapse-edit>
+                            <div class="portlet">
+
+                                <!-- portlet : header -->
+                                <div class="portlet-header border-bottom mb-3" :class="layoutGradientColor">
+                        <span class="d-block text-white text-truncate font-weight-medium" v-show="updateTitle">
+                            {{updateTitle}}
+                        </span>
+                                </div>
+                                <!-- /portlet : header -->
+
+                                <div class="portlet-body pb-0" c-edit-container>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </c-manage>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-12">
+            <c-manage c-conf="ManageStoricoContatti" inline-template>
+                <div class="portlet">
+
+                    <div class="portlet-header border-bottom mb-0" :class="manageHeaderClass">
+									<span class="d-block text-truncate font-weight-medium"
+                                          :class="manageHeaderTextClass">
+										    Storico contatti
+									</span>
+                    </div>
+
+                    <div class="portlet-body pb-0 pt-0">
+                        <div class="collapse show" c-collapse-list>
+                            <div >
+                                <div >
+                                    <div c-search-container>
+                                    </div>
+                                    <div c-list-container>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collapse" c-collapse-edit>
+                            <div class="portlet">
+
+                                <!-- portlet : header -->
+                                <div class="portlet-header border-bottom mb-3" :class="layoutGradientColor">
+                        <span class="d-block text-white text-truncate font-weight-medium" v-show="updateTitle">
+                            {{updateTitle}}
+                        </span>
+                                </div>
+                                <!-- /portlet : header -->
+
+                                <div class="portlet-body pb-0" c-edit-container>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </c-manage>
+<!--            <v-list-constraint c-conf="ModelTelefonata.listStoricoContatti"></v-list-constraint>-->
+        </div>
+    </div>
+
+</div>
+
+

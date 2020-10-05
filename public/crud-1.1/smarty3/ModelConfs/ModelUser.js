@@ -21,29 +21,30 @@ var ModelUser = {
         fieldsConfig : {
             mainrole : {
                 type : 'w-belongsto',
-                fields : ['name']
+                labelFields : ['name']
             }
         }
     },
     list : {
         modelName : 'user',
-        fields : ['email','name','email_verified_at','banned','mainrole','fotos','attachments'],
-        actions : ['action-edit','action-delete','action-insert','action-delete-selected','action-view'],
+        fields : ['id','email','name',
+            // 'email_verified_at',
+            'banned','mainrole'],
+        actions : ['action-edit','action-delete','action-insert','action-delete-selected'],
+        //actions : ['action-delete-selected'],
         orderFields : {
             'email':'email'
         },
         fieldsConfig : {
             email_verified_at : {
                 type : 'w-swap',
-                model : 'user',
+                modelName : 'user',
             },
             banned : {
-                type : 'w-swap',
-                model : 'user',
-                domainValues : {
-                    1 : 'fa fa-circle text-danger',
-                    0 : 'fa fa-circle text-success'
-                }
+                type : 'w-swap-smarty',
+                modelName : 'user',
+                switchClass: 'form-switch-danger banned',
+                dataSwitched : true,
             },
             fotos : {
                 type : 'w-hasmany-view',
@@ -74,7 +75,9 @@ var ModelUser = {
     edit : {
         modelName : 'user',
         actions : ['action-save','action-back','action-test'],
-        fields : ['name','email','password','password_confirmation','banned','mainrole','fotos','attachments'],
+        fields : ['name','email','password','password_confirmation','mainrole',
+            // 'fotos','attachments'
+        ],
         methods : {
             fillData : function (route,json) {
                 var that = this;

@@ -117,33 +117,16 @@ crud.components.cManage = Vue.component('c-manage',{
             thisManage.updateTitle = 'Modifica ' + thisManage.modelName;
             var id= 'd' + (new Date().getTime());
             thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
-            // if (thisManage.editConf.inlineTemplate) {
-            //     var v = Vue.component(id,{
-            //         extends : thisManage.$options.components[thisManage.editComponentName],
-            //         template : jQuery(thisManage.insertConf.inlineTemplate).html()
-            //     });
-            //
-            //
-            //     thisManage.editComp = new v({
-            //         propsData: {
-            //             cModel: thisManage.modelName,
-            //             cPk : action.modelData[thisManage.editConf.primaryKey],
-            //             cConf : thisManage.editConf
-            //         }
-            //     });
-            //     thisManage.editComp.$mount('#'+id);
-            // } else {
-                //console.log('EditConf',action.modelData);
-                thisManage.editComp = new thisManage.$options.components[thisManage.editComponentName]({
+            console.log('c-manage edit component name',thisManage.editComponentName)
+            thisManage.editComp = new thisManage.$options.components[thisManage.editComponentName]({
 
-                    propsData : {
-                        cModel : thisManage.modelName,
-                        cPk : action.modelData[thisManage.editConf.primaryKey],
-                        cConf : thisManage.editConf
-                    }
-                });
-                thisManage.editComp.$mount('#'+id);
-            //}
+                propsData : {
+                    cModel : thisManage.modelName,
+                    cPk : action.modelData[thisManage.editConf.primaryKey],
+                    cConf : thisManage.editConf
+                }
+            });
+            thisManage.editComp.$mount('#'+id);
 
             thisManage.jQe('[c-collapse-edit]').collapse('show');
             thisManage.jQe('[c-collapse-list]').collapse('hide');
@@ -177,27 +160,14 @@ crud.components.cManage = Vue.component('c-manage',{
             thisManage.jQe('[c-edit-container]').html('<div id="'+id+'"></div>');
             if (thisManage.insertComp)
                 thisManage.insertComp.$destroy();
-            // if (thisManage.insertConf.inlineTemplate) {
-            //     var v = Vue.component(id,{
-            //         extends : thisManage.$options.components[thisManage.insertComponentName],
-            //         template : jQuery(thisManage.insertConf.inlineTemplate).html()
-            //     });
-            //
-            //
-            //     thisManage.insertComp = new v({
-            //         propsData: {
-            //             cModel: thisManage.modelName,
-            //             cConf: thisManage.insertConf
-            //         }
-            //     });
-            // } else {
-                thisManage.insertComp = new thisManage.$options.components[thisManage.insertComponentName]({
-                    propsData : {
-                        cModel : thisManage.modelName,
-                        cConf : thisManage.insertConf
-                    }
-                });
-            //}
+
+            thisManage.insertComp = new thisManage.$options.components[thisManage.insertComponentName]({
+                propsData : {
+                    cModel : thisManage.modelName,
+                    cConf : thisManage.insertConf
+                }
+            });
+
             thisManage.insertComp.$mount('#'+id);
             thisManage.jQe('[c-collapse-edit]').collapse('show');
             thisManage.jQe('[c-collapse-list]').collapse('hide');
@@ -236,7 +206,7 @@ crud.components.cManage = Vue.component('c-manage',{
 
             if (! thisManage.cInlineEdit && ! conf.inlineEdit) {
                 listConf = conf.listConf || originalConf.list || {};
-                listConf = thisManage.confMerge(thisManage.$crud.conf.list,listConf);
+                listConf = thisManage.mergeConfView(thisManage.$crud.conf.list,listConf);
                 if (listConf.actions.indexOf('action-edit') >= 0) {
                     listConf.customActions['action-edit'] = {
                         execute : function () {
@@ -277,7 +247,7 @@ crud.components.cManage = Vue.component('c-manage',{
 
             if ( thisManage.cInlineEdit || conf.inlineEdit) {
                 listEditConf = conf.listEditConf || originalConf.listEdit || {};
-                listEditConf = thisManage.confMerge(thisManage.$crud.conf.listEdit,listEditConf);
+                listEditConf = thisManage.mergeConfView(thisManage.$crud.conf.listEdit,listEditConf);
                 if (listEditConf.actions.indexOf('action-view')) {
                     listEditConf.customActions['action-view'] = {
                         execute : function () {
@@ -307,8 +277,8 @@ crud.components.cManage = Vue.component('c-manage',{
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf]?window[modelConf]:{};
             var searchConf = conf.searchConf || originalConf.search || {};
-            searchConf = thisManage.confMerge(thisManage.$crud.conf.search,searchConf);
-            searchConf = thisManage.confMerge(searchConf,{
+            searchConf = thisManage.mergeConfView(thisManage.$crud.conf.search,searchConf);
+            searchConf = thisManage.mergeConfView(searchConf,{
                 customActions : {
                     'action-search' : {
                         // beforeExecute : function( callback ) {
@@ -351,9 +321,9 @@ crud.components.cManage = Vue.component('c-manage',{
             var originalConf = window[modelConf]?window[modelConf]:{};
 
             var editConf = conf.editConf || originalConf.edit || {};
-            editConf = thisManage.confMerge(thisManage.$crud.conf.edit,editConf);
+            editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit,editConf);
 
-            editConf = thisManage.confMerge(editConf,{
+            editConf = thisManage.mergeConfView(editConf,{
                 customActions : {
                     'action-save-back' : thisManage._actionSaveBack(),
                     'action-back' : thisManage._actionBack()
@@ -372,11 +342,11 @@ crud.components.cManage = Vue.component('c-manage',{
             var thisManage = this;
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf]?window[modelConf]:{};
-            var editConf = thisManage.confMerge(thisManage.$crud.conf.edit,(originalConf.edit || {}));
+            var editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit,(originalConf.edit || {}));
             var insertConf = conf.insertConf || originalConf.insert || editConf;
-            insertConf = thisManage.confMerge(thisManage.$crud.conf.insert,insertConf);
+            insertConf = thisManage.mergeConfView(thisManage.$crud.conf.insert,insertConf);
             insertConf.routeName = 'insert';
-            insertConf = thisManage.confMerge(insertConf,{
+            insertConf = thisManage.mergeConfView(insertConf,{
                 customActions : {
                     'action-save-back' : thisManage._actionSaveBack(),
                     'action-back' : thisManage._actionBack()
@@ -396,7 +366,7 @@ crud.components.cManage = Vue.component('c-manage',{
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf]?window[modelConf]:{};
             var viewConf = conf.viewConf || originalConf.view || {};
-            viewConf = thisManage.confMerge(thisManage.$crud.conf.view,viewConf);
+            viewConf = thisManage.mergeConfView(thisManage.$crud.conf.view,viewConf);
             var d = {
                 viewComponentName :  conf.viewComponentName || 'v-view',
                 viewComp : null,

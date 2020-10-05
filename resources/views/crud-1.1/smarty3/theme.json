@@ -1,0 +1,5 @@
+{
+    "name": "smarty3",
+    "extends": "bootstrap4",
+    "asset-path": "smarty3"
+}
