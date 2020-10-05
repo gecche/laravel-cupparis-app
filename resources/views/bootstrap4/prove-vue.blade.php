@@ -379,10 +379,15 @@
             ]
         }
 
+        inputConf = {
+            cRef : 'wi',
+            value : 100,
+        }
     </script>
 
     <div id="app">
         <div>
+            <a class="m-3" href="/prove-vue" title="custom esegue il codice html presente nella pagina">Codice html </a>
             <a class="m-3" href="#v-list?cModel=comune" title="lista calcolata con il solo nome modello">Comuni List </a>
             <a class="m-3" href="#v-search?cModel=comune" title="search calcolata con il solo nome modello">Comuni Search </a>
             <a class="m-3" href="#v-edit?cModel=comune&cPk=1" title="edit calcolata con il solo nome modello e pk">Edit Comune</a>
@@ -417,10 +422,12 @@
             <div id="component-area"></div>
         </c-router>
 
+        <w-input c-conf="inputConf"></w-input>
+
         <div data-action-id="myAction"></div>
 {{--        <w-b2-select2 c-conf="selConf"></w-b2-select2>--}}
 
-        <c-wizard c-conf="wizardConf"></c-wizard>
+{{--        <c-wizard c-conf="wizardConf"></c-wizard>--}}
         {{--<c-drag-drop c-conf="dragConf"></c-drag-drop>--}}
 
 {{--        <w-autocomplete2 c-conf="autoConf"></w-autocomplete2>--}}
