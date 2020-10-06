@@ -154,10 +154,21 @@ crud.components.cRouter = Vue.component('c-router',{
             delete params['path'];
             route.setParams(params);
             Server.route(route,function (html) {
+                var htmlNode = jQuery('<div>'+html+'</div>');
+                jQuery.each(htmlNode.find('script'),function () {
+                    //console.log('script',jQuery(this).text());
+                    jQuery('body').append(jQuery(this));
+                    jQuery(this).remove();
+                })
+                //console.log(htmlNode.html())
+                //jQuery(that.contentId).html(html);
+                //return ;
+
+
 
                 var cdef = Vue.component('async-comp', {
                     extends : crud.components.cComponent,
-                    template : html
+                    template : htmlNode.html()
                 });
 
                 var id= 'd' + (new Date().getTime());

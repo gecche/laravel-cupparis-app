@@ -1,4 +1,6 @@
-
+crud.routes['pages'] = {
+    url : '/bootstrap4/pages/{path}',
+}
 crud.routes.delete.url = "/foormaction/delete/{modelName}/list";
 crud.conf['action-mia'] = {
     text : 'action mia',
