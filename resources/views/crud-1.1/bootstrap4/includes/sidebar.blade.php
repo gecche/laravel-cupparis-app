@@ -1,4 +1,4 @@
-<c-router ref="menu" inline-template c-content-id="#component-area">
+
 <nav class="nav-deep nav-deep-dark nav-deep-hover fs--15 pb-5">
     <ul class="nav flex-column">
 
@@ -37,4 +37,4 @@
         @endforeach
     </ul>
 </nav>
-</c-router>
+

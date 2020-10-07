@@ -10,6 +10,10 @@ crud.components.cRouter = Vue.component('c-router',{
         jQuery( window ).on( 'crud-app-loaded', function( e ) {
             that.getHash();
         } );
+        that.$crud.EventBus.$on('router::doCmd',function (cmd) {
+            console.log('EVENTO RICEVUTO',cmd);
+            that.doCmd(cmd);
+        })
     },
     data : function() {
         return {
@@ -84,61 +88,6 @@ crud.components.cRouter = Vue.component('c-router',{
                     break;
             }
             return ;
-
-            // if (tmp[0] == 'page') {
-            //     if (that.lastComponent)
-            //         that.lastComponent.$destroy();
-            //
-            //     var params = that.getAllUrlParams(command);
-            //
-            //     var route = that.createRoute('pages');
-            //     route.setValues({
-            //         path : params['path']
-            //     })
-            //     delete params['path'];
-            //     route.setParams(params);
-            //     Server.route(route,function (html) {
-            //
-            //         var cdef = Vue.component('async-comp', {
-            //             extends : crud.components.cComponent,
-            //             template : html
-            //         });
-            //
-            //         var id= 'd' + (new Date().getTime());
-            //         jQuery(that.contentId).html('<div id="'+id+'" ></div>');
-            //         var componente = new cdef();
-            //         componente.$mount('#'+id);
-            //         that.lastComponent = componente;
-            //         //jQuery(that.contentId).html(html);
-            //     })
-            //     return ;
-            // }
-
-            var componentName = tmp[0];
-            var params = that.getAllUrlParams(command);
-            console.log('componente',componentName,'params',params);
-
-            console.log('that',that);
-            if (!that.$options.components[componentName]) {
-                // potrebbe essere un'ancora percio' nessuna eccezione, semplicemente non faccio nulla
-                return ;
-                //throw 'Componente non trovato ' + componentName;
-            }
-
-            if (that.lastComponent)
-                that.lastComponent.$destroy();
-
-            var componente = new that.$options.components[componentName]({
-                propsData : params,
-                ref : componentName
-            });
-            var id= 'd' + (new Date().getTime());
-            jQuery(that.contentId).html('<div id="'+id+'" ></div>');
-            componente.$mount('#'+id);
-            that.lastComponent = componente;
-
-            return;
-
         },
         _loadPage : function(params) {
             var that = this;
@@ -172,7 +121,7 @@ crud.components.cRouter = Vue.component('c-router',{
                 });
 
                 var id= 'd' + (new Date().getTime());
-                jQuery(that.contentId).html('<div id="'+id+'" ></div>');
+                jQuery('#'+that.contentId).html('<div id="'+id+'" ></div>');
                 var componente = new cdef();
                 componente.$mount('#'+id);
                 that.lastComponent = componente;
@@ -200,10 +149,11 @@ crud.components.cRouter = Vue.component('c-router',{
             that._loadComponent(componentName,params,divId);
         },
 
-        _loadComponent : function(componentName,params,elementId) {
+        _loadComponent : function(componentName,params) {
             var that = this;
             console.log('componente',componentName,'params',params);
-
+            var elementId = params['targetId']?params['targetId']:that.contentId;
+            delete params['targetId'];
             console.log('that',that);
             if (!that.$options.components[componentName]) {
                 // potrebbe essere un'ancora percio' nessuna eccezione, semplicemente non faccio nulla
@@ -218,13 +168,9 @@ crud.components.cRouter = Vue.component('c-router',{
                 propsData : params,
                 ref : componentName
             });
-            if (elementId) {
-                componente.$mount('#'+elementId);
-            } else {
-                var id= 'd' + (new Date().getTime());
-                jQuery(that.contentId).html('<div id="'+id+'" ></div>');
-                componente.$mount('#'+id);
-            }
+            var id= 'd' + (new Date().getTime());
+            jQuery('#'+elementId).html('<div id="'+id+'" ></div>');
+            componente.$mount('#'+id);
             that.lastComponent = componente;
         },
 

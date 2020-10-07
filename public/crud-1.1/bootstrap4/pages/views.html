@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-2">
+        <gestore-links c-conf="GestoreLinks" inline-template>
+        <ul>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConf&targetId=componentArea')">Vlist</a>
+<!--                <a href="#w-input?cConf=inputConf&targetId=componentArea">Hasmany</a>-->
+<!--                <a href="#w-text?cConf=textConf&targetId=componentArea">Hasmany</a>-->
+            </li>
+        </ul>
+        </gestore-links>
+    </div>
+    <div class="col-10">
+        <div id="componentArea"></div>
+    </div>
+</div>
+<script>
+    Vue.component('gestore-links',{
+        extend : crud.components.cComponent,
+        methods : {
+            doCmd : function (command) {
+                var that = this;
+                console.log('cCiccio',that.cCiccio);
+                that.$crud.EventBus.$emit('router::doCmd',command);
+            },
+            getHref : function () {
+                var that = this;
+                return window.location.hash;
+            }
+        }
+    });
+
+    var listConf = {
+        cRef : 'cTest',
+        modelName : 'user',
+        fields : ['email','mio'],
+        orderFields : {'email':'email'},
+        fieldsConfig : {
+            mio : {
+                type : 'w-text',
+                label : 'mio',
+            },
+            email : {
+                type : 'w-text',
+                //label : 'mio',
+            }
+        }
+    }
+</script>

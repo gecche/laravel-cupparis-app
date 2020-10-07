@@ -26,7 +26,7 @@
     <!-- crud-vue.js -->
     <script src="/crud-vue/crud-vue.js"  ></script>
 
-    {!! Theme::js('translations.js')  !!}
+    {!! Theme::js('js/it-translations.js')  !!}
 
     <!-- configurazione modelli -->
     {!! Theme::js('ModelConfs/ModelUser.js')  !!}
