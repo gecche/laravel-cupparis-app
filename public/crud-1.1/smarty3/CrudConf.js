@@ -1,9 +1,3 @@
-var appThemePath = '/smarty3/';
-
-crud.routes['pages'] = {
-    url : appThemePath+'pages/{path}',
-}
-
 crud.routes['csv-exporta'] = {
     url : 'foormaction/csv-export/{foorm}/{foormtype}',///{foormpk?}',
     method : 'post',
@@ -42,33 +36,6 @@ crud.routes['list-constraint'] = {
     protocol : 'list',
     method : 'get'
 };
-
-
-
-crud.components.libs = {
-    'csv-dashboard' : {
-        js : appThemePath+'components/js/csv-dashboard.js',
-        tpl : appThemePath+'components/templates/csv-dashboard.html'
-    },
-    'c-router' : {
-        js : appThemePath+'components/js/c-router.js'
-    },
-    'c-manage': {
-        js  : appThemePath+'components/js/c-manage.js',
-        tpl : appThemePath+'components/templates/c-manage.html'
-    },
-    'supplementari' : {
-        js  : appThemePath+'custom-components/supplementari.js',
-    },
-    'c-wizard' : {
-        js  : appThemePath+'components/js/c-wizard.js',
-        tpl : appThemePath+'components/templates/c-wizard.html'
-    },
-    'c-drag-drop' : {
-        js  : appThemePath+'components/js/c-drag-drop.js',
-        tpl : appThemePath+'components/templates/c-drag-drop.html'
-    }
-}
 
 
 Vue.component('tpl-search', {

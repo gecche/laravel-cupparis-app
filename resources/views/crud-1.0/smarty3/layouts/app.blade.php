@@ -44,11 +44,39 @@
         <!-- configurazione modelli -->
         {!! Theme::js('ModelConfs/ModelUser.js')  !!}
 
+
         <script>
             var app = null;
             jQuery( function() {
                 crud.EventBus = new Vue();
                 crud.layoutGradientColor = '{{$layoutGradientColor}}';
+                crud.components.libs = {
+                    'csv-dashboard' : {
+                        js : '{!! Theme::url("components/js/csv-dashboard.js") !!}',
+                        tpl : '{!! Theme::url("components/templates/csv-dashboard.htm") !!}',
+                    },
+                    'c-router' : {
+                        js : '{!! Theme::url("components/js/c-router.j") !!}',
+                    },
+                    'c-manage': {
+                        js  : '{!! Theme::url("components/js/c-manage.js") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-manage.htm") !!}',
+                    },
+                    'supplementari' : {
+                        js  : '{!! Theme::url("custom-components/supplementari.js") !!}',
+                    },
+                    'c-wizard' : {
+                        js  : '{!! Theme::url("components/js/c-wizard.js") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-wizard.htm") !!}',
+                    },
+                    'c-drag-drop' : {
+                        js  : '{!! Theme::url("components/js/c-drag-drop.js") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-drag-drop.htm") !!}',
+                    }
+                },
+                crud.routes['pages'] = {
+                        url : '{!! Theme::url("pages") !!}/{path}',
+                }
                 app = new CrudApp({
                     data : {
                         templatesFiles : '{!! Theme::url("crud-vue.html") !!}',
