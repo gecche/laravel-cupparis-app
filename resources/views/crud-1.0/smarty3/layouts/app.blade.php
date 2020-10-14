@@ -53,25 +53,25 @@
                 crud.components.libs = {
                     'csv-dashboard' : {
                         js : '{!! Theme::url("components/js/csv-dashboard.js") !!}',
-                        tpl : '{!! Theme::url("components/templates/csv-dashboard.htm") !!}',
+                        tpl : '{!! Theme::url("components/templates/csv-dashboard.html") !!}',
                     },
                     'c-router' : {
-                        js : '{!! Theme::url("components/js/c-router.j") !!}',
+                        js : '{!! Theme::url("components/js/c-router.js") !!}',
                     },
                     'c-manage': {
                         js  : '{!! Theme::url("components/js/c-manage.js") !!}',
-                        tpl : '{!! Theme::url("components/templates/c-manage.htm") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-manage.html") !!}',
                     },
                     'supplementari' : {
                         js  : '{!! Theme::url("custom-components/supplementari.js") !!}',
                     },
                     'c-wizard' : {
                         js  : '{!! Theme::url("components/js/c-wizard.js") !!}',
-                        tpl : '{!! Theme::url("components/templates/c-wizard.htm") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-wizard.html") !!}',
                     },
                     'c-drag-drop' : {
                         js  : '{!! Theme::url("components/js/c-drag-drop.js") !!}',
-                        tpl : '{!! Theme::url("components/templates/c-drag-drop.htm") !!}',
+                        tpl : '{!! Theme::url("components/templates/c-drag-drop.html") !!}',
                     }
                 },
                 crud.routes['pages'] = {
