@@ -17,8 +17,8 @@
             <!-- Logo : height: 60px max -->
             <a class="w-100 align-self-center navbar-brand px-3 p-1" href="/">
                 <span data-gfont="Sriracha" class="text-dark">
-                    <img src="{!! Theme::url('images/ifc.png') !!}" width="55" height="40"
-                         alt="CNR-IFC Progetto Abruzzo">Progetto Abruzzo
+                    <img src="{!! Theme::url('images/default_image.png') !!}" width="55" height="40"
+                         alt="{{config('app.name','Studio 6')}}">{{config('app.name','Studio 6')}}
                 </span>
             </a>
         </div>
