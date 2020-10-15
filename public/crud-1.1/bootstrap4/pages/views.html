@@ -4,9 +4,20 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfDefault&targetId=componentArea')">VlistDefault</a>
+            </li>
+            <li class="list-group-item">
                 <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConf&targetId=componentArea')">Vlist con campo custom</a>
+            </li>
+            <li class="list-group-item">
                 <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfCustomActions&targetId=componentArea')">Vlist con custom actions</a>
             </li>
+            <li class="list-group-item">
+
+            </li>
+
+
+
+
         </ul>
         </gestore-links>
     </div>
@@ -59,7 +70,11 @@
         modelName : 'user',
         customActions :  {
             'action-edit' : {
-                icon : 'fa fa-wrench'
+                icon : 'fa fa-wrench',
+                beforeExecute : function () {
+                    alert(' blocco l\'azione ritornando false');
+                    return false;
+                }
             }
         }
     }
