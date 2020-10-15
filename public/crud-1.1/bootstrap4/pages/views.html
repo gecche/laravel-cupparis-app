@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-2">
+        <gestore-links c-conf="GestoreLinks" inline-template>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfDefault&targetId=componentArea')">VlistDefault</a>
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConf&targetId=componentArea')">Vlist con campo custom</a>
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfCustomActions&targetId=componentArea')">Vlist con custom actions</a>
+            </li>
+        </ul>
+        </gestore-links>
+    </div>
+    <div class="col-10">
+        <div id="componentArea"></div>
+    </div>
+</div>
+<script>
+    Vue.component('gestore-links',{
+        extend : crud.components.cComponent,
+        methods : {
+            doCmd : function (command) {
+                var that = this;
+                console.log('cCiccio',that.cCiccio);
+                that.$crud.EventBus.$emit('router::doCmd',command);
+            },
+            // per evitare di che il comando modifichi l'href la metto uguale a quella con cui atterro alla pagina.
+            getHref : function () {
+                var that = this;
+                return window.location.hash;
+            }
+        }
+    });
+
+    var listConfDefault = {
+        cRef : 'cTest',
+        modelName : 'user',
+    }
+
+    var listConf = {
+        cRef : 'cTest',
+        modelName : 'user',
+        fields : ['email','mio'],
+        orderFields : {'email':'email'},
+        fieldsConfig : {
+            mio : {
+                type : 'w-text',
+                label : 'mio',
+                value : 'valore random'
+            },
+            email : {
+                type : 'w-text',
+                label : 'emailcod',
+            }
+        }
+    }
+
+    var listConfCustomActions = {
+        cRef : 'cTest',
+        modelName : 'user',
+        customActions :  {
+            'action-edit' : {
+                icon : 'fa fa-wrench'
+            }
+        }
+    }
+</script>

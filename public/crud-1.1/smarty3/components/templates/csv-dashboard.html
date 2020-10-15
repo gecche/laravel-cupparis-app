@@ -1,0 +1,26 @@
+<script type="text/x-template" id="csv-dashboard-template">
+    <div id="tabContent">
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Importazione csv</h4>
+            <p>Importazione modello <strong>{{cProviderName}}</strong> da file csv.</p>
+            <hr>
+            <p class="mb-0">L'importazione avverrà in due fasi, la lettura del file csv e check degli errori e salvataggio del csv importato</p>
+        </div>
+        <div v-if="uploadEnabled" class="panel panel-default" >
+            <div>Seleziona file csv da importare</div>
+            <w-upload-ajax :c-conf="confUpload" v-on:success="uploadsuccess"></w-upload-ajax>
+        </div>
+        <div v-if="progressEnabled">
+            <div v-if="status=='loading'">Loading</div>
+            <div v-if="status=='saving'">Saving</div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped" :style="'width:'+progressValue+'%'"></div>
+            </div>
+        </div>
+        <div v-if="saveEnabled">
+            <div>File csv caricato e controllato</div>
+            <v-list-data :c-model="cProviderName" :c-conf="datafileConf"></v-list-data>
+<!--            <v-action c-name="action-base" :c-action="saveAction"></v-action>-->
+        </div>
+    </div>
+</script>

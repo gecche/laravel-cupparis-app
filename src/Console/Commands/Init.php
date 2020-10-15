@@ -16,12 +16,12 @@ class Init extends Command
      *
      * @var string
      */
-    protected $signature = 'init 
+    protected $signature = 'init
                             {--force : it forces initialization without prompting (default: no)}
                             {--stopOnException=0 : stop execution at the first exception (default: no)}
                             {--type=standard : the initialization type (default: standard)}
-                            {--composer=0 : runs shell commands labeled as "composer" (default: no)} 
-                            {--mig=1 : it runs shell commands labeled either as "mig" or "seed" (default: yes)} 
+                            {--composer=0 : runs shell commands labeled as "composer" (default: no)}
+                            {--mig=1 : it runs shell commands labeled either as "mig" or "seed" (default: yes)}
                             {--seed=1 : it runs shell commands labeled as "seed" (default: yes)}
                             {--storage=1 : it runs shell commands labeled as "storage" (default: yes)}';
 
@@ -200,8 +200,22 @@ class Init extends Command
             $this->comment("\nCARTELLA STORAGE ". storage_path());
             $confirmMessage2 = "Il comando inizializzerà il database e la cartella di storage indicate, continuo?";
             if ($this->confirm($confirmMessage2)) {
-                return $this->handleAfterConfirmation();
+                $this->handleAfterConfirmation();
+                $crudVersion = env('CRUD_VERSION', '1.0');
+                $this->comment("----- crud version $crudVersion crud env " .  env('CRUD_ENV', ''));
+                if (env('CRUD_ENV', '') == 'develop') {
+                    @unlink(public_path('bootstrap4'));
+                    @unlink(public_path('smarty3'));
+                    @unlink(resource_path('views/bootstrap4'));
+                    @unlink(resource_path('views/smarty3'));
+                    $this->laravel->make('files')->link("../packages/gecche/laravel-cupparis-app/public/crud-$crudVersion/bootstrap4",public_path('bootstrap4'));
+                    $this->laravel->make('files')->link("../packages/gecche/laravel-cupparis-app/public/crud-$crudVersion/smarty3",public_path('smarty3'));
+                    $this->laravel->make('files')->link("../../packages/gecche/laravel-cupparis-app/resources/views/crud-$crudVersion/bootstrap4",resource_path('views/bootstrap4'));
+                    $this->laravel->make('files')->link("../../packages/gecche/laravel-cupparis-app/resources/views/crud-$crudVersion/smarty3",resource_path('views/smarty3'));
+                }
+                return ;
             }
         }
+
     }
 }

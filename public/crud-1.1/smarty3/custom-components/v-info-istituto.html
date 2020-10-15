@@ -1,0 +1,124 @@
+<template id="v-info-istituto-template">
+    <div class="container-fluid p-0 mb-1">
+        <slot card-title><h4 v-show="viewTitle">{{viewTitle}}</h4></slot>
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <div v-else>
+
+
+            <div class="container-fluid
+                        card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top
+                        h-100 border-danger bl-0 br-0 bb-0 bw--2 p-0">
+
+                <div class="card-header text-red-800">
+                    <span class="pull-left">Istituto, contatto e referenti</span>
+                    <v-action class="pull-right" :c-action="actionsClass['action-edit']"></v-action>
+                </div>
+
+                <div class="card-body">
+                    <h6 class="card-title"> {{value['T_ANAGIST_DESCBREVE']}} </h6>
+                    <p class="card-text">
+                        {{value['T_ANAGIST_INDIRIZZO']}} {{value['T_ANAGIST_CAP']}}
+                        <br/>
+                        {{value['comune'] ? value['comune']['T_COMUNE_DESC'] + ' (' +
+                        value['provincia']['T_PROVINCIA_SIGLA'] + ')' : ''}}
+                        <br/>
+                        <span class="font-weight-medium"> {{value['T_TIPOIST']}} - {{value['T_REGIME']}} </span><br/>
+                    </p>
+
+                    <p class="card-text"
+                       v-if="value['contatto'] && value['contatto'][0] && value['contatto'][0]['T_CONTATTO_NOTE']">
+                        <span class="font-weight-bolder text-muted">
+                            Note di contatto:
+                        </span>
+                        <br/>
+                        <small class="font-weight-normal">
+                            {{value['contatto'][0]['T_CONTATTO_NOTE']}}
+                        </small>
+                    </p>
+
+                    <p class="card-text">
+                        <span class="font-weight-bolder text-success">
+                            <i class="fa fa-phone "></i>
+                            {{value['T_ANAGIST_TEL']}}
+                        </span>
+                        <br/>
+                        <small class="font-weight-normal text-primary">
+                            <i class="fa fa-envelope"></i>
+                            {{value['T_ANAGIST_EMAIL']}}
+                        </small>
+                    </p>
+
+                    <p class="card-text">
+
+
+
+                        <h6 v-if="parseInt(value['referenti'].length) < 1">
+                            Nessun referente attualmente per questo istituto
+                        </h6>
+
+                        <template v-for="(referente,i) in value['referenti']">
+
+                                <span class="font-weight-light text-muted">
+                                    <span class="font-weight-medium">Rif {{referente['T_ANNO_ID']}}:</span>
+                                    {{referente['T_REFERENTE_RUOLO']}} {{referente['T_REFERENTE_COGNOME']}} {{referente['T_REFERENTE_NOME']}}
+                                    <span v-if="referente['T_REFERENTE_EMAIL']">
+                                        <br/>
+                                        <small>
+                                            <i class="fa fa-envelope"></i> {{referente['T_REFERENTE_EMAIL']}}
+                                        </small>
+                                    </span>
+                                </span>
+                            <hr/>
+                        </template>
+
+                    </p>
+
+                    <p class="card-text">
+
+                        <template v-if="value['storicoreferenti'].length > 0">
+                            <p>
+                                <a class="btn btn-sm px-2 py-1 fs--15 btn-success btn-soft" data-toggle="collapse"
+                                   href="#collapseExample2" role="button"
+                                   aria-expanded="false" aria-controls="collapseExample2">
+                                                    <span class="group-icon">
+                                                        <i class="fi fi-arrow-end-slim"></i>
+                                                        <i class="fi fi-arrow-down-slim"></i>
+                                                    </span>
+                                    <span>Storico referenti</span>
+                                </a>
+                            </p>
+                        </template>
+
+                        <div class="collapse" id="collapseExample2">
+                            <template v-for="(referente,i) in value['storicoreferenti']">
+
+                                <span class="font-weight-light text-muted">
+                                    <span class="font-weight-medium">Rif {{referente['T_ANNO_ID']}}:</span>
+                                    {{referente['T_REFERENTE_RUOLO']}} {{referente['T_REFERENTE_COGNOME']}} {{referente['T_REFERENTE_NOME']}}
+                                    <span v-if="referente['T_REFERENTE_EMAIL']">
+                                        <br/>
+                                        <small>
+                                            <i class="fa fa-envelope"></i> {{referente['T_REFERENTE_EMAIL']}}
+                                        </small>
+                                    </span>
+                                 </span>
+                                <hr/>
+                            </template>
+                        </div>
+
+                    </p>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!--<div v-if="actions.length">-->
+        <!--<template v-for="(action,name) in actionsClass">-->
+        <!--<v-action :c-action="action"></v-action>-->
+        <!--</template>-->
+        <!--</div>-->
+    </div>
+</template>

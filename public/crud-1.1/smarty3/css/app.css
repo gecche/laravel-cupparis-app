@@ -1,0 +1,91 @@
+.telefonate-select2 span.select2 {
+    padding : 0 0 0 0 !important;
+    height: 34px;
+}
+
+.telefonate-select2 .select2-container .select2-selection--single {
+    height: 34px !important;
+}
+
+.referenti-switch i:before {
+    width: 49px !important;
+}
+
+.referenti-switch input:checked+i {
+    padding-left: 53px !important;
+}
+
+
+a.espad-main:hover {
+    /*background-color: #AABF75;*/
+    text-decoration: none !important;
+}
+
+.search-buttons {
+    border-top : 1px dotted lightgray;
+    margin-top : 10px;
+    border-bottom : 1px dotted lightgray;
+
+    /*color: #377;*/
+}
+
+
+.scrollable-horizontal::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+
+.scrollable-horizontal::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(104, 140, 240, 0.3);
+}
+
+.scrollable-horizontal::-webkit-scrollbar-thumb {
+    background-color: lightblue;
+    outline: 1px solid slategrey;
+}
+
+.form-search.form-istituto .referenti-T_REFERENTE_COGNOME input,
+.form-search.form-istituto .referenti-T_ANNO_ID select,
+.form-search.form-istituto .referenti-T_REFERENTE_NOME input {
+    border-color:#c62828;
+}
+
+.form-switch.banned>i {
+    background: #6dbb30;
+}
+
+.nav-tabs-border-bottom, .nav-tabs-border-top, table.table-striped td, table.table-striped th {
+    border: 1px solid #eaf0f5;
+}
+
+.storico_contatti td.T_STORCONT_FLAG_CONT,
+.storico_contatti td.T_STORCONT_FLAG_ACC,
+.storico_contatti td.T_STORCONT_FLAG_SPED,
+.storico_contatti td.T_STORCONT_FLAG_RIT,
+.storico_contatti td.T_STORCONT_FLAG_PART {
+    text-align: center;
+}
+
+.provinciaop th {
+    text-align:center;
+}
+.provinciaop td {
+    text-align:right;
+}
+.provinciaop td.T_PROVINCIA_DESC {
+    text-align:left;
+}
+
+/*
+TELEFONATE E PROGETTI
+ */
+
+.table-responsive.progetto td {
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+}
+
+.table-responsive.progetto td.T_MOTNOWEB_ID {
+    max-width:300px !important;
+}

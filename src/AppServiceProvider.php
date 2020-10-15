@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        $crudVersion = env('CRUD_VERSION','1.0');
         $this->publishes([
             __DIR__ . '/../config/cupparis-app.php' => config_path('cupparis-app.php'),
         ], 'public');
@@ -98,12 +99,19 @@ class AppServiceProvider extends ServiceProvider
             //__DIR__ . '/../public/crud-vue/plugins' => public_path('crud-vue/plugins'),
         ], 'public-js');
 
-        $this->publishes([
-            __DIR__ . '/../public/bootstrap4' => public_path('bootstrap4'),
-            __DIR__ . '/../public/smarty3' => public_path('smarty3'),
-            __DIR__ . '/../resources/views/bootstrap4' => resource_path('views/bootstrap4'),
-            __DIR__ . '/../resources/views/smarty3' => resource_path('views/smarty3'),
-        ], 'templates');
+
+
+
+        if (env('CRUD_ENV','') != 'develop') {
+            $this->publishes([
+                __DIR__ . "/../public/crud-$crudVersion/bootstrap4" => public_path('bootstrap4'),
+                __DIR__ . "/../public/crud-$crudVersion/smarty3" => public_path('smarty3'),
+                __DIR__ . "/../resources/views/crud-$crudVersion/bootstrap4" => resource_path('views/bootstrap4'),
+                __DIR__ . "/../resources/views/crud-$crudVersion/smarty3" => resource_path('views/smarty3'),
+            ], 'templates');
+        }
+
+
 
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
 
@@ -112,6 +120,7 @@ class AppServiceProvider extends ServiceProvider
         $this->bootActivityLog();
 
         $this->bootValidationRules();
+
     }
 
     /**
