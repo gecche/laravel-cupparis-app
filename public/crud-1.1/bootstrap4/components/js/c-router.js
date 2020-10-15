@@ -109,11 +109,6 @@ crud.components.cRouter = Vue.component('c-router',{
                     jQuery('body').append(jQuery(this));
                     jQuery(this).remove();
                 })
-                //console.log(htmlNode.html())
-                //jQuery(that.contentId).html(html);
-                //return ;
-
-
 
                 var cdef = Vue.component('async-comp', {
                     extends : crud.components.cComponent,
