@@ -1,16 +1,26 @@
 <div class="row">
-    <div class="col-2">
+    <div class="col-3">
         <gestore-links c-conf="GestoreLinks" inline-template>
         <ul>
             <li>
                 <a :href="getHref()" v-on:click="doCmd('w-hasmany?cConf=hasmanyConf&targetId=componentArea')">Hasmany</a>
-<!--                <a href="#w-input?cConf=inputConf&targetId=componentArea">Hasmany</a>-->
-<!--                <a href="#w-text?cConf=textConf&targetId=componentArea">Hasmany</a>-->
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-b2-select2?cConf=b2Select2Conf&targetId=componentArea')">b2Select2</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-b2-select2?cConf=b2Select2ConfStatic&targetId=componentArea')">b2Select2 Dati statici</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-b2m-select2?cConf=b2mSelect2Conf&targetId=componentArea')">b2mSelect2</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-b2m-select2?cConf=b2mSelect2ConfStatic&targetId=componentArea')">b2nSelect2 Dati statici</a>
             </li>
         </ul>
         </gestore-links>
     </div>
-    <div class="col-10">
+    <div class="col-9">
         <div id="componentArea"></div>
     </div>
 </div>
@@ -20,7 +30,6 @@
         methods : {
             doCmd : function (command) {
                 var that = this;
-                console.log('cCiccio',that.cCiccio);
                 that.$crud.EventBus.$emit('router::doCmd',command);
             },
             getHref : function () {
@@ -31,10 +40,90 @@
     });
 
     var hasmanyConf = {
-        cRef : 'cTest',
+        cRef : 'wTest',
         hasmanyConf : {
             fields : ['name']
         }
 
+    }
+    var b2Select2Conf = {
+        cRef : 'wTest',
+        name : 'email',
+        modelName : 'user',
+        value : 3,
+        //labelFields : ['email'],
+        // in caso di valore selezionato bisogna mettere il data come i risultati json
+        data : [
+            {
+                id : 3,
+                email : 'amministratore@amministratore.it',
+            }
+        ]
+    }
+
+    var b2Select2ConfStatic = {
+        cRef : 'wTest',
+        name : 'email',
+        modelName : 'user',
+        routeName: null,
+        labelFields : ['nome','cognome'],
+        value : 3,
+        methods : {
+            change : function () {
+                console.log('change mia',this.getValue());
+            }
+        },
+        data : [
+            {
+                id : 1,
+                nome : 'aa',
+                cognome : 'aa'
+            },
+            {
+                id : 2,
+                nome : 'bb',
+                cognome : 'bb'
+            },
+            {
+                id : 3,
+                nome : 'dd',
+                cognome : 'dd'
+            },
+            {
+                id : 4,
+                nome : 'ff',
+                cognome : 'ff'
+            },
+            {
+                id : 5,
+                nome : 'mm',
+                cognome : 'mm'
+            },
+            {
+                id : 6,
+                nome : 'nn',
+                cognome : 'nn'
+            }
+        ]
+        //labelFields : ['email'],
+    }
+    var b2mSelect2Conf = {
+        name : 'email',
+        modelName : 'user',
+        cRef : 'wTest',
+        value : [3,4],
+        data : [
+            {
+                id : 3,
+                email : 'amministratore@amministratore.it',
+            },
+            {
+                id : 4,
+                email : 'pinkopallo@amministratore.it',
+            }
+        ]
+    }
+    var b2mSelect2ConfStatic = {
+        cRef : 'wTest',
     }
 </script>

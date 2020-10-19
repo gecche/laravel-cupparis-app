@@ -12,6 +12,12 @@
                 <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfCustomActions&targetId=componentArea')">Vlist con custom actions</a>
             </li>
             <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list-edit?cModel=user&targetId=componentArea')">VlistEdit solo con cModel</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=staticList&targetId=componentArea')">Lista statica</a>
+            </li>
+            <li class="list-group-item">
 
             </li>
 
@@ -77,5 +83,50 @@
                 }
             }
         }
+    }
+
+    var staticList = {
+        modelName : 'pippo',
+        cRef : 'cTest',
+        routeName : null,
+        orderFields: {'nome':'nome'},
+        metadata : {
+            order : {
+                direction : 'ASC',
+                field : 'nome'
+            }
+        },
+        value : [
+            {
+                id : 1,
+                nome : 'aa',
+                cognome : 'aa'
+            },
+            {
+                id : 2,
+                nome : 'bb',
+                cognome : 'bb'
+            },
+            {
+                id : 3,
+                nome : 'dd',
+                cognome : 'dd'
+            },
+            {
+                id : 4,
+                nome : 'ff',
+                cognome : 'ff'
+            },
+            {
+                id : 5,
+                nome : 'mm',
+                cognome : 'mm'
+            },
+            {
+                id : 6,
+                nome : 'nn',
+                cognome : 'nn'
+            }
+        ]
     }
 </script>
