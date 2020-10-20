@@ -17,6 +17,15 @@
             <li>
                 <a :href="getHref()" v-on:click="doCmd('w-b2m-select2?cConf=b2mSelect2ConfStatic&targetId=componentArea')">b2nSelect2 Dati statici</a>
             </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-autocomplete?cConf=autocompleteConf&targetId=componentArea')">autocomplete</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-autocomplete?cConf=autocompleteConfStatic&targetId=componentArea')">autocomplete Static</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-swap?cConf=swapConf&targetId=componentArea')">swap</a>
+            </li>
         </ul>
         </gestore-links>
     </div>
@@ -125,5 +134,100 @@
     }
     var b2mSelect2ConfStatic = {
         cRef : 'wTest',
+        routeName : null,
+        value : [3,4],
+        labelFields : ['nome','cognome'],
+        data : [
+            {
+                id : 1,
+                nome : 'aa',
+                cognome : 'aa'
+            },
+            {
+                id : 2,
+                nome : 'bb',
+                cognome : 'bb'
+            },
+            {
+                id : 3,
+                nome : 'dd',
+                cognome : 'dd'
+            },
+            {
+                id : 4,
+                nome : 'ff',
+                cognome : 'ff'
+            },
+            {
+                id : 5,
+                nome : 'mm',
+                cognome : 'mm'
+            },
+            {
+                id : 6,
+                nome : 'nn',
+                cognome : 'nn'
+            }
+        ]
+    }
+    var autocompleteConf = {
+        modelName : 'user',
+        name : 'email',
+        labelFields : ['email'],
+        value : 2,
+        referredData : {
+            id : 2,
+            email : 'ciullo@gmail.com',
+        },
+        //primaryKey : 'email'
+    }
+
+    var autocompleteConfStatic = {
+        modelName : 'user',
+        name : 'email',
+        labelFields : ['nome'],
+        routeName : null,
+        minLength : 0,
+        value : 3,
+        referredData : {
+            id : 3,
+            nome : 'domodossola',
+            cognome : 'dd'
+        },
+        data : [
+            {
+                id : 1,
+                nome : 'angela',
+                cognome : 'aa'
+            },
+            {
+                id : 2,
+                nome : 'borotalco',
+                cognome : 'bb'
+            },
+            {
+                id : 3,
+                nome : 'domodossola',
+                cognome : 'dd'
+            },
+            {
+                id : 4,
+                nome : 'fanfarone',
+                cognome : 'ff'
+            },
+            {
+                id : 5,
+                nome : 'mancino',
+                cognome : 'mm'
+            },
+            {
+                id : 6,
+                nome : 'nottambulo',
+                cognome : 'nn'
+            }
+        ]
+    }
+    var swapConf = {
+        
     }
 </script>

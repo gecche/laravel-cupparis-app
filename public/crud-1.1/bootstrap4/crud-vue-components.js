@@ -7,13 +7,14 @@ crud.components.widgets.wAutocomplete = Vue.component('w-autocomplete', {
             var that = this;
             route.setValues({modelName:that.modelName});
             var url = that.url?that.url:route.getUrl();
-            url+= '?value='+term+'&';
+            //url+= '?value='+term+'&';
             route.setParams({
-                field : that.name
+                field : that.name,
+                value : term,
             })
-            url += that.conf.separator ? '&separator=' + that.conf.separator : '';
-            url += that.conf.n_items ? '&n_items=' + that.conf.n_items : '';
-            url += that.conf.method ? '&method=' + that.conf.method: '';
+            url += that.separator ? '&separator=' + that.separator : '';
+            url += that.n_items ? '&n_items=' + that.n_items : '';
+            url += that.method ? '&method=' + that.method: '';
             route.setUrl(url);
             return route;
         }
