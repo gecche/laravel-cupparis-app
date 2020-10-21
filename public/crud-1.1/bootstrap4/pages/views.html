@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-2">
+    <div class="col-3">
         <gestore-links c-conf="GestoreLinks" inline-template>
         <ul class="list-group">
             <li class="list-group-item">
@@ -18,7 +18,7 @@
                 <a :href="getHref()" v-on:click="doCmd('v-list?cConf=staticList&targetId=componentArea')">Lista statica</a>
             </li>
             <li class="list-group-item">
-
+                <a :href="getHref()" v-on:click="doCmd('v-insert?cConf=staticInsert&targetId=componentArea')">Insert valori statici</a>
             </li>
 
 
@@ -27,7 +27,7 @@
         </ul>
         </gestore-links>
     </div>
-    <div class="col-10">
+    <div class="col-9">
         <div id="componentArea"></div>
     </div>
 </div>
@@ -128,5 +128,50 @@
                 cognome : 'nn'
             }
         ]
+    }
+    var staticInsert = {
+        routeName : null,
+        fields : ['name','relazione'],
+        fieldsConfig:  {
+            relazione : {
+                type : 'w-b2m-select2',
+                routeName : null,
+                primaryKey : 'nome',
+                //value : [3],
+                //labelFields : ['nome'],
+                data : [
+                    {
+                        id : 1,
+                        nome : 'aa',
+                        cognome : 'aa'
+                    },
+                    {
+                        id : 2,
+                        nome : 'bb',
+                        cognome : 'bb'
+                    },
+                    {
+                        id : 3,
+                        nome : 'dd',
+                        cognome : 'dd'
+                    },
+                    {
+                        id : 4,
+                        nome : 'ff',
+                        cognome : 'ff'
+                    },
+                    {
+                        id : 5,
+                        nome : 'mm',
+                        cognome : 'mm'
+                    },
+                    {
+                        id : 6,
+                        nome : 'nn',
+                        cognome : 'nn'
+                    }
+                ]
+            }
+        }
     }
 </script>

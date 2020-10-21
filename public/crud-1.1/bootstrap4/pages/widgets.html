@@ -26,6 +26,12 @@
             <li>
                 <a :href="getHref()" v-on:click="doCmd('w-swap?cConf=swapConf&targetId=componentArea')">swap</a>
             </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-map-view?cConf=mapViewConf&targetId=componentArea')">map view</a>
+            </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-map?cConf=mapConf&targetId=componentArea')">map</a>
+            </li>
         </ul>
         </gestore-links>
     </div>
@@ -50,8 +56,10 @@
 
     var hasmanyConf = {
         cRef : 'wTest',
+        name : 'prova',
         hasmanyConf : {
-            fields : ['name']
+            fields : ['name'],
+            langContext : 'pippo'
         }
 
     }
@@ -171,6 +179,7 @@
         ]
     }
     var autocompleteConf = {
+        cRef : 'wTest',
         modelName : 'user',
         name : 'email',
         labelFields : ['email'],
@@ -183,6 +192,7 @@
     }
 
     var autocompleteConfStatic = {
+        cRef : 'wTest',
         modelName : 'user',
         name : 'email',
         labelFields : ['nome'],
@@ -228,6 +238,29 @@
         ]
     }
     var swapConf = {
-        
+        cRef : 'wTest',
+        modelName : 'user',
+        name : 'banned',
+        modelData : {
+            id : 3,
+            name : 'amministratore',
+        },
+        domainValues : {
+            0 : 'non settato',
+            1 : 'bannato',
+            2 : 'espulso'
+        },
+        swapType : 'text'
+    }
+
+    var mapViewConf = {
+        cRef : 'wTest',
+        apiKey : 'AIzaSyDmb4Gu2kQ-Kk5z8wp2UJVNY0Eq8W9xig8'
+    }
+    var mapConf = {
+        cRef : 'wTest',
+        apiKey : 'AIzaSyDmb4Gu2kQ-Kk5z8wp2UJVNY0Eq8W9xig8',
+        lat : 43.000,
+        lng : 40.000
     }
 </script>
