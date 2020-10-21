@@ -27,9 +27,10 @@ var ModelUser = {
     },
     list : {
         modelName : 'user',
-        fields : ['email','name','email_verified_at','banned','mainrole','fotos','attachments'],
+        fields : ['id','email','name','email_verified_at','banned','mainrole','fotos','attachments'],
         actions : ['action-edit','action-delete','action-insert','action-delete-selected','action-view'],
         orderFields : {
+            'id':'id',
             'email':'email'
         },
         fieldsConfig : {
@@ -161,6 +162,7 @@ var ModelUser = {
     //     }
     // },
     'listEdit' : {
+        fields : ['id','email','name','banned'],
         fieldsConfigEditMode : {
             'id' : 'w-text',
             'email' : 'w-text',
