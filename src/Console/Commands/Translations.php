@@ -169,6 +169,15 @@ class Translations extends Command
         ];
     }
 
+    protected function getSearchKeysRelationGroup($field, $foormEntity, $relationName, $formType)
+    {
+        return [
+            'foorms.' . $foormEntity . '.' . $formType . '.' . $relationName . '.' . $field,
+            'foorms.' . $foormEntity . '.' . $relationName . '.' . $field,
+            'fields.' . $field,
+        ];
+    }
+
     protected function getSearchKeysGroupFoorname($foormEntity)
     {
         return [
@@ -238,14 +247,16 @@ class Translations extends Command
 
 
     protected function getFoormFieldLabel(
-        $field, $foormEntity, $formType, array $replace = [], $locale = null, $capitals = 'ucfirst'
+        $field, $foormEntity, $formType, $relationName = null, array $replace = [], $locale = null, $capitals = 'ucfirst'
     )
     {
         $params = [
             'capitals' => $capitals,
             'nullable' => true,
         ];
-        $keys = $this->getSearchKeysGroup($field, $foormEntity, $formType);
+        $keys = $relationName
+            ? $this->getSearchKeysGroup($field, $foormEntity, $formType)
+            : $this->getSearchKeysRelationGroup($field, $foormEntity, $relationName, $formType);
         $result = $this->getTranslated($keys, $replace, $locale, $params);
         if ($result === null) {
             $fieldAdjusted = $this->adjustField($field);
@@ -264,14 +275,16 @@ class Translations extends Command
     }
 
     protected function getFoormFieldFurtherLabel(
-        $furtherLabel, $field, $foormEntity, $formType, array $replace = [], $locale = null, $capitals = 'ucfirst'
+        $furtherLabel, $field, $foormEntity, $formType, $relationName = null, array $replace = [], $locale = null, $capitals = 'ucfirst'
     )
     {
         $params = [
             'capitals' => $capitals,
             'nullable' => true,
         ];
-        $keys = $this->getSearchKeysGroup($field . $furtherLabel, $foormEntity, $formType);
+        $keys = $relationName
+            ? $this->getSearchKeysGroup($field . $furtherLabel, $foormEntity, $formType)
+            : $this->getSearchKeysRelationGroup($field . $furtherLabel, $foormEntity, $relationName, $formType);
         $result = $this->getTranslated($keys, $replace, $locale, $params);
         return $result;
     }
@@ -356,7 +369,7 @@ class Translations extends Command
                 if (!array_key_exists($relationFieldName, Arr::get($translations, $relationModelName, []))) {
 
                     $translations[$relationModelName][$relationFieldName] = [
-                        'label' => $this->getFoormFieldLabel($relationFieldName, $relationModelName, $formType),
+                        'label' => $this->getFoormFieldLabel($relationFieldName, $foormEntity, $formType, $relationModelName),
                     ];
                     foreach ($furtherLabels as $furtherLabel) {
                         $line = $this->getFoormFieldFurtherLabel('_' . $furtherLabel, $relationFieldName, $relationModelName, $formType);
@@ -370,7 +383,7 @@ class Translations extends Command
                 $prefix = $relationName . '.' . $relationFieldName;
                 $translations[$foormEntity][$relationName][$relationFieldName] = [
 
-                    'label' => $this->getFoormFieldLabel($relationFieldName, $prefix, $formType),
+                    'label' => $this->getFoormFieldLabel($relationFieldName, $foormEntity, $formType, $relationName),
                 ];
                 foreach ($furtherLabels as $furtherLabel) {
                     $line = $this->getFoormFieldFurtherLabel('_' . $furtherLabel, $relationFieldName, $prefix, $formType);
@@ -387,52 +400,6 @@ class Translations extends Command
 
             }
 
-
-        }
-
-        print_r($translations);
-        return $translations;
-    }
-
-    protected function getFoormTranslationsOld($foorm, $foormEntyt, $formType)
-    {
-
-        $translations = [];
-
-
-        echo $foorm->getModelName() . ' --- ' . $foorm->getModelRelativeName() . "\n";
-
-        $formMetadata = $foorm->getFormMetadata();
-        $mainModelName = Str::snake($foorm->getModelRelativeName());
-        $mainModelFields = array_keys(Arr::get($formMetadata, 'fields', []));
-        $relations = Arr::get($formMetadata, 'relations', []);
-
-        foreach (array_merge($mainModelFields, array_keys($relations)) as $field) {
-            $translations[$mainModelName][$field] = [
-                'label' => Lang::getMFormLabel($field, $mainModelName),
-                'msg' => Lang::getMFormMsg($field, $mainModelName),
-                'addedLabel' => Lang::getMFormAddedLabel($field, $mainModelName)
-            ];
-        }
-        $translations[$mainModelName]['modelMetadata']['singular'] = trans_choice('model.' . $mainModelName, 1);
-        $translations[$mainModelName]['modelMetadata']['plural'] = trans_choice('model.' . $mainModelName, 2);
-
-        foreach ($relations as $relationName => $relation) {
-
-            $relationModelName = Str::snake(Arr::get($relation, 'modelRelativeName', $relationName));
-
-            $relationFields = Arr::get($relation, 'fields', []);
-
-            foreach (array_keys($relationFields) as $relationFieldName) {
-                $translations[$relationModelName][$relationFieldName] = [
-                    'label' => Lang::getMFormLabel($relationFieldName, $mainModelName),
-                    'msg' => Lang::getMFormMsg($relationFieldName, $mainModelName),
-                    'addedLabel' => Lang::getMFormAddedLabel($relationFieldName, $mainModelName)
-                ];
-            }
-
-            $translations[$relationName]['modelMetadata']['singular'] = trans_choice('model.' . $relationModelName, 1);
-            $translations[$relationName]['modelMetadata']['plural'] = trans_choice('model.' . $relationModelName, 2);
 
         }
 
@@ -509,6 +476,52 @@ class Translations extends Command
 //            ["nodb", null, InputOption::VALUE_NONE, "No migrations neither seeds", null],
 //            ["nomig", null, InputOption::VALUE_NONE, "No migrations", null],
         ];
+    }
+
+    protected function getFoormTranslationsOld($foorm, $foormEntyt, $formType)
+    {
+
+        $translations = [];
+
+
+        echo $foorm->getModelName() . ' --- ' . $foorm->getModelRelativeName() . "\n";
+
+        $formMetadata = $foorm->getFormMetadata();
+        $mainModelName = Str::snake($foorm->getModelRelativeName());
+        $mainModelFields = array_keys(Arr::get($formMetadata, 'fields', []));
+        $relations = Arr::get($formMetadata, 'relations', []);
+
+        foreach (array_merge($mainModelFields, array_keys($relations)) as $field) {
+            $translations[$mainModelName][$field] = [
+                'label' => Lang::getMFormLabel($field, $mainModelName),
+                'msg' => Lang::getMFormMsg($field, $mainModelName),
+                'addedLabel' => Lang::getMFormAddedLabel($field, $mainModelName)
+            ];
+        }
+        $translations[$mainModelName]['modelMetadata']['singular'] = trans_choice('model.' . $mainModelName, 1);
+        $translations[$mainModelName]['modelMetadata']['plural'] = trans_choice('model.' . $mainModelName, 2);
+
+        foreach ($relations as $relationName => $relation) {
+
+            $relationModelName = Str::snake(Arr::get($relation, 'modelRelativeName', $relationName));
+
+            $relationFields = Arr::get($relation, 'fields', []);
+
+            foreach (array_keys($relationFields) as $relationFieldName) {
+                $translations[$relationModelName][$relationFieldName] = [
+                    'label' => Lang::getMFormLabel($relationFieldName, $mainModelName),
+                    'msg' => Lang::getMFormMsg($relationFieldName, $mainModelName),
+                    'addedLabel' => Lang::getMFormAddedLabel($relationFieldName, $mainModelName)
+                ];
+            }
+
+            $translations[$relationName]['modelMetadata']['singular'] = trans_choice('model.' . $relationModelName, 1);
+            $translations[$relationName]['modelMetadata']['plural'] = trans_choice('model.' . $relationModelName, 2);
+
+        }
+
+        print_r($translations);
+        return $translations;
     }
 
 
