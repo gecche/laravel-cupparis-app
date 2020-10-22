@@ -56,6 +56,11 @@ crud.components.widgets.wDateSelect = Vue.component('w-date-select', {
     template: '#w-date-select-template',
 });
 
+crud.components.widgets.wDateText = Vue.component('w-date-text', {
+    extends: crud.components.widgets.coreWDateText,
+    template: '#w-date-text-template',
+});
+
 crud.components.widgets.wDownload = Vue.component('w-download', {
     extends: crud.components.widgets.coreWDownload,
     template: '#w-download-template',
@@ -117,7 +122,6 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
     methods : {
         setRouteValues : function(route) {
             var that = this;
-            console.log('rswap RIDEFINITO')
             var dV = that.getDV();
             var keys = Object.keys(dV);
             var value = that.value?that.value:keys[0];
@@ -129,7 +133,7 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
                 modelName: that.modelName,
             });
             route.setParams({
-                id:that.conf.modelData.id,
+                id:that.modelData.id,
                 field : that.name,
                 value : keys[index]
             });
@@ -166,6 +170,16 @@ crud.components.widgets.wUpload = Vue.component('w-upload', {
 crud.components.widgets.wUploadAjax = Vue.component('w-upload-ajax', {
     extends: crud.components.widgets.coreWUploadAjax,
     template: '#w-upload-ajax-template',
+});
+
+crud.components.widgets.wMap = Vue.component('w-map', {
+    extends: crud.components.widgets.coreWMap,
+    template: '#w-map-template',
+});
+
+crud.components.widgets.wMapView = Vue.component('w-map-view', {
+    extends: crud.components.widgets.coreWMapView,
+    template: '#w-map-view-template',
 });
 
 //-----------------   VIEWS  ----------------------
