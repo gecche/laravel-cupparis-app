@@ -41,10 +41,6 @@ class Translations extends Command
 
     protected $dirjs = 'js';
 
-    protected $excludedModels = [
-        'activityqueue',
-    ];
-
     /**
      * Create a new reminder table command instance.
      *
@@ -164,15 +160,33 @@ class Translations extends Command
     }
 
 
-    protected function getSearchKeysGroup($field, $foormEntity, $formType) {
+    protected function getSearchKeysGroup($field, $foormEntity, $formType)
+    {
         return [
-            'foorms.'.$foormEntity.'.'.$formType.'.'.$field,
-            'foorms.'.$foormEntity.'.'.$field,
-            'fields.'.$field,
+            'foorms.' . $foormEntity . '.' . $formType . '.' . $field,
+            'foorms.' . $foormEntity . '.' . $field,
+            'fields.' . $field,
         ];
     }
 
-    protected function getTranslated($keys,$replace, $locale, $params) {
+    protected function getSearchKeysGroupFoorname($foormEntity)
+    {
+        return [
+            'foorms.' . $foormEntity . '.metadata.name',
+            'model.' . $foormEntity,
+        ];
+    }
+
+    protected function getSearchKeysGroupRelationname($foormEntity, $relationName)
+    {
+        return [
+            'foorms.' . $foormEntity . '.metadata.' . $relationName . '.name',
+            'model.' . $relationName,
+        ];
+    }
+
+    protected function getTranslated($keys, $replace, $locale, $params)
+    {
 
         foreach ($keys as $key) {
 
@@ -195,10 +209,11 @@ class Translations extends Command
         }
 
         $capitals = Arr::get($params, 'capitals', false);
-        return Lang::capitalizations($line,$capitals);
+        return Lang::capitalizations($line, $capitals);
     }
 
-    protected function adjustField($field,$separator = '_') {
+    protected function adjustField($field, $separator = '_')
+    {
         $suffixes = $this->getSuffixesToRemove();
         foreach ($suffixes as $suffix) {
             if (Str::endsWith($field, 'id')) {
@@ -208,11 +223,12 @@ class Translations extends Command
         return $field;
     }
 
-    protected function getSuffixesToRemove() {
+    protected function getSuffixesToRemove()
+    {
 
         $suffixes = ['id'];
 
-        foreach (config('app.langs',[]) as $langSuffix) {
+        foreach (config('app.langs', []) as $langSuffix) {
             $suffixes[] = $langSuffix;
         }
 
@@ -223,24 +239,25 @@ class Translations extends Command
 
     protected function getFoormFieldLabel(
         $field, $foormEntity, $formType, array $replace = [], $locale = null, $capitals = 'ucfirst'
-    ) {
+    )
+    {
         $params = [
             'capitals' => $capitals,
             'nullable' => true,
         ];
-        $keys = $this->getSearchKeysGroup($field,$foormEntity,$formType);
-        $result = $this->getTranslated($keys,$replace, $locale, $params);
+        $keys = $this->getSearchKeysGroup($field, $foormEntity, $formType);
+        $result = $this->getTranslated($keys, $replace, $locale, $params);
         if ($result === null) {
             $fieldAdjusted = $this->adjustField($field);
             if ($field !== $fieldAdjusted) {
-                $keys = $this->getSearchKeysGroup($fieldAdjusted,$foormEntity,$formType);
-                $result = $this->getTranslated($keys,$replace, $locale, $params);
+                $keys = $this->getSearchKeysGroup($fieldAdjusted, $foormEntity, $formType);
+                $result = $this->getTranslated($keys, $replace, $locale, $params);
             }
         }
         if ($result === null) {
             $keys = [$field];
             $params['nullable'] = false;
-            $result = $this->getTranslated($keys,$replace, $locale, $params);
+            $result = $this->getTranslated($keys, $replace, $locale, $params);
         }
 
         return $result;
@@ -248,14 +265,53 @@ class Translations extends Command
 
     protected function getFoormFieldFurtherLabel(
         $furtherLabel, $field, $foormEntity, $formType, array $replace = [], $locale = null, $capitals = 'ucfirst'
-    ) {
+    )
+    {
         $params = [
             'capitals' => $capitals,
             'nullable' => true,
         ];
-        $keys = $this->getSearchKeysGroup($field.$furtherLabel,$foormEntity,$formType);
-        $result = $this->getTranslated($keys,$replace, $locale, $params);
+        $keys = $this->getSearchKeysGroup($field . $furtherLabel, $foormEntity, $formType);
+        $result = $this->getTranslated($keys, $replace, $locale, $params);
         return $result;
+    }
+
+    protected function getFoormMetadata($foormEntity, array $replace = [], $locale = null, $capitals = false)
+    {
+        $result = [];
+        $foormNameKeys = $this->getSearchKeysGroupFoorname($foormEntity);
+        $result['singular'] = Lang::capitalizations($this->getTranslatedChoice($foormNameKeys, 1, $replace, $locale, []), $capitals);
+        $result['plural'] = Lang::capitalizations($this->getTranslatedChoice($foormNameKeys, 2, $replace, $locale, []), $capitals);
+
+        return $result;
+
+    }
+
+    protected function getFoormRelationMetadata($foormEntity, $relationName, array $replace = [], $locale = null, $capitals = false)
+    {
+        $result = [];
+        $foormNameKeys = $this->getSearchKeysGroupRelationname($foormEntity, $relationName);
+        $result['singular'] = Lang::capitalizations($this->getTranslatedChoice($foormNameKeys, 1, $replace, $locale, []), $capitals);
+        $result['plural'] = Lang::capitalizations($this->getTranslatedChoice($foormNameKeys, 2, $replace, $locale, []), $capitals);
+
+        return $result;
+
+    }
+
+
+    protected function getTranslatedChoice($keys, $number, $replace, $locale, $params)
+    {
+
+        $line = null;
+        foreach ($keys as $key) {
+            $line = Lang::choiceRaw($key, $number, $replace, $locale);
+            if ($line !== null) {
+                break;
+            }
+        }
+
+        $capitals = Arr::get($params, 'capitals', false);
+        return Lang::capitalizations($line, $capitals);
     }
 
     protected function getFoormTranslations($foorm, $foormEntity, $formType)
@@ -271,15 +327,24 @@ class Translations extends Command
         $foormFields = array_keys(Arr::get($formMetadata, 'fields', []));
         $relations = Arr::get($formMetadata, 'relations', []);
 
+        $furtherLabels = ['msg', 'addedLabel'];
         foreach (array_merge($foormFields, array_keys($relations)) as $field) {
             $translations[$foormEntity][$field] = [
-                'label' => $this->getFoormFieldLabel($field,$foormEntity,$formType),
-                'msg' => $this->getFoormFieldFurtherLabel('_msg',$field,$foormEntity,$formType),
-                'addedLabel' => $this->getFoormFieldFurtherLabel('_addedLabel',$field,$foormEntity,$formType),
+                'label' => $this->getFoormFieldLabel($field, $foormEntity, $formType),
             ];
+            foreach ($furtherLabels as $furtherLabel) {
+                $line = $this->getFoormFieldFurtherLabel('_' . $furtherLabel, $field, $foormEntity, $formType);
+                if (!is_null($line)) {
+                    $translations[$foormEntity][$field][$furtherLabel] = $line;
+                }
+            }
         }
         $translations[$foormEntity]['modelMetadata']['singular'] = trans_choice('model.' . $foormEntity, 1);
         $translations[$foormEntity]['modelMetadata']['plural'] = trans_choice('model.' . $foormEntity, 2);
+        if (!array_key_exists('metadata', $translations[$foormEntity])) {
+            $translations[$foormEntity]['metadata'] = $this->getFoormMetadata($foormEntity);
+        }
+
 
         foreach ($relations as $relationName => $relation) {
 
@@ -288,25 +353,38 @@ class Translations extends Command
             $relationFields = Arr::get($relation, 'fields', []);
 
             foreach (array_keys($relationFields) as $relationFieldName) {
-                if (!array_key_exists($relationFieldName,Arr::get($translations,$relationModelName,[]))) {
+                if (!array_key_exists($relationFieldName, Arr::get($translations, $relationModelName, []))) {
 
                     $translations[$relationModelName][$relationFieldName] = [
-                        'label' => $this->getFoormFieldLabel($relationFieldName,$relationModelName,$formType),
-                        'msg' => $this->getFoormFieldFurtherLabel('_msg',$relationFieldName,$relationModelName,$formType),
-                        'addedLabel' => $this->getFoormFieldFurtherLabel('_addedLabel',$relationFieldName,$relationModelName,$formType),
+                        'label' => $this->getFoormFieldLabel($relationFieldName, $relationModelName, $formType),
                     ];
+                    foreach ($furtherLabels as $furtherLabel) {
+                        $line = $this->getFoormFieldFurtherLabel('_' . $furtherLabel, $relationFieldName, $relationModelName, $formType);
+                        if (!is_null($line)) {
+                            $translations[$relationModelName][$relationFieldName][$furtherLabel] = $line;
+                        }
+                    }
                     $translations[$relationModelName]['modelMetadata']['singular'] = trans_choice('model.' . $relationModelName, 1);
                     $translations[$relationModelName]['modelMetadata']['plural'] = trans_choice('model.' . $relationModelName, 2);
                 }
-                $prefix = $relationName.'.'.$relationFieldName;
+                $prefix = $relationName . '.' . $relationFieldName;
                 $translations[$foormEntity][$relationName][$relationFieldName] = [
 
-                    'label' => $this->getFoormFieldLabel($relationFieldName,$prefix,$formType),
-                    'msg' => $this->getFoormFieldFurtherLabel('_msg',$relationFieldName,$prefix,$formType),
-                    'addedLabel' => $this->getFoormFieldFurtherLabel('_addedLabel',$relationFieldName,$prefix,$formType),
+                    'label' => $this->getFoormFieldLabel($relationFieldName, $prefix, $formType),
                 ];
+                foreach ($furtherLabels as $furtherLabel) {
+                    $line = $this->getFoormFieldFurtherLabel('_' . $furtherLabel, $relationFieldName, $prefix, $formType);
+                    if (!is_null($line)) {
+                        $translations[$foormEntity][$relationName][$relationFieldName][$furtherLabel] = $line;
+                    }
+                }
                 $translations[$relationName]['modelMetadata']['singular'] = trans_choice('model.' . $relationName, 1);
                 $translations[$relationName]['modelMetadata']['plural'] = trans_choice('model.' . $relationName, 2);
+                if (!array_key_exists('metadata', $translations[$foormEntity][$relationName])) {
+                    $translations[$foormEntity][$relationName]['metadata'] = $this->getFoormRelationMetadata($foormEntity, $relationName);
+                }
+
+
             }
 
 
