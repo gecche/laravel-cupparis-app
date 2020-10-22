@@ -32,6 +32,9 @@
             <li>
                 <a :href="getHref()" v-on:click="doCmd('w-map?cConf=mapConf&targetId=componentArea')">map</a>
             </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-upload-ajax?cConf=uploadAjaxConf&targetId=componentArea')">upload ajax</a>
+            </li>
         </ul>
         </gestore-links>
     </div>
@@ -262,5 +265,14 @@
         apiKey : 'AIzaSyDmb4Gu2kQ-Kk5z8wp2UJVNY0Eq8W9xig8',
         lat : 43.000,
         lng : 40.000
+    }
+
+    var uploadAjaxConf = {
+        name : 'name',
+        modelName : 'user',
+        ajaxFields: {
+            field: 'name',
+            resource_type: 'foto'
+        },
     }
 </script>
