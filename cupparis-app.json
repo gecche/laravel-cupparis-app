@@ -1,0 +1,56 @@
+{
+  "foorm": {
+    "entities": {
+      "user": {
+      }
+    }
+  },
+
+  "modelconfs": {
+    "rootJsDir": "ModelConfs",
+    "files": [
+      "ModelUser.js"
+    ]
+  },
+
+  "permissions": {
+    "guards": [
+      "web"
+    ],
+    "roles": {
+      "web": [
+        "Superutente",
+        "Login",
+        "Admin",
+        "Operatore"
+      ]
+    },
+    "models": [
+      "user"
+    ],
+    "models_permissions_prefixes": {
+      "web": [
+        "edit",
+        "create",
+        "view",
+        "list",
+        "delete",
+        "menu",
+        "tab"
+      ]
+    },
+    "other_permissions": {
+      "web": [
+        //                "permission_1",
+        //                "permission_2",
+      ]
+      //Altri permessi non correlati ai singoli modelli
+    }
+  },
+
+  "policies": {
+    "models": {
+
+    }
+  }
+}

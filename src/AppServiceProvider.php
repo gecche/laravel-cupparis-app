@@ -131,6 +131,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
 
+        $this->app->singleton('cupparis', function ($app) {
+            return new CupparisAppManager($app['config']->get('cupparis-app'));
+        });
         $this->app->bind('foorm', function ($app) {
             return new FoormManager($app['config']->get('foorm'));
         });
