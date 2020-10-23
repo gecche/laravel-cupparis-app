@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $crudVersion = env('CRUD_VERSION','1.0');
         $this->publishes([
             __DIR__ . '/../config/cupparis-app.php' => config_path('cupparis-app.php'),
+            __DIR__ . '/../cupparis-app.json' => base_path('cupparis-app.json'),
         ], 'public');
 
 
