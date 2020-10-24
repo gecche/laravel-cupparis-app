@@ -1,0 +1,5 @@
+{
+    "name": "admin",
+    "extends": "smarty3-app",
+    "asset-path": "admin"
+}

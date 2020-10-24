@@ -1,0 +1,5 @@
+{
+    "name": "smarty3-app",
+    "extends": "smarty3",
+    "asset-path": "smarty3-app"
+}

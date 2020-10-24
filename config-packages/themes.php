@@ -29,7 +29,7 @@ return [
 	|--------------------------------------------------------------------------
 	*/
 
-	'default' => env('THEME_NAME','bootstrap4'),
+	'default' => env('THEME_NAME','admin'),
 
 
 	/*
@@ -61,9 +61,18 @@ return [
 	'themes' => [
 
         'bootstrap4' => [],
-//        'smarty3' => [
-//            'extends' => 'bootstrap4'
-//        ],
+        'bootstrap4-app' => [
+            'extends' => 'bootstrap4'
+        ],
+        'smarty3' => [
+            'extends' => 'bootstrap4'
+        ],
+        'smarty3-app' => [
+            'extends' => 'smarty3'
+        ],
+        'admin' => [
+            'extends' => 'smarty3-app'
+        ]
                 // Add your themes here. These settings will override theme.json settings defined for each theme
 
 		/*

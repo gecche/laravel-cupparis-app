@@ -1,0 +1,5 @@
+{
+    "name": "bootstrap4-app",
+    "extends": "bootstrap4",
+    "asset-path": "bootstrap4-app"
+}
