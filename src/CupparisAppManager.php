@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 class CupparisAppManager
 {
 
+    use CupparisJsonTrait;
 
     protected $config = [];
 
@@ -42,30 +43,7 @@ class CupparisAppManager
     public function get($key, $default = null)
     {
 
-        if (array_key_exists($key,$this->appSettingsDotted)) {
-            return $this->appSettingsDotted[$key];
-        }
+        return $this->getJsonValue($key,$this->appSettings,$default,$this->appSettingsDotted);
 
-        $parts = explode('.',$key);
-
-        $part = array_shift($parts);
-        $result = $this->getGroup($part,$parts,$this->appSettings);
-        return  $result !== false ? $result : $default;
-
-    }
-
-    protected function getGroup($part,$parts,$array) {
-        if (!array_key_exists($part,$array)) {
-            return false;
-        }
-        $array = $array[$part];
-        if (!$parts) {
-            return $array;
-        }
-        if (!is_array($array)) {
-            return false;
-        }
-        $part = array_shift($parts);
-        return $this->getGroup($part,$parts,$array);
     }
 }

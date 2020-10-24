@@ -17,13 +17,19 @@ class AppServiceProvider extends ServiceProvider
     {
 
         $crudVersion = env('CRUD_VERSION','1.0');
+
+        //Publishing configs
         $this->publishes([
             __DIR__ . '/../config/cupparis-app.php' => config_path('cupparis-app.php'),
+        ], 'public');
+
+        if (!is_dir(base_path('cupparis'))) {
+            mkdir(base_path('cupparis'));
+        }
+        $this->publishes([
             __DIR__ . '/../cupparis-app.json' => base_path('cupparis-app.json'),
         ], 'public');
 
-
-        //Publishing configs
         if (!is_dir(config_path('foorms'))) {
             mkdir(config_path('foorms'));
         }
