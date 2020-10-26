@@ -163,8 +163,8 @@ class Translations extends Command
     protected function getSearchKeysGroup($field, $foormEntity, $formType)
     {
         return [
-            'foorms.' . $foormEntity . '.' . $formType . '.' . $field,
-            'foorms.' . $foormEntity . '.' . $field,
+            'foorms/' . $foormEntity . '.' . $formType . '.' . $field,
+            'foorms/' . $foormEntity . '.' . $field,
             'fields.' . $field,
         ];
     }
@@ -172,8 +172,8 @@ class Translations extends Command
     protected function getSearchKeysRelationGroup($field, $foormEntity, $relationName, $formType)
     {
         return [
-            'foorms.' . $foormEntity . '.' . $formType . '.' . $relationName . '.' . $field,
-            'foorms.' . $foormEntity . '.' . $relationName . '.' . $field,
+            'foorms/' . $foormEntity . '.' . $formType . '.' . $relationName . '.' . $field,
+            'foorms/' . $foormEntity . '.' . $relationName . '.' . $field,
             'fields.' . $field,
         ];
     }
@@ -181,7 +181,7 @@ class Translations extends Command
     protected function getSearchKeysGroupFoorname($foormEntity)
     {
         return [
-            'foorms.' . $foormEntity . '.metadata.name',
+            'foorms/' . $foormEntity . '.metadata.name',
             'model.' . $foormEntity,
         ];
     }
@@ -189,7 +189,7 @@ class Translations extends Command
     protected function getSearchKeysGroupRelationname($foormEntity, $relationName)
     {
         return [
-            'foorms.' . $foormEntity . '.metadata.' . $relationName . '.name',
+            'foorms/' . $foormEntity . '.metadata.' . $relationName . '.name',
             'model.' . $relationName,
         ];
     }
@@ -255,8 +255,8 @@ class Translations extends Command
             'nullable' => true,
         ];
         $keys = $relationName
-            ? $this->getSearchKeysGroup($field, $foormEntity, $formType)
-            : $this->getSearchKeysRelationGroup($field, $foormEntity, $relationName, $formType);
+            ? $this->getSearchKeysRelationGroup($field, $foormEntity, $relationName, $formType)
+            : $this->getSearchKeysGroup($field, $foormEntity, $formType);
         $result = $this->getTranslated($keys, $replace, $locale, $params);
         if ($result === null) {
             $fieldAdjusted = $this->adjustField($field);
@@ -283,8 +283,8 @@ class Translations extends Command
             'nullable' => true,
         ];
         $keys = $relationName
-            ? $this->getSearchKeysGroup($field . $furtherLabel, $foormEntity, $formType)
-            : $this->getSearchKeysRelationGroup($field . $furtherLabel, $foormEntity, $relationName, $formType);
+            ? $this->getSearchKeysRelationGroup($field . $furtherLabel, $foormEntity, $relationName, $formType)
+            : $this->getSearchKeysGroup($field . $furtherLabel, $foormEntity, $formType);
         $result = $this->getTranslated($keys, $replace, $locale, $params);
         return $result;
     }
@@ -341,7 +341,7 @@ class Translations extends Command
         $relations = Arr::get($formMetadata, 'relations', []);
 
         $furtherLabels = ['msg', 'addedLabel'];
-        foreach (array_merge($foormFields, array_keys($relations)) as $field) {
+        foreach ($foormFields as $field) {
             $translations[$foormEntity][$field] = [
                 'label' => $this->getFoormFieldLabel($field, $foormEntity, $formType),
             ];

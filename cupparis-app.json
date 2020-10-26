@@ -1,9 +1,8 @@
 {
   "foorm": {
-    "entities": {
-      "user": {
-      }
-    }
+    "entities": [
+      "user"
+    ]
   },
 
   "modelconfs": {
@@ -40,11 +39,7 @@
       ]
     },
     "other_permissions": {
-      "web": [
-        //                "permission_1",
-        //                "permission_2",
-      ]
-      //Altri permessi non correlati ai singoli modelli
+      "web": []
     }
   },
 
