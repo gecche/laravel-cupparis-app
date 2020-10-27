@@ -10,7 +10,7 @@ use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Str;
 
-class InstallCupparisPackage extends Command
+class UninstallCupparisPackage extends Command
 {
 
     use CupparisJsonTrait;
@@ -21,9 +21,9 @@ class InstallCupparisPackage extends Command
      *
      * @var string
      */
-    protected $signature = 'install-cupparis-package
+    protected $signature = 'uninstall-cupparis-package
+                            {package : Package to uninstall}
                             {--force : it forces initialization without prompting (default: no)}
-                            {package? : Only compile relations for the specified model and not for all the models in the folder}
                             {--dir= : Directory of the models}';
 
     /**
@@ -31,7 +31,7 @@ class InstallCupparisPackage extends Command
      *
      * @var string
      */
-    protected $description = 'Installazione package cupparis app';
+    protected $description = 'Disinstallazione package cupparis app';
 
 
 
@@ -73,10 +73,10 @@ class InstallCupparisPackage extends Command
                 continue;
             }
 
-            $this->setFoorms($currentJson,$packageContents,$currentJsonDotted);
-            $this->setModelconfs($currentJson,$packageContents,$currentJsonDotted);
-            $this->setPermissions($currentJson,$packageContents,$currentJsonDotted);
-            $this->setPolicies($currentJson,$packageContents,$currentJsonDotted);
+            $this->removeFoorms($currentJson,$packageContents,$currentJsonDotted);
+            $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
+            $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
+            $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
 
         }
 
@@ -90,7 +90,9 @@ class InstallCupparisPackage extends Command
     }
 
 
-    protected function setFoorms(&$main,$package,$mainDotted) {
+
+
+    protected function removeFoorms(&$main,$package,$mainDotted) {
 
         $values = $this->buildPackageArrayValue('foorm.entities',$main,$package,$mainDotted,false);
 
@@ -98,7 +100,7 @@ class InstallCupparisPackage extends Command
 
     }
 
-    protected function setModelconfs(&$main,$package,$mainDotted) {
+    protected function removeModelconfs(&$main,$package,$mainDotted) {
 
         $values = $this->buildPackageArrayValue('modelconfs.files',$main,$package,$mainDotted,false);
 
@@ -106,7 +108,7 @@ class InstallCupparisPackage extends Command
 
     }
 
-    protected function setPermissions(&$main,$package,$mainDotted) {
+    protected function removePermissions(&$main,$package,$mainDotted) {
 
         $values = $this->buildPackageArrayValue('permissions.models',$main,$package,$mainDotted,false);
 
@@ -114,12 +116,13 @@ class InstallCupparisPackage extends Command
 
     }
 
-    protected function setPolicies(&$main,$package,$mainDotted) {
+    protected function removePolicies(&$main,$package,$mainDotted) {
 
         $values = $this->buildPackageArrayValue('policies.models',$main,$package,$mainDotted);
 
         $main['policies']['models'] = $values;
 
     }
+
 
 }
