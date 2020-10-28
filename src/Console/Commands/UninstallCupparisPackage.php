@@ -9,6 +9,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Str;
+use Symfony\Polyfill\Intl\Idn\Resources\unidata\DisallowedRanges;
 
 class UninstallCupparisPackage extends Command
 {
@@ -75,12 +76,13 @@ class UninstallCupparisPackage extends Command
 
             $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
 
-            $this->install($packageContents,true);
+            $this->installUninstall($packageContents,true);
 
 
         }
 
         File::put($mainJsonFile,cupparis_json_encode($currentJson));
+        File::delete($packageFilename);
 
         $this->info('Cupparis app json updated successfully.');
         foreach ($this->packagesErrors as $packageFileName => $packageError) {
@@ -130,5 +132,72 @@ class UninstallCupparisPackage extends Command
 
     }
 
+    protected function uninstall($packageContents) {
+
+        $foormsDir = config_path('foorms' . DIRECTORY_SEPARATOR);
+        $foorms = $this->getJsonValue('foorm.entities',$packageContents,[]);
+        foreach ($foorms as $foorm) {
+            $foormFile = $foormsDir . $foorm . '.php';
+            $this->info($foormFile);
+            File::delete($foormFile);
+        }
+
+        $modelconfsDir = public_path('admin'.DIRECTORY_SEPARATOR.'ModelConfs'.DIRECTORY_SEPARATOR);
+        $modelconfs = $this->getJsonValue('modelconfs.files',$packageContents,[]);
+        foreach ($modelconfs as $modelconf) {
+            File::delete($modelconfsDir . $modelconf);
+        }
+
+        $pagesDir = public_path('admin'.DIRECTORY_SEPARATOR.'pages'.DIRECTORY_SEPARATOR);
+        $pages = $this->getJsonValue('pages',$packageContents,[]);
+        foreach ($pages as $page) {
+            File::delete($pagesDir . $page);
+        }
+
+        $modelsDir = app_path('Models'.DIRECTORY_SEPARATOR);
+        $relationModelsDir = app_path('Models'.DIRECTORY_SEPARATOR.'Relations'.DIRECTORY_SEPARATOR);
+        $policiesDir = app_path('Policies'.DIRECTORY_SEPARATOR);
+        $models = $this->getJsonValue('models',$packageContents,[]);
+        foreach ($models as $model) {
+            File::delete($modelsDir . $model . '.php');
+
+            $relationFile = $relationModelsDir . $model . 'Relations.php';
+            if (File::exists($relationFile)) {
+                File::delete($relationFile);
+            }
+
+            $policyFile = $policiesDir . $model . 'Policy.php';
+            if (File::exists($policyFile)) {
+                File::delete($policyFile);
+            }
+        }
+
+        $modelsDir = app_path('DatafileModels'.DIRECTORY_SEPARATOR);
+        $relationModelsDir = app_path('DatafileModels'.DIRECTORY_SEPARATOR.'Relations'.DIRECTORY_SEPARATOR);
+        $policiesDir = app_path('Policies'.DIRECTORY_SEPARATOR);
+        $models = $this->getJsonValue('datafile-models',$packageContents,[]);
+        foreach ($models as $model) {
+            File::delete($modelsDir . $model . '.php');
+
+            $relationFile = $relationModelsDir . $model . 'Relations.php';
+            if (File::exists($relationFile)) {
+                File::delete($relationFile);
+            }
+
+            $policyFile = $policiesDir . $model . 'Policy.php';
+            if (File::exists($policyFile)) {
+                File::delete($policyFile);
+            }
+        }
+
+        $datafileProvidersDir = app_path('DatafileProviders'.DIRECTORY_SEPARATOR);
+        $datafileProviders = $this->getJsonValue('datafile-providers',$packageContents,[]);
+        foreach ($datafileProviders as $datafileProvider) {
+            File::delete($datafileProvidersDir . $datafileProvider . '.php');
+        }
+
+        $this->info("Package uninstalled successfully");
+        return;
+    }
 
 }

@@ -76,7 +76,7 @@ class InstallCupparisPackage extends Command
 
             $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
 
-            $this->install($packageContents);
+            $this->installUninstall($packageContents);
 
         }
 
@@ -128,5 +128,11 @@ class InstallCupparisPackage extends Command
         $main['policies']['models'] = $values;
 
     }
+
+    protected function install($packageContents) {
+        $this->info("Package installed successfully");
+        return;
+    }
+
 
 }

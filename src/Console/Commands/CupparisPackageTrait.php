@@ -100,15 +100,14 @@ trait CupparisPackageTrait {
         return $values;
     }
 
-    protected function install($packageContents,$uninstall = false) {
+    protected function installUninstall($packageContents,$uninstall = false) {
         $key = $uninstall ? 'uninstall' : 'install';
         $installingString = $uninstall ? 'uninstalling' : 'installing';
 
         $installClass = $this->getJsonValue($key.'.class',$packageContents,[]);
         $installMethod = $this->getJsonValue($key.'.method',$packageContents,[]);
         if (!$installClass || !$installMethod) {
-            $this->info("Nothing to execute for ".$installingString." the package");
-            return;
+            return $this->$key($packageContents);
         }
 
         if (!class_exists($installClass)) {
@@ -132,5 +131,6 @@ trait CupparisPackageTrait {
         $this->info($installClass.'@'.$installMethod." executed successfully!");
         return;
     }
+
 
 }
