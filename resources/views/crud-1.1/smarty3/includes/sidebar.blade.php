@@ -42,7 +42,7 @@
             .nav-deep-hover 	hover background slightly different
             .nav-deep-bordered	bordered links
         -->
-        <c-router ref="menu" inline-template c-content-id="#middle">
+        <c-router ref="menu" inline-template c-content-id="middle">
             <nav class="nav-deep nav-deep-dark nav-deep-dark-contrast nav-deep-indicator-dot nav-deep-hover">
 
                 <ul class="nav flex-column">

@@ -297,7 +297,7 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
     methods : {
         setRouteValues : function(route) {
             var that = this;
-            console.log('rswap RIDEFINITO',that.modelName,that.conf.modelName)
+            console.log('rswap RIDEFINITO',that.modelName,that.modelName)
             var dV = that.getDV();
             var keys = Object.keys(dV);
             var value = that.value?that.value:keys[0];
@@ -306,15 +306,15 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
             index = (index + 1) % vs.length;
             console.log('rswap',that);
             route.setValues({
-                modelName: that.conf.modelName,
+                modelName: that.modelName,
                 //field : that.name, //that.conf.key?that.conf.key:that.cKey,
                 //value : keys[index]
             });
             route.setParams({
-                id:that.conf.modelData.id,
+                id:that.modelData.id,
                 field : that.name,
                 value : keys[index]
-});
+            });
             return route;
         }
     }

@@ -141,33 +141,6 @@ crud.conf['action-insert'].execute = function () {
     document.location.href = '#v-insert?cModel='+that.view.modelName;
 }
 
-crud.conf['action-delete'].execute = function () {
-        var that = this;
-        var confirmMessage;
-        if (that.view.modelName == 'istituto') {
-            confirmMessage = 'Attenzione! Cancellando l\'istituto verranno cancellati DEFINITIVAMENTE tutti i progetti ' +
-                'associati, le informazioni di contatto, i referenti e lo storico dei contatti.<br/>' +
-                'Sicuro di voler continuare?';
-        } else {
-            confirmMessage = that.$crud.lang['app.conferma-cancellazione'];
-        }
-        that.confirmDialog(confirmMessage ,{
-            ok : function () {
-                var r = that.createRoute('delete');
-                that.setRouteValues(r);
-                Server.route(r,function (json) {
-                    if (json.error) {
-                        that.errorDialog(json.msg);
-                        return ;
-                    }
-                    var msg = json.msg?json.msg:that.translate('app.cancellazione-successo');
-                    that.alertSuccess(msg);
-                    that.view.reload();
-                });
-            }
-        });
-}
-
 crud.conf['action-previous'] = {
     text : '<<',
     title : 'Precedente',
