@@ -76,7 +76,7 @@ class InstallCupparisPackage extends Command
 
             $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
 
-            $this->install($packageContents);
+            $this->installUninstall($packageContents);
 
         }
 
