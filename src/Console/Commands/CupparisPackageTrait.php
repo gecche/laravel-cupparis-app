@@ -100,15 +100,14 @@ trait CupparisPackageTrait {
         return $values;
     }
 
-    protected function install($packageContents,$uninstall = false) {
+    protected function installUninstall($packageContents,$uninstall = false) {
         $key = $uninstall ? 'uninstall' : 'install';
         $installingString = $uninstall ? 'uninstalling' : 'installing';
 
         $installClass = $this->getJsonValue($key.'.class',$packageContents,[]);
         $installMethod = $this->getJsonValue($key.'.method',$packageContents,[]);
         if (!$installClass || !$installMethod) {
-            $this->info("Nothing to execute for ".$installingString." the package");
-            return;
+            return $this->$key();
         }
 
         if (!class_exists($installClass)) {
@@ -133,4 +132,40 @@ trait CupparisPackageTrait {
         return;
     }
 
+
+    protected function install($packageContents) {
+        $this->info("Package installed successfully");
+        return;
+    }
+
+    protected function uninstall($packageContents) {
+
+        $foormsDir = config_path('foorms') . DIRECTORY_SEPARATOR;
+        $foorms = $this->getJsonValue('foorms.entities',$packageContents,[]);
+        foreach ($foorms as $foorm) {
+            File::delete($foormsDir . $foorm . '.php');
+        }
+
+        $modelconfsDir = public_path('admin'.DIRECTORY_SEPARATOR.'ModelConfs'.DIRECTORY_SEPARATOR);
+        $modelconfs = $this->getJsonValue('modelconfs.files',$packageContents,[]);
+        foreach ($modelconfs as $modelconf) {
+            File::delete($modelconfsDir . $modelconf);
+        }
+
+        $modelsDir = app_path('Models'.DIRECTORY_SEPARATOR);
+        $models = $this->getJsonValue('models',$packageContents,[]);
+        foreach ($models as $model) {
+            File::delete($modelsDir . $model . '.php');
+        }
+
+        $policiesDir = app_path('Policies'.DIRECTORY_SEPARATOR);
+        $policies = $this->getJsonValue('policies.models',$packageContents,[]);
+        foreach ($policies as $model => $policyClass) {
+            $policyFile = substr($policyClass,strrpos($policyClass,"\\")+1);
+            File::delete($policiesDir . $policyFile . '.php');
+        }
+
+        $this->info("Package installed successfully");
+        return;
+    }
 }
