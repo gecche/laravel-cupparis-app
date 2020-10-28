@@ -44,8 +44,9 @@ trait CupparisPackageTrait {
          * get all the models in modelsFolder
          */
         $packageName = $this->argument('package');
-        $this->packages = $packageName ? [$this->packagesFolder . DIRECTORY_SEPARATOR . $packageName . '.json']
-            : glob($this->packagesFolder . DIRECTORY_SEPARATOR . '*.json');
+        $this->packages = ($packageName == 'all')
+            ? glob($this->packagesFolder . DIRECTORY_SEPARATOR . '*.json')
+            : [$this->packagesFolder . DIRECTORY_SEPARATOR . $packageName . '.json'];
 
 
     }
@@ -99,5 +100,37 @@ trait CupparisPackageTrait {
         return $values;
     }
 
+    protected function install($packageContents,$uninstall = false) {
+        $key = $uninstall ? 'uninstall' : 'install';
+        $installingString = $uninstall ? 'uninstalling' : 'installing';
+
+        $installClass = $this->getJsonValue($key.'.class',$packageContents,[]);
+        $installMethod = $this->getJsonValue($key.'.method',$packageContents,[]);
+        if (!$installClass || !$installMethod) {
+            $this->info("Nothing to execute for ".$installingString." the package");
+            return;
+        }
+
+        if (!class_exists($installClass)) {
+            $this->info("Class " . $installClass . " for ".$installingString." the package not found");
+            return;
+        }
+
+        if (!class_exists($installMethod)) {
+            $this->info("Method " . $installMethod . " for ".$installingString." the package not found");
+            return;
+        }
+
+        try {
+            $installClass->$installMethod();
+        } catch (\Exception $e) {
+            $this->info("Problems while ".$installingString." package: ");
+            $this->info($e->getMessage());
+            return;
+        }
+
+        $this->info($installClass.'@'.$installMethod." executed successfully!");
+        return;
+    }
 
 }

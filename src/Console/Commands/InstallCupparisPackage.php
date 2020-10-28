@@ -1,6 +1,7 @@
 <?php namespace Gecche\Cupparis\App\Console\Commands;
 
 use Gecche\Cupparis\App\CupparisJsonTrait;
+use Gecche\Cupparis\App\Facades\Cupparis;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -23,7 +24,7 @@ class InstallCupparisPackage extends Command
      */
     protected $signature = 'install-cupparis-package
                             {--force : it forces initialization without prompting (default: no)}
-                            {package? : Only compile relations for the specified model and not for all the models in the folder}
+                            {package : package to install (all scans for all the cupparis packages json files)}
                             {--dir= : Directory of the models}';
 
     /**
@@ -73,10 +74,9 @@ class InstallCupparisPackage extends Command
                 continue;
             }
 
-            $this->setFoorms($currentJson,$packageContents,$currentJsonDotted);
-            $this->setModelconfs($currentJson,$packageContents,$currentJsonDotted);
-            $this->setPermissions($currentJson,$packageContents,$currentJsonDotted);
-            $this->setPolicies($currentJson,$packageContents,$currentJsonDotted);
+            $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
+
+            $this->install($packageContents);
 
         }
 
@@ -89,6 +89,13 @@ class InstallCupparisPackage extends Command
 
     }
 
+
+    protected function updateJson(&$currentJson,$packageContents,$currentJsonDotted) {
+        $this->setFoorms($currentJson,$packageContents,$currentJsonDotted);
+        $this->setModelconfs($currentJson,$packageContents,$currentJsonDotted);
+        $this->setPermissions($currentJson,$packageContents,$currentJsonDotted);
+        $this->setPolicies($currentJson,$packageContents,$currentJsonDotted);
+    }
 
     protected function setFoorms(&$main,$package,$mainDotted) {
 
