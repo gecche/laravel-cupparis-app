@@ -73,10 +73,10 @@ class UninstallCupparisPackage extends Command
                 continue;
             }
 
-            $this->removeFoorms($currentJson,$packageContents,$currentJsonDotted);
-            $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
-            $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
-            $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
+            $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
+
+            $this->install($packageContents,true);
+
 
         }
 
@@ -90,6 +90,12 @@ class UninstallCupparisPackage extends Command
     }
 
 
+    protected function updateJson(&$currentJson,$packageContents,$currentJsonDotted) {
+//        $this->removeFoorms($currentJson,$packageContents,$currentJsonDotted);
+//        $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
+//        $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
+//        $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
+    }
 
 
     protected function removeFoorms(&$main,$package,$mainDotted) {
