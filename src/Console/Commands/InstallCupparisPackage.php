@@ -129,4 +129,10 @@ class InstallCupparisPackage extends Command
 
     }
 
+    protected function install($packageContents) {
+        $this->info("Package installed successfully");
+        return;
+    }
+
+
 }
