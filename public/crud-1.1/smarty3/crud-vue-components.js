@@ -215,27 +215,25 @@ crud.components.widgets.wHasmanyView = Vue.component('w-hasmany-view', {
     }
 });
 
+crud.conf['w-hasone'] =  {
+    confParent : 'crud.conf.w-hasmany',
+    nullable : false,
+    limit : 1
+}
+
 crud.components.widgets.wHasone = Vue.component('w-hasone', {
     extends : crud.components.widgets.coreWHasmany,
     template: '#w-hasone-template',
-    data : function () {
-        var _conf = this._getConf();
-        return {
-            nullable : _conf.nullable?_conf.nullable:false,
-            limit : 1,
-        }
-    }
 });
+
+crud.conf['w-hasone-view'] =  {
+    confParent : 'crud.conf.w-hasone',
+    titleClass : ' text-amber-900',
+}
 
 crud.components.widgets.wHasoneView = Vue.component('w-hasone-view', {
     extends : crud.components.widgets.wHasone,
     template: '#w-hasone-view-template',
-    data : function () {
-        var _conf = this._getConf();
-        return {
-            titleClass : _conf.titleClass || ' text-amber-900',
-        }
-    }
 });
 
 crud.components.widgets.wHidden = Vue.component('w-hidden', {
@@ -251,13 +249,17 @@ crud.components.widgets.wImage = Vue.component('w-image',{
 crud.components.widgets.wInput = Vue.component('w-input', {
     extends : crud.components.widgets.coreWInput,
     template: '#w-input-template',
-    data : function () {
-        var _conf = this._getConf();
-        return {
-            label : _conf.label?_conf.label:'',
-        }
-    }
+    // data : function () {
+    //     var _conf = this._getConf();
+    //     return {
+    //         label : _conf.label?_conf.label:'',
+    //     }
+    // }
 });
+
+crud.conf['w-input-view'] =  {
+    confParent : 'crud.conf.w-input',
+}
 
 crud.components.widgets.wInputView = Vue.component('w-input-view', {
     extends : crud.components.widgets.wInput,

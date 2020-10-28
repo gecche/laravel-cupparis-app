@@ -74,12 +74,27 @@
     var listConfCustomActions = {
         cRef : 'cTest',
         modelName : 'user',
+        actions : ['action-insert','action-view','action-edit','action-delete','action-delete-selected','action-globale','action-record'],
         customActions :  {
             'action-edit' : {
                 icon : 'fa fa-wrench',
                 beforeExecute : function () {
                     alert(' blocco l\'azione ritornando false');
                     return false;
+                }
+            },
+            'action-globale' : {
+                type : 'collection',
+                icon : 'fa fa-globe',
+                execute : function () {
+                    alert('execute action globale');
+                }
+            },
+            'action-record' : {
+                type : 'record',
+                icon : 'fa fa-globe',
+                execute : function () {
+                    alert('execute action record');
                 }
             }
         }

@@ -475,7 +475,7 @@
         <div class="portlet-body">
             <input type="hidden" value="1">
             <div class="row">
-                <div class="col-12 col-lg-6 col-xl-4 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)">
+                <div class="col-12 col-lg-6 col-xl-4 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)" :key="index">
                     <div class="card p-1 m-0
                      shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
                         <!--<div class="card-header" crud-hasmany_title>-->
