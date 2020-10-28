@@ -815,7 +815,7 @@
                                     <th v-show="recordActionsName.length"></th>
                                     <th v-for="key in keys" v-if="!isHiddenField(key)"
                                         class="text-gray-500 font-weight-normal fs--14" :class="key">
-                                        <action-order v-if="conf.orderFields[key]"
+                                        <action-order v-if="orderFields[key]"
                                                       v-bind:c-conf="getOrderConf(key)"></action-order>
                                         <span style="cursor:default"
                                               class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
@@ -878,7 +878,7 @@
                                     <th v-show="recordActionsName.length"></th>
                                     <th v-for="key in keys" v-if="!isHiddenField(key)"
                                         class="text-gray-500 font-weight-normal fs--14">
-                                        <action-order v-if="conf.orderFields[key]"
+                                        <action-order v-if="orderFields[key]"
                                                       v-bind:c-conf="getOrderConf(key)"></action-order>
                                         <span style="cursor:default"
                                               class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
@@ -942,7 +942,7 @@
                             <span>{{"app.azioni" | translate }}</span>
                         </th>
                         <th v-for="key in keys" v-if="!isHiddenField(key)">
-                            <action-order v-if="conf.orderFields[key]" v-bind:c-conf="getOrderConf(key)"></action-order>
+                            <action-order v-if="orderFields[key]" v-bind:c-conf="getOrderConf(key)"></action-order>
                             <span v-else>{{key+'.label' | translate(langContext) }}</span>
                         </th>
                     </tr>
@@ -1008,7 +1008,7 @@
         </form>
         <div v-html="beforeActions"></div>
         <div class="p-3" v-show="actions.length">
-            <template v-for="(action,name) in actionsClass">
+            <template v-for="(action,name) in actionsConf">
                 <v-action :c-action="action"></v-action>
             </template>
         </div>
@@ -1027,7 +1027,7 @@
             <v-widget :c-widget="widget" :key="key"></v-widget>
         </template>
         <div v-if="actions.length">
-            <template v-for="(action,name) in actionsClass">
+            <template v-for="(action,name) in actionsConf">
                 <v-action :c-action="action"></v-action>
             </template>
         </div>
@@ -1049,7 +1049,7 @@
         </form>
         <div v-html="beforeActions"></div>
         <div class="p-3" v-show="actions.length">
-            <template v-for="(action,name) in actionsClass">
+            <template v-for="(action,name) in actionsConf">
                 <v-action :c-action="action"></v-action>
             </template>
         </div>
@@ -1072,7 +1072,7 @@
                 </div>
                 <div class="col-12 search-buttons" :class="buttonsClass">
                     <div class="p-3" v-show="actions.length">
-                        <template v-for="(action,name) in actionsClass">
+                        <template v-for="(action,name) in actionsConf">
                             <v-action :c-action="action"></v-action>
                             <!--                            <component  v-bind:is="name" v-bind:c-conf="action"></component>-->
                         </template>
@@ -1126,7 +1126,7 @@
             </div>
         </div>
         <div v-show="actions.length">
-            <template v-for="(action,name) in actionsClass">
+            <template v-for="(action,name) in actionsConf">
                 <component v-bind:is="name" v-bind:c-conf="action"></component>
             </template>
         </div>

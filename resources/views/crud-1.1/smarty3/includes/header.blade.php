@@ -43,7 +43,7 @@
                 -->
                 <a class="navbar-brand d-inline-block d-lg-none" href="/">
                     <span data-gfont="Sriracha" class="text-dark">
-                        <img src="{!! Theme::url('images/ifc.png') !!}" width="55" height="40" alt="Abruzzo"> Abruzzo
+                        <img src="{!! Theme::url('images/ifc.png') !!}" width="55" height="40" alt="{{env('APP_NAME')}}"> {{env('APP_NAME')}}
                     </span>
                 </a>
 

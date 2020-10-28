@@ -9,13 +9,13 @@ crud.routes['pdf-exporta'] = {
     resultType  : 'record',
 }
 crud.routes.delete.url = "/foormaction/delete/{modelName}/list";
-crud.actions['action-delete'].setRouteValues = function(route) {
+crud.conf['action-delete'].setRouteValues = function(route) {
     var that = this;
     route.setValues({
         modelName: that.view.modelName
     });
     route.setParams({
-        id : that.modelData[that.view.conf.primaryKey]
+        id : that.modelData[that.view.primaryKey]
     });
     return route;
 };
@@ -63,7 +63,7 @@ crud.conf.view.defaultWidgetType = 'w-input-view';
 
 console.log('APPLICATION CONFIG LOADED');
 
-crud.actions['action-export-csv'] = {
+crud.conf['action-export-csv'] = {
     execute : function () {
         var that = this;
         var r = that.createRoute(that.routeName);
@@ -98,50 +98,50 @@ crud.actions['action-export-csv'] = {
     startMessage : 'Generazione csv in corso...',
 };
 
-crud.actions['action-search'].css = "btn-sm mr-1 btn-success bg-success-soft"
-crud.actions['action-reset'].css = "btn-sm mr-1 btn-warning bg-warning-soft"
-crud.actions['action-save'].css = "btn-sm mr-1 btn-success bg-success-soft";
-//crud.actions['action-save'].alertTime = 0;
-//crud.actions['action-save-row'].alertTime = 0;
-crud.actions['action-back'].css = "btn-sm mr-1 btn-danger bg-danger-soft"
+crud.conf['action-search'].css = "btn-sm mr-1 btn-success bg-success-soft"
+crud.conf['action-reset'].css = "btn-sm mr-1 btn-warning bg-warning-soft"
+crud.conf['action-save'].css = "btn-sm mr-1 btn-success bg-success-soft";
+//crud.conf['action-save'].alertTime = 0;
+//crud.conf['action-save-row'].alertTime = 0;
+crud.conf['action-back'].css = "btn-sm mr-1 btn-danger bg-danger-soft"
 
-crud.actions['action-export-csv-codici'] = crud.instance.merge(
-    crud.actions['action-export-csv'],
+crud.conf['action-export-csv-codici'] = crud.instance.merge(
+    crud.conf['action-export-csv'],
     {
         text : "Codici",
         css : 'btn-sm btn btn-outline-primary',
         csvType : 'codici',
     }
 );
-crud.actions['action-export-csv-standard'] = crud.instance.merge(
-    crud.actions['action-export-csv'],
+crud.conf['action-export-csv-standard'] = crud.instance.merge(
+    crud.conf['action-export-csv'],
     {
         text : "Export",
     }
 );
-crud.actions['action-export-csv-riepilogo'] = crud.instance.merge(
-    crud.actions['action-export-csv'],
+crud.conf['action-export-csv-riepilogo'] = crud.instance.merge(
+    crud.conf['action-export-csv'],
     {
         text : "Export riepilogo",
         csvType : 'riepilogo',
     }
 );
 
-crud.actions['action-save-back'] = crud.instance.merge(
-    crud.actions['action-save'], {
+crud.conf['action-save-back'] = crud.instance.merge(
+    crud.conf['action-save'], {
         text : 'Salva e torna alla lista',
         css : "btn-sm mr-1 btn-success bg-success-soft",
         //alertTime: 0,
 
 });
 
-crud.actions['action-insert'].execute = function () {
+crud.conf['action-insert'].execute = function () {
     var that = this;
     var id = that.modelData[that.view.primaryKey];
     document.location.href = '#v-insert?cModel='+that.view.modelName;
 }
 
-crud.actions['action-delete'].execute = function () {
+crud.conf['action-delete'].execute = function () {
         var that = this;
         var confirmMessage;
         if (that.view.modelName == 'istituto') {
@@ -168,14 +168,14 @@ crud.actions['action-delete'].execute = function () {
         });
 }
 
-crud.actions['action-previous'] = {
+crud.conf['action-previous'] = {
     text : '<<',
     title : 'Precedente',
     execute : function () {
         this.view._backward();
     }
 }
-crud.actions['action-next'] = {
+crud.conf['action-next'] = {
     text : '>>',
     title : 'Successivo',
     execute : function () {

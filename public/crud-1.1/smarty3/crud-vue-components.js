@@ -321,16 +321,22 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
 
 });
 
+
+crud.conf['w-swap-smarty'] =  {
+    confParent : 'crud.conf.w-swap',
+    switchClass : 'form-switch-success',
+    dataSwitched : false,
+}
 crud.components.widgets.wSwapSmarty = Vue.component('w-swap-smarty', {
     extends: crud.components.widgets.wSwap,
     template: '#w-swap-smarty-template',
-    data : function() {
-        var _c = this._getConf();
-        return {
-            switchClass : _c.switchClass || 'form-switch-success',
-            dataSwitched : _c.dataSwitched || false,
-        }
-    },
+    // data : function() {
+    //     var _c = this._getConf();
+    //     return {
+    //         switchClass : _c.switchClass || 'form-switch-success',
+    //         dataSwitched : _c.dataSwitched || false,
+    //     }
+    // },
     methods : {
         _swap : function (key) {
             var that = this;

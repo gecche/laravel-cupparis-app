@@ -208,7 +208,7 @@ crud.components.cManage = Vue.component('c-manage', {
         _actionSaveBack: function () {
             var thisManage = this;
 
-            return thisManage.merge(thisManage.$crud.actions['action-save'], {
+            return thisManage.merge(thisManage.$crud.conf['action-save'], {
                 text: 'Salva e Torna alla lista',
                 afterExecute: function () {
                     thisManage.jQe('[c-collapse-edit]').collapse('hide');
@@ -240,7 +240,7 @@ crud.components.cManage = Vue.component('c-manage', {
 
             if (!thisManage.cInlineEdit && !conf.inlineEdit) {
                 listConf = conf.listConf || originalConf.list || {};
-                listConf = thisManage.confMerge(thisManage.$crud.conf.list, listConf);
+                listConf = thisManage.mergeConfView(thisManage.$crud.conf.list, listConf);
 
                 if (listConf.actions.indexOf('action-edit') >= 0) {
 
@@ -299,7 +299,7 @@ crud.components.cManage = Vue.component('c-manage', {
 
             if (thisManage.cInlineEdit || conf.inlineEdit) {
                 listEditConf = conf.listEditConf || originalConf.listEdit || {};
-                listEditConf = thisManage.confMerge(thisManage.$crud.conf.listEdit, listEditConf);
+                listEditConf = thisManage.mergeConfView(thisManage.$crud.conf.listEdit, listEditConf);
                 console.log('acions list edit ', listEditConf.actions);
                 if (listEditConf.actions.indexOf('action-view') >= 0) {
                     listEditConf.customActions['action-view'] = {
@@ -330,7 +330,7 @@ crud.components.cManage = Vue.component('c-manage', {
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
             var searchConf = conf.searchConf || originalConf.search || {};
-            searchConf = thisManage.confMerge(thisManage.$crud.conf.search, searchConf);
+            searchConf = thisManage.mergeConfView(thisManage.$crud.conf.search, searchConf);
 
             var acSearch = searchConf.customActions['action-search'] || {};
 
@@ -357,11 +357,11 @@ crud.components.cManage = Vue.component('c-manage', {
             var originalConf = window[modelConf] ? window[modelConf] : {};
 
             var editConf = conf.editConf || originalConf.edit || {};
-            editConf = thisManage.confMerge(thisManage.$crud.conf.edit, editConf);
+            editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit, editConf);
             // prendo eventuali configurazioni locali al modello.
             var _asb = editConf.customActions['action-save-back'] || {};
             //var _as = editConf.customActions['action-save'] || {};
-            editConf = thisManage.confMerge(editConf, {
+            editConf = thisManage.mergeConfView(editConf, {
                 customActions: {
                     'action-save-back': thisManage.merge(_asb,thisManage._actionSaveBack()),
                     'action-back': thisManage._actionBack(),
@@ -382,13 +382,13 @@ crud.components.cManage = Vue.component('c-manage', {
             var thisManage = this;
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
-            var editConf = thisManage.confMerge(thisManage.$crud.conf.edit, (originalConf.edit || {}));
+            var editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit, (originalConf.edit || {}));
             var insertConf = conf.insertConf || originalConf.insert || editConf;
-            insertConf = thisManage.confMerge(thisManage.$crud.conf.insert, insertConf);
+            insertConf = thisManage.mergeConfView(thisManage.$crud.conf.insert, insertConf);
             insertConf.routeName = 'insert';
             // prendo eventuali configurazioni locali al modello.
             var _asb = insertConf.customActions['action-save-back'] || {};
-            insertConf = thisManage.confMerge(insertConf, {
+            insertConf = thisManage.mergeConfView(insertConf, {
                 customActions: {
                     'action-save-back': thisManage.merge(_asb,thisManage._actionSaveBack()),
                     'action-back': thisManage._actionBack()
@@ -412,7 +412,7 @@ crud.components.cManage = Vue.component('c-manage', {
             var modelConf = "Model" + thisManage.pascalCase(modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
             var viewConf = conf.viewConf || originalConf.view || {};
-            viewConf = thisManage.confMerge(thisManage.$crud.conf.view, viewConf);
+            viewConf = thisManage.mergeConfView(thisManage.$crud.conf.view, viewConf);
             var d = {
                 viewComponentName: conf.viewComponentName || 'v-view',
                 viewComp: null,
