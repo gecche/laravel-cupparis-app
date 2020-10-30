@@ -24,6 +24,7 @@ class UninstallCupparisPackage extends Command
      */
     protected $signature = 'uninstall-cupparis-package
                             {package : Package to uninstall}
+                            {--json : also delete the package json file (default: no)}
                             {--force : it forces initialization without prompting (default: no)}
                             {--dir= : Directory of the models}';
 
@@ -82,7 +83,10 @@ class UninstallCupparisPackage extends Command
         }
 
         File::put($mainJsonFile,cupparis_json_encode($currentJson));
-        File::delete($packageFilename);
+
+        if ($this->option('json')) {
+            File::delete($packageFilename);
+        }
 
         $this->info('Cupparis app json updated successfully.');
         foreach ($this->packagesErrors as $packageFileName => $packageError) {
@@ -93,16 +97,16 @@ class UninstallCupparisPackage extends Command
 
 
     protected function updateJson(&$currentJson,$packageContents,$currentJsonDotted) {
-//        $this->removeFoorms($currentJson,$packageContents,$currentJsonDotted);
-//        $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
-//        $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
-//        $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
+        $this->removeFoorms($currentJson,$packageContents,$currentJsonDotted);
+        $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
+        $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
+        $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
     }
 
 
     protected function removeFoorms(&$main,$package,$mainDotted) {
 
-        $values = $this->buildPackageArrayValue('foorm.entities',$main,$package,$mainDotted,false);
+        $values = $this->removePackageArrayValue('foorm.entities',$main,$package,$mainDotted,false);
 
         $main['foorm']['entities'] = $values;
 
@@ -110,7 +114,7 @@ class UninstallCupparisPackage extends Command
 
     protected function removeModelconfs(&$main,$package,$mainDotted) {
 
-        $values = $this->buildPackageArrayValue('modelconfs.files',$main,$package,$mainDotted,false);
+        $values = $this->removePackageArrayValue('modelconfs.files',$main,$package,$mainDotted,false);
 
         $main['modelconfs']['files'] = $values;
 
@@ -118,7 +122,7 @@ class UninstallCupparisPackage extends Command
 
     protected function removePermissions(&$main,$package,$mainDotted) {
 
-        $values = $this->buildPackageArrayValue('permissions.models',$main,$package,$mainDotted,false);
+        $values = $this->removePackageArrayValue('permissions.models',$main,$package,$mainDotted,false);
 
         $main['permissions']['models'] = $values;
 
@@ -126,7 +130,7 @@ class UninstallCupparisPackage extends Command
 
     protected function removePolicies(&$main,$package,$mainDotted) {
 
-        $values = $this->buildPackageArrayValue('policies.models',$main,$package,$mainDotted);
+        $values = $this->removePackageArrayValue('policies.models',$main,$package,$mainDotted);
 
         $main['policies']['models'] = $values;
 

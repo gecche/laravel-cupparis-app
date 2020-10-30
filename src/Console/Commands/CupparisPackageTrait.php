@@ -100,6 +100,19 @@ trait CupparisPackageTrait {
         return $values;
     }
 
+    protected function removePackageArrayValue($buildKey,$main,$package,$mainDotted,$associative = true) {
+        $values = $this->getJsonValue($buildKey,$main,[],$mainDotted);
+        $packageValues = $this->getJsonValue($buildKey,$package,[]);
+
+        if ($associative) {
+            $values = array_diff_key($values,$packageValues);
+        } else {
+            $values = array_diff($values,$packageValues);
+        }
+
+        return $values;
+    }
+
     protected function installUninstall($packageContents,$uninstall = false) {
         $key = $uninstall ? 'uninstall' : 'install';
         $installingString = $uninstall ? 'uninstalling' : 'installing';
