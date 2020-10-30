@@ -1,51 +1,52 @@
 {
-  "foorm": {
-    "entities": [
-      "user"
-    ]
-  },
-
-  "modelconfs": {
-    "rootJsDir": "ModelConfs",
-    "files": [
-      "ModelUser.js"
-    ]
-  },
-
-  "permissions": {
-    "guards": [
-      "web"
-    ],
-    "roles": {
-      "web": [
-        "Superutente",
-        "Login",
-        "Admin",
-        "Operatore"
-      ]
+    "foorm": {
+        "entities": [
+            "user"
+        ]
     },
-    "models": [
-      "user"
-    ],
-    "models_permissions_prefixes": {
-      "web": [
-        "edit",
-        "create",
-        "view",
-        "list",
-        "delete",
-        "menu",
-        "tab"
-      ]
+    "modelconfs": {
+        "rootJsDir": "ModelConfs",
+        "files": [
+            "ModelUser.js"
+        ]
     },
-    "other_permissions": {
-      "web": []
+    "permissions": {
+        "guards": [
+            "web"
+        ],
+        "roles": {
+            "web": [
+                "Superutente",
+                "Login",
+                "Admin",
+                "Operatore"
+            ]
+        },
+        "models": [
+            "user"
+        ],
+        "models_permissions_prefixes": {
+            "web": [
+                "edit",
+                "create",
+                "view",
+                "list",
+                "delete",
+                "menu",
+                "tab"
+            ]
+        },
+        "other_permissions": {
+            "web": []
+        }
+    },
+    "policies": {
+        "models": {
+            "\\App\\Models\\User": "\\App\\Policies\\UserPolicy"
+        }
+    },
+    "datafile": {
+        "providers": {
+        }
     }
-  },
-
-  "policies": {
-    "models": {
-
-    }
-  }
 }
