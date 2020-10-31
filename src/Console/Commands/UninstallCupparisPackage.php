@@ -5,6 +5,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
@@ -200,6 +201,24 @@ class UninstallCupparisPackage extends Command
             File::delete($datafileProvidersDir . $datafileProvider . '.php');
         }
 
+        $seedsDir = database_path('seeds'.DIRECTORY_SEPARATOR);
+        $seeds = $this->getJsonValue('database.seeds',$packageContents,[]);
+        foreach ($seeds as $seed) {
+            File::delete($seedsDir . $seed . '.php');
+        }
+        $dumpsDir = database_path('dump'.DIRECTORY_SEPARATOR);
+        $dumps = $this->getJsonValue('database.dump',$packageContents,[]);
+        foreach ($dumps as $dump) {
+            Log::info("DUMP::: ".$dumpsDir . $dump . '.sql');
+            File::delete($dumpsDir . $dump . '.sql');
+        }
+
+
+        $configs = $this->getJsonValue('config',$packageContents,[]);
+        foreach ($configs as $config) {
+            Log::info("CONFIG::: ".config_path($config . '.php'));
+            File::delete(config_path($config . '.php'));
+        }
         $this->info("Package uninstalled successfully");
         return;
     }
