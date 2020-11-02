@@ -416,9 +416,11 @@ class Translations extends Command
         foreach ($relations as $relationName => $relation) {
 
             $translations[$foormEntity]['relations'][$relationName]['label'] = $this->getFoormRelationMetadata($foormEntity, $relationName);
+            $translations[$foormEntity]['fields'][$relationName]['label'] = $this->getFoormRelationMetadata($foormEntity, $relationName);
             $line = $this->getFoormRelationMetadata($foormEntity,$relationName,$formType);
             if (!is_null($line)) {
                 $translations[$foormEntity][$formType]['relations'][$relationName]['label'] = $line;
+                $translations[$foormEntity][$formType]['fields'][$relationName]['label'] = $line;
             }
 
             $relationFields = Arr::get($relation, 'fields', []);
