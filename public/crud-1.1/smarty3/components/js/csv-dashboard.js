@@ -40,7 +40,7 @@ Vue.component('csv-dashboard', {
             //         field : 'dizionario_comune',
             //     },
             // },
-            datafileConf : csvD.confMerge(csvD.$crud.conf.list,{
+            datafileConf : csvD.mergeConfView(csvD.$crud.conf.list,{
                 routeName : 'datafile_data',
                 actions : ['action-save-import'],
                 customActions : {

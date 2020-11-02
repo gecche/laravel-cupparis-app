@@ -47,6 +47,7 @@
         <script>
             var app = null;
             jQuery( function() {
+                crud.apiKey = "{{env('GOOGLE_MAP_KEY')}}";
                 crud.EventBus = new Vue();
                 crud.layoutGradientColor = '{{$layoutGradientColor}}';
                 crud.components.libs = {

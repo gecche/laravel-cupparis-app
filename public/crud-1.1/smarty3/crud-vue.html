@@ -375,14 +375,16 @@
 </script>
 
 <template id="w-radio-template">
-    <div>
-        <div class="form-check-inline" v-for="key in domainValuesOrder">
-            <label class="form-check-label">
-                <input class="form-control-input" v-bind:name="getFieldName()" type="radio" :value="key"
+    <div class="col-12 mb-2 form-label-group">
+        <div class="bw--1 border-solid border-gray-400 p--6 rounded">
+            <label v-for="key in domainValuesOrder" class="form-radio">
+                <input v-bind:name="getFieldName()" type="radio" :value="key"
                        v-model="value"
-                       v-bind:c-marker="cMarker" v-on:change="change">&nbsp;&nbsp;{{domainValues[key]}}
+                       v-bind:c-marker="cMarker" v-on:change="change">
+                <i></i>{{domainValues[key]}}
             </label>
         </div>
+
     </div>
 </template>
 
@@ -761,6 +763,32 @@
     </div>
 </template>
 
+<template id="w-map-template">
+    <div>
+        <!-- input hidden for form compatibiliy --->
+        <input type="hidden" :name="lngName" >
+        <input type="hidden" :name="latName">
+        <div class="mb-2 form-label-group" >
+            <input :placeholder="label" class="form-control" v-on:change="searchAddress">
+            <label>
+                {{label}}
+            </label>
+        </div>
+
+
+<!--        <div class="input-group mb-3">-->
+<!--            <div class="input-group-prepend">-->
+<!--                <span class="input-group-text" id="basic-addon1">{{'app.trova-indirizzo' | translate}}</span>-->
+<!--            </div>-->
+<!--            <input class="form-control" type="text" v-on:change="searchAddress"/>-->
+<!--        </div>-->
+        <div c-map></div>
+    </div>
+</template>
+
+<template id="w-map-view-template">
+    <div c-map ></div>
+</template>
 
 <script type="text/x-template" id="v-list-template">
     <!-- start:row -->

@@ -402,6 +402,25 @@ crud.components.widgets.wUploadAjax = Vue.component('w-upload-ajax', {
     template: '#w-upload-ajax-template',
 });
 
+crud.components.widgets.wMap = Vue.component('w-map', {
+    extends: crud.components.widgets.coreWMap,
+    template: '#w-map-template',
+    methods : {
+        dynamicData: function (conf) {
+            var that = this;
+            conf.lat = parseFloat(conf.modelData[conf.latName]); //[conf.latName];
+            conf.lng = parseFloat(conf.modelData[conf.lngName]); //[conf.lngName];
+            conf.apiKey = this.$crud.apiKey;
+            return conf;
+        }
+    }
+});
+
+crud.components.widgets.wMapView = Vue.component('w-map-view', {
+    extends: crud.components.widgets.coreWMapView,
+    template: '#w-map-view-template',
+});
+
 //-----------------   VIEWS  ----------------------
 crud.conf['v-edit'].beforeForm = null;
 
@@ -410,11 +429,12 @@ crud.components.views.vEdit = Vue.component('v-edit', {
     template : '#v-edit-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
-        }
+        },
     }
 });
 
@@ -438,11 +458,12 @@ crud.components.views.vInsert = Vue.component('v-insert', {
     template: '#v-insert-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
-        }
+        },
     }
 });
 
@@ -452,9 +473,10 @@ crud.components.views.vList = Vue.component('v-list', {
     template: '#v-list-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
         },
         hasHelp : function (key) {
@@ -471,11 +493,12 @@ crud.components.views.vListEdit = Vue.component('v-list-edit', {
     template: '#v-list-edit-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
-        }
+        },
     }
 });
 
@@ -484,11 +507,12 @@ crud.components.views.vSearch = Vue.component('v-search', {
     template: '#v-search-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
-        }
+        },
     }
 });
 crud.conf['v-view'].defaultWidgetType = 'w-input-view';
@@ -497,11 +521,12 @@ crud.components.views.vView = Vue.component('v-view', {
     template: '#v-view-template',
     methods : {
         dynamicData : function (conf) {
-            if (!conf.langContext && conf.langContext !== null)
-                conf.langContext = conf.modelName ? conf.modelName: this.cModel
-            //console.log('lang')
+            if (!conf.langContext && conf.langContext !== null) {
+                conf.langContext = conf.modelName ? conf.modelName : this.cModel
+                conf.langContext += '.fields';
+            }
             return conf;
-        }
+        },
     }
 });
 //-----------------   ACTIONS ---------------------

@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Request as RequestFacade;
-use igaster\laravelTheme\Facades\Theme;
+#use igaster\laravelTheme\Facades\Theme;
+use Igaster\LaravelTheme\Facades\Theme;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,6 +39,16 @@ class MiscController extends BaseController {
     }
 
 
+    public function crudPage($page) {
+        try {
+            $realPage = 'pages/' . str_replace('.','/',$page) . '.html';
+            $file = Theme::url($realPage);
+            return Response::file(public_path($file));
+        } catch(\Exception $e) {
+            abort(404);
+        }
+
+    }
     public function captchajs() {
 
         return response(captcha_img(),200);
