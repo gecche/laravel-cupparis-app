@@ -140,11 +140,15 @@ class UninstallCupparisPackage extends Command
     protected function uninstall($packageContents) {
 
         $foormsDir = config_path('foorms' . DIRECTORY_SEPARATOR);
+        $foormsLangDir = resource_path('lang'.DIRECTORY_SEPARATOR.'it'.DIRECTORY_SEPARATOR.'foorms' . DIRECTORY_SEPARATOR);
         $foorms = $this->getJsonValue('foorm.entities',$packageContents,[]);
         foreach ($foorms as $foorm) {
             $foormFile = $foormsDir . $foorm . '.php';
             $this->info($foormFile);
             File::delete($foormFile);
+            $foormLangFile = $foormsLangDir . $foorm . '.php';
+            $this->info($foormLangFile);
+            File::delete($foormLangFile);
         }
 
         $modelconfsDir = public_path('admin'.DIRECTORY_SEPARATOR.'ModelConfs'.DIRECTORY_SEPARATOR);
