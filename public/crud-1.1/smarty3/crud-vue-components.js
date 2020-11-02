@@ -403,13 +403,17 @@ crud.components.widgets.wUploadAjax = Vue.component('w-upload-ajax', {
 });
 
 //-----------------   VIEWS  ----------------------
+crud.conf['v-edit'].beforeForm = null;
 
 crud.components.views.vEdit = Vue.component('v-edit', {
     extends : crud.components.views.coreVEdit,
     template : '#v-edit-template',
-    data : function () {
-        return {
-            beforeForm : null,
+    methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
         }
     }
 });
@@ -432,18 +436,27 @@ crud.components.views.vHasmanyList = Vue.component('v-hasmany-list', {
 crud.components.views.vInsert = Vue.component('v-insert', {
     extends: crud.components.views.coreVInsert,
     template: '#v-insert-template',
+    methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
+        }
+    }
 });
 
+crud.conf['v-list'].helpText = '';
 crud.components.views.vList = Vue.component('v-list', {
     extends: crud.components.views.coreVList,
     template: '#v-list-template',
-    data :  function () {
-        var _conf = this._getConf() || {};
-        var d =  {}
-        d.helpText = _conf.helpText || '';
-        return d;
-    },
     methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
+        },
         hasHelp : function (key) {
             var that = this;
             if (this.fieldsConfig[key]) {
@@ -456,23 +469,40 @@ crud.components.views.vList = Vue.component('v-list', {
 crud.components.views.vListEdit = Vue.component('v-list-edit', {
     extends: crud.components.views.coreVListEdit,
     template: '#v-list-edit-template',
+    methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
+        }
+    }
 });
 
 crud.components.views.vSearch = Vue.component('v-search', {
     extends: crud.components.views.coreVSearch,
     template: '#v-search-template',
+    methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
+        }
+    }
 });
-
+crud.conf['v-view'].defaultWidgetType = 'w-input-view';
 crud.components.views.vView = Vue.component('v-view', {
     extends: crud.components.views.coreVView,
     template: '#v-view-template',
-    data :  function () {
-        var _conf = this._getConf() || {};
-        var d =  {}
-        d.defaultWidgetType = _conf.defaultWidgetType || 'w-input-view';
-        return d;
-    },
-
+    methods : {
+        dynamicData : function (conf) {
+            if (!conf.langContext && conf.langContext !== null)
+                conf.langContext = conf.modelName ? conf.modelName: this.cModel
+            //console.log('lang')
+            return conf;
+        }
+    }
 });
 //-----------------   ACTIONS ---------------------
 
