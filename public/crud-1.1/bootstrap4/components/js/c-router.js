@@ -94,15 +94,18 @@ crud.components.cRouter = Vue.component('c-router',{
             if (that.lastComponent)
                 that.lastComponent.$destroy();
 
-            //var params = that.getAllUrlParams(command);
-
             var route = that.createRoute('pages');
+            var path = params['path'].replaceAll('/','.');
             route.setValues({
-                path : params['path']
+                path : path
             })
             delete params['path'];
             route.setParams(params);
             Server.route(route,function (html) {
+                if (html.error) {
+                    that.errorDialog(html.msg);
+                    return ;
+                }
                 var htmlNode = jQuery('<div>'+html+'</div>');
                 jQuery.each(htmlNode.find('script'),function () {
                     //console.log('script',jQuery(this).text());

@@ -408,8 +408,15 @@ crud.components.widgets.wMap = Vue.component('w-map', {
     methods : {
         dynamicData: function (conf) {
             var that = this;
-            conf.lat = parseFloat(conf.modelData[conf.latName]); //[conf.latName];
-            conf.lng = parseFloat(conf.modelData[conf.lngName]); //[conf.lngName];
+            var _md = conf.modelData || {};
+            if (_md[conf.latName]) {
+                conf.lat = parseFloat(_md[conf.latName]);
+            }
+            if (_md[conf.lngName]) {
+                conf.lng = parseFloat(_md[conf.lngName]); //[conf.lngName];
+            }
+            //conf.lat = parseFloat(conf.modelData[conf.latName]); //[conf.latName];
+            //conf.lng = parseFloat(conf.modelData[conf.lngName]); //[conf.lngName];
             conf.apiKey = this.$crud.apiKey;
             return conf;
         }
@@ -419,6 +426,27 @@ crud.components.widgets.wMap = Vue.component('w-map', {
 crud.components.widgets.wMapView = Vue.component('w-map-view', {
     extends: crud.components.widgets.coreWMapView,
     template: '#w-map-view-template',
+    methods : {
+        dynamicData: function (conf) {
+            var that = this;
+            var _md = conf.modelData || {};
+            if (_md[conf.latName]) {
+                conf.lat = parseFloat(_md[conf.latName]);
+            }
+            if (_md[conf.lngName]) {
+                conf.lng = parseFloat(_md[conf.lngName]); //[conf.lngName];
+            }
+            //conf.lat = parseFloat(conf.modelData[conf.latName]); //[conf.latName];
+            //conf.lng = parseFloat(conf.modelData[conf.lngName]); //[conf.lngName];
+            conf.apiKey = this.$crud.apiKey;
+            return conf;
+        }
+    }
+});
+
+crud.components.widgets.wDateText = Vue.component('w-date-text', {
+    extends: crud.components.widgets.coreWDateText,
+    template: '#w-date-text-template',
 });
 
 //-----------------   VIEWS  ----------------------

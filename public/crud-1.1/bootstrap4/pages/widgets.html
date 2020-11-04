@@ -35,6 +35,9 @@
             <li>
                 <a :href="getHref()" v-on:click="doCmd('w-upload-ajax?cConf=uploadAjaxConf&targetId=componentArea')">upload ajax</a>
             </li>
+            <li>
+                <a :href="getHref()" v-on:click="doCmd('w-date-text?cConf=dateTextConf&targetId=componentArea')">Date text</a>
+            </li>
         </ul>
         </gestore-links>
     </div>
@@ -60,6 +63,7 @@
     var hasmanyConf = {
         cRef : 'wTest',
         name : 'prova',
+        //label : 'pbo',
         hasmanyConf : {
             fields : ['name'],
             langContext : 'pippo'
@@ -268,11 +272,9 @@
 
     var mapViewConf = {
         cRef : 'wTest',
-        apiKey : 'AIzaSyDmb4Gu2kQ-Kk5z8wp2UJVNY0Eq8W9xig8'
     }
     var mapConf = {
         cRef : 'wTest',
-        apiKey : 'AIzaSyDmb4Gu2kQ-Kk5z8wp2UJVNY0Eq8W9xig8',
         lat : 43.000,
         lng : 40.000
     }
@@ -284,5 +286,12 @@
             field: 'name',
             resource_type: 'foto'
         },
+    }
+
+    var dateTextConf = {
+        name : 'datename',
+        cRef : 'wTest',
+        format : 'DD/MM/YYYY',
+        value : '2020-02-28'
     }
 </script>

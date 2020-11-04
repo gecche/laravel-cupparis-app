@@ -42,7 +42,12 @@
         {!! Theme::js('js/it-translations.js')  !!}
 
         <!-- configurazione modelli -->
-        {!! Theme::js('ModelConfs/ModelUser.js')  !!}
+{{--        {!! Theme::js('ModelConfs/ModelUser.js')  !!}--}}
+
+        @foreach (Cupparis::get('modelconfs.files',[]) as $modelConf)
+            {!! Theme::js(Cupparis::get('modelconfs.rootJsDir','ModelConfs').'/'.$modelConf)  !!}
+        @endforeach
+        {!! Theme::js('CsvConfs.js')  !!}
 
         <script>
             var app = null;
@@ -74,15 +79,15 @@
                         tpl : '{!! Theme::url("components/templates/c-drag-drop.html") !!}',
                     }
                 },
-                crud.routes['pages'] = {
-                        url : '{!! Theme::url("pages") !!}/{path}',
-                }
+                {{--crud.routes['pages'] = {--}}
+                {{--        url : '{!! Theme::url("pages") !!}/{path}',--}}
+                {{--}--}}
                 app = new CrudApp({
                     data : {
                         templatesFiles : '{!! Theme::url("crud-vue.html") !!}',
                         //         pluginsPath : '/bootstrap4/plugins/',
                         el : '#wrapper',
-                        appConfig : '{!! Theme::url("CrudConf.js") !!}',
+                        appConfig : ['{!! Theme::url("CrudConf.js") !!}','{!! Theme::url("Smarty3CrudConf.js") !!}'],
                         componentsFiles : '{!! Theme::url("crud-vue-components.js") !!}',
 
                     },

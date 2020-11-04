@@ -6,13 +6,13 @@
                 <h1 class="d-inline-block text-center text-center-md text-center-xs display-4 h2-xs w-100 w-100-md w-100-xs">
 
                     <span data-gfont="Sriracha" class="display-3 h1-xs d-block font-weight-medium">
-									Abruzzo
+									{{env('APP_NAME')}}
 								</span>
                 </h1>
             </div>
 
             <div class="text-center">
-                <h4 class="text-deep-orange-300">CNR-IFC Progetto Abruzzo</h4>
+                <h4 class="text-deep-orange-300">{{env('APP_NAME')}}</h4>
             </div>
 
 

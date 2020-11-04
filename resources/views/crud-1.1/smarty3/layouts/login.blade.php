@@ -15,8 +15,8 @@
     <a aria-label="go back" href="/"
        class="espad-main position-absolute top-0 start-0 my-2 mx-4 z-index-3 h--60 d-inline-flex align-items-center bg-white full-width">
                     <span data-gfont="Sriracha" class="fs--25 text-dark">
-                        <img src="{!! Theme::url('images/ifc.png') !!}" width="55" height="40"
-                             alt="CNR-IFC Progetto Abruzzo">
+                        <img src="{!! Theme::url('images/logo.png') !!}" width="55" height="40"
+                             alt="{{env('APP_NAME')}}">
                     </span>
         {{--                <img src="{{Theme::url('assets/images/logo/logo_dark.svg')}}" width="110" alt="...">--}}
     </a>
