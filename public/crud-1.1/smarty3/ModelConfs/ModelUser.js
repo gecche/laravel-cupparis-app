@@ -82,7 +82,7 @@ var ModelUser = {
             fillData : function (route,json) {
                 var that = this;
                 if (json.metadata.is_auth) {
-                    that.conf.fieldsConfig.mainrole = 'w-hidden';
+                    that.fieldsConfig.mainrole = 'w-hidden';
                 }
                 that.$options.methods.fillData.apply(that,[route,json]);
             }
