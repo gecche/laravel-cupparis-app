@@ -1,6 +1,6 @@
 crud.components.cManage = Vue.component('c-manage', {
     extends: crud.components.cComponent,
-    props: ['cModel', 'cInlineEdit'],
+    props: ['cModel', 'cInlineEdit','cCollapsible'],
     mounted: function () {
         this.createList();
         this.createSearch();
@@ -30,6 +30,13 @@ crud.components.cManage = Vue.component('c-manage', {
         };
         d.manageHeaderClass = _conf.manageHeaderClass || null;
         d.manageHeaderTextClass = _conf.manageHeaderTextClass || 'text-dark';
+        console.log(modelName , thisManage.cCollapsible);
+        var collapsibleElement = (thisManage.cCollapsible !== undefined) ? thisManage.cCollapsible :
+            (_conf.collapsible !== undefined) ? _conf.collapsible :
+            true;
+        d.collapsible = (collapsibleElement === true || collapsibleElement === 'collapsed');
+        d.collapsed =  (collapsibleElement === 'collapsed');
+        d.collapseId = _conf.collapseId || 'manageCollapse'+modelName;
 
         d = Object.assign(d, thisManage._getListConfiguration(_conf, modelName))
         d = Object.assign(d, thisManage._getSearchConfiguration(_conf, modelName))
@@ -123,11 +130,11 @@ crud.components.cManage = Vue.component('c-manage', {
 
             if (thisManage.modelName === 'istituto') {
 
-                thisManage.updateTitle = 'Modifica ' + thisManage.translate("model." + thisManage.modelName, 0) + ' (' +
+                thisManage.updateTitle = 'Modifica ' + thisManage.translate(thisManage.modelName+'.label') + ' (' +
                     pkTranslation +
                     ':' + action.modelData[thisManage.editConf.primaryKey] + ')';
             } else {
-                thisManage.updateTitle = 'Modifica ' + thisManage.translate("model." + thisManage.modelName, 0);
+                thisManage.updateTitle = 'Modifica ' + thisManage.translate(thisManage.modelName+'.label');
             }
 
             var id = 'd' + (new Date().getTime());
@@ -175,7 +182,7 @@ crud.components.cManage = Vue.component('c-manage', {
         },
         _createInsert: function (action) {
             var thisManage = this;
-            thisManage.updateTitle = 'Inserimento ' + thisManage.translate("model." + thisManage.modelName, 0);
+            thisManage.updateTitle = 'Inserimento ' + thisManage.translate(thisManage.modelName+'.label');
             var id = 'd' + (new Date().getTime());
             thisManage.jQe('[c-edit-container]').html('<div id="' + id + '"></div>');
             if (thisManage.insertComp)

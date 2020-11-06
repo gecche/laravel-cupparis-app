@@ -29,32 +29,32 @@ crud.routes.set.url = "/foormaction/set/{modelName}/list";
 crud.routes['autocomplete'].url = "/foormaction/autocomplete/{modelName}/edit";
 crud.routes['autocomplete'].method = 'post';
 
-crud.components.libs = {
-    'csv-dashboard' : {
-        js : '/bootstrap4/components/js/csv-dashboard.js',
-        tpl : '/bootstrap4/components/templates/csv-dashboard.html'
-    },
-    'c-router' : {
-        js : '/bootstrap4/components/js/c-router.js'
-    },
-    'c-manage': {
-        js  : '/bootstrap4/components/js/c-manage.js',
-        tpl : '/bootstrap4/components/templates/c-manage.html'
-    },
-    'c-wizard': {
-        js  : '/bootstrap4/components/js/c-wizard.js',
-        tpl : '/bootstrap4/components/templates/c-wizard.html'
-    },
-    'c-drag-drop': {
-        js  : '/bootstrap4/components/js/c-drag-drop.js',
-        tpl : '/bootstrap4/components/templates/c-drag-drop.html'
-    },
-
-    // 'c-test' : {
-    //     js  : '/bootstrap4/components/js/c-test.js',
-    //     tpl : '/bootstrap4/components/templates/c-test.html'
-    // }
-}
+// crud.components.libs = {
+//     'csv-dashboard' : {
+//         js : '/bootstrap4/components/js/csv-dashboard.js',
+//         tpl : '/bootstrap4/components/templates/csv-dashboard.html'
+//     },
+//     'c-router' : {
+//         js : '/bootstrap4/components/js/c-router.js'
+//     },
+//     'c-manage': {
+//         js  : '/bootstrap4/components/js/c-manage.js',
+//         tpl : '/bootstrap4/components/templates/c-manage.html'
+//     },
+//     'c-wizard': {
+//         js  : '/bootstrap4/components/js/c-wizard.js',
+//         tpl : '/bootstrap4/components/templates/c-wizard.html'
+//     },
+//     'c-drag-drop': {
+//         js  : '/bootstrap4/components/js/c-drag-drop.js',
+//         tpl : '/bootstrap4/components/templates/c-drag-drop.html'
+//     },
+//
+//     // 'c-test' : {
+//     //     js  : '/bootstrap4/components/js/c-test.js',
+//     //     tpl : '/bootstrap4/components/templates/c-test.html'
+//     // }
+// }
 
 console.log('APPLICATION CONFIG LOADED');
 

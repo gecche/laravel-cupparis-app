@@ -4,12 +4,24 @@
         <div class="portlet-header border-bottom mb-1" :class="manageHeaderClass">
 									<span class="d-block text-truncate font-weight-medium"
                                           :class="manageHeaderTextClass">
-										Gestione {{modelName|translate('model',1)}}
+										Gestione {{translate(modelName+'.label',1)}}
+
+                <a class="btn btn-sm btn-success btn-soft float-end" data-toggle="collapse"
+                   :href="'#'+collapseId" role="button" aria-expanded="false"
+                   aria-controls="collapseExample2" v-if="collapsible">
+                    <span>+/-</span>
+                    <span class="group-icon">
+                        <i class="fi fi-arrow-end-slim"></i>
+                        <i class="fi fi-arrow-down-slim"></i>
+                    </span>
+                </a>
 									</span>
+
+
+
         </div>
 
-        <div class="portlet-body pb-0">
-            <a id="" :id="'hiddenTelLink-'+modelName|translate('model',0)" href="#" target="_blank"></a>
+        <div class="portlet-body pb-0" :class="collapsed?'collapse':'collapse show'" :id="collapseId">
             <div class="collapse show" c-collapse-list>
                 <div >
                     <div >
