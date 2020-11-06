@@ -384,6 +384,14 @@ class Translations extends Command
         $foormFields = array_keys(Arr::get($formMetadata, 'fields', []));
         $relations = Arr::get($formMetadata, 'relations', []);
 
+        if (!array_key_exists($foormEntity, $translations) || !array_key_exists('label', $translations[$foormEntity])) {
+            $translations[$foormEntity]['label'] = $this->getFoormMetadata($foormEntity);
+        }
+        $line = $this->getFoormMetadata($foormEntity,$formType);
+        if (!is_null($line)) {
+            $translations[$foormEntity][$formType]['label'] = $line;
+        }
+
         $furtherLabels = ['msg', 'addedLabel'];
         foreach ($foormFields as $field) {
             $translations[$foormEntity]['fields'][$field] = [
@@ -403,13 +411,6 @@ class Translations extends Command
                     $translations[$foormEntity][$formType]['fields'][$field][$furtherLabel] = $line;
                 }
             }
-        }
-        if (!array_key_exists('label', $translations[$foormEntity])) {
-            $translations[$foormEntity]['label'] = $this->getFoormMetadata($foormEntity);
-        }
-        $line = $this->getFoormMetadata($foormEntity,$formType);
-        if (!is_null($line)) {
-            $translations[$foormEntity][$formType]['label'] = $line;
         }
 
 
