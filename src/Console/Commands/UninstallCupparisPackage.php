@@ -210,6 +210,11 @@ class UninstallCupparisPackage extends Command
         foreach ($seeds as $seed) {
             File::delete($seedsDir . $seed . '.php');
         }
+        $factoriesDir = database_path('factories'.DIRECTORY_SEPARATOR);
+        $factories = $this->getJsonValue('database.factories',$packageContents,[]);
+        foreach ($factories as $factory) {
+            File::delete($factoriesDir . $factory . '.php');
+        }
         $dumpsDir = database_path('dump'.DIRECTORY_SEPARATOR);
         $dumps = $this->getJsonValue('database.dump',$packageContents,[]);
         foreach ($dumps as $dump) {
