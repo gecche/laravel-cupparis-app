@@ -102,6 +102,7 @@ class UninstallCupparisPackage extends Command
         $this->removeModelconfs($currentJson,$packageContents,$currentJsonDotted);
         $this->removePermissions($currentJson,$packageContents,$currentJsonDotted);
         $this->removePolicies($currentJson,$packageContents,$currentJsonDotted);
+        $this->removeComponents($currentJson,$packageContents,$currentJsonDotted);
     }
 
 
@@ -137,6 +138,15 @@ class UninstallCupparisPackage extends Command
 
     }
 
+    protected function removeComponents(&$main,$package,$mainDotted) {
+
+        $values = $this->removePackageArrayValue('components',$main,$package,$mainDotted,false);
+
+        $main['components'] = $values;
+
+    }
+
+
     protected function uninstall($packageContents) {
 
         $foormsDir = config_path('foorms' . DIRECTORY_SEPARATOR);
@@ -161,6 +171,13 @@ class UninstallCupparisPackage extends Command
         $pages = $this->getJsonValue('pages',$packageContents,[]);
         foreach ($pages as $page) {
             File::delete($pagesDir . $page);
+        }
+
+        $componentsDir = public_path('admin'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR);
+        $components = $this->getJsonValue('components',$packageContents,[]);
+        foreach ($components as $component) {
+            File::delete($componentsDir .DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR. $component.'.js');
+            File::delete($componentsDir .DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR. $component.'.html');
         }
 
         $modelsDir = app_path('Models'.DIRECTORY_SEPARATOR);

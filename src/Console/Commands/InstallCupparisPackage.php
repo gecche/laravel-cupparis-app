@@ -95,6 +95,7 @@ class InstallCupparisPackage extends Command
         $this->setModelconfs($currentJson,$packageContents,$currentJsonDotted);
         $this->setPermissions($currentJson,$packageContents,$currentJsonDotted);
         $this->setPolicies($currentJson,$packageContents,$currentJsonDotted);
+        $this->setComponents($currentJson,$packageContents,$currentJsonDotted);
     }
 
     protected function setFoorms(&$main,$package,$mainDotted) {
@@ -126,6 +127,13 @@ class InstallCupparisPackage extends Command
         $values = $this->buildPackageArrayValue('policies.models',$main,$package,$mainDotted);
 
         $main['policies']['models'] = $values;
+
+    }
+    protected function setComponents(&$main,$package,$mainDotted) {
+
+        $values = $this->buildPackageArrayValue('components',$main,$package,$mainDotted,false);
+
+        $main['components'] = $values;
 
     }
 
