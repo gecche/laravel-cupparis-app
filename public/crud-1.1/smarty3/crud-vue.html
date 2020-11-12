@@ -97,6 +97,7 @@
     </div>
 </template>
 
+
 <template id="c-paginator-template">
     <div v-if="last_page">
         <nav aria-label="pagination">
@@ -345,9 +346,9 @@
               data-output-target=".js-form-advanced-char-left"
               v-model="value" v-bind:name="getFieldName()"
               v-bind:c-marker="cMarker" v-on:change="change"></textarea>
-        <!--<div v-if="charleft" class="fs&#45;&#45;12 text-muted text-align-end mt&#45;&#45;3">-->
-            <!--car. rimanenti: <span class="js-form-advanced-char-left">{{maxlength || 255}}</span>-->
-        <!--</div>-->
+    <!--<div v-if="charleft" class="fs&#45;&#45;12 text-muted text-align-end mt&#45;&#45;3">-->
+    <!--car. rimanenti: <span class="js-form-advanced-char-left">{{maxlength || 255}}</span>-->
+    <!--</div>-->
 
 </script>
 
@@ -375,26 +376,25 @@
 </script>
 
 <template id="w-radio-template">
-    <div class="col-12 mb-2 form-label-group">
-        <div class="bw--1 border-solid border-gray-400 p--6 rounded">
+    <div class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded">
+        <div class="in-label-group">
             <label v-for="key in domainValuesOrder" class="form-radio">
                 <input v-bind:name="getFieldName()" type="radio" :value="key"
                        v-model="value"
                        v-bind:c-marker="cMarker" v-on:change="change">
-                <i></i>{{domainValues[key]}}
+                <i></i><span v-html="domainValues[key]"></span>
             </label>
         </div>
-
     </div>
 </template>
 
 <template id="w-checkbox-template">
-    <div class="form-check-inline">
-        <div class="" v-for="key in domainValuesOrder">
+    <div class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
+        <div class="in-label-group" v-for="key in domainValuesOrder">
             <input class="form-check-input" v-bind:name="getFieldName()" type="checkbox" :value="key"
                    v-model="value"
                    v-bind:c-marker="cMarker" v-on:change="change">
-            <label class="form-check-label">{{domainValues[key]}}&nbsp;&nbsp;&nbsp;</label>
+            <label class="form-check-label"><span v-html="domainValues[key]"></span></label>
         </div>
     </div>
 </template>
@@ -477,7 +477,8 @@
         <div class="portlet-body">
             <input type="hidden" value="1">
             <div class="row">
-                <div class="col-12 col-lg-6 col-xl-4 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)" :key="index">
+                <div class="col-12 col-lg-6 col-xl-4 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)"
+                     :key="index">
                     <div class="card p-1 m-0
                      shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
                         <!--<div class="card-header" crud-hasmany_title>-->
@@ -544,7 +545,6 @@
 </template>
 
 
-
 <template id="w-hasone-template">
     <div class="portlet mb-1">
         <div class="portlet-header border-bottom mb-1 " :class="bgClass">
@@ -566,7 +566,8 @@
                         <!--{{cConf.metadata.modelName}}-->
                         <!--</div>-->
                         <div class="card-header bg-white">
-                            <button v-if="nullable" v-on:click="deleteItem(index)" class="btn-danger btn-pill btn-xs pull-right"
+                            <button v-if="nullable" v-on:click="deleteItem(index)"
+                                    class="btn-danger btn-pill btn-xs pull-right"
                                     type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -584,7 +585,8 @@
     <div class="portlet">
         <div class="portlet-body pl-1 pr-1 pb-1">
             <h5 class="">
-                <span class="pull-left text-truncate font-weight-medium " :class="titleClass">{{ label | translate }}</span>&nbsp;
+                <span class="pull-left text-truncate font-weight-medium "
+                      :class="titleClass">{{ label | translate }}</span>&nbsp;
             </h5>
 
             <input type="hidden" value="1">
@@ -766,9 +768,9 @@
 <template id="w-map-template">
     <div>
         <!-- input hidden for form compatibiliy --->
-        <input type="hidden" :name="lngName" >
+        <input type="hidden" :name="lngName">
         <input type="hidden" :name="latName">
-        <div class="mb-2 form-label-group" >
+        <div class="mb-2 form-label-group">
             <input :placeholder="label" class="form-control" v-on:change="searchAddress">
             <label>
                 {{label}}
@@ -776,22 +778,22 @@
         </div>
 
 
-<!--        <div class="input-group mb-3">-->
-<!--            <div class="input-group-prepend">-->
-<!--                <span class="input-group-text" id="basic-addon1">{{'app.trova-indirizzo' | translate}}</span>-->
-<!--            </div>-->
-<!--            <input class="form-control" type="text" v-on:change="searchAddress"/>-->
-<!--        </div>-->
+        <!--        <div class="input-group mb-3">-->
+        <!--            <div class="input-group-prepend">-->
+        <!--                <span class="input-group-text" id="basic-addon1">{{'app.trova-indirizzo' | translate}}</span>-->
+        <!--            </div>-->
+        <!--            <input class="form-control" type="text" v-on:change="searchAddress"/>-->
+        <!--        </div>-->
         <div c-map></div>
     </div>
 </template>
 
 <template id="w-map-view-template">
-    <div c-map ></div>
+    <div c-map></div>
 </template>
 
 <template id="w-date-text-template">
-    <span >{{formattedValue}}</span>
+    <span>{{formattedValue}}</span>
 </template>
 
 <!-- views --->
@@ -1124,7 +1126,7 @@
     <c-loading v-if="loading"></c-loading>
     <div v-else>
         <div class="row">
-            <v-widget  v-for="(widget, key) in widgets" :c-widget="widget"></v-widget>
+            <v-widget v-for="(widget, key) in widgets" :c-widget="widget"></v-widget>
         </div>
     </div>
 </template>
