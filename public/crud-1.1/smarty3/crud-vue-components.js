@@ -183,15 +183,16 @@ crud.components.widgets.wDownload = Vue.component('w-download', {
     template: '#w-download-template',
 });
 
+crud.conf['w-hasmany'].bgClass = 'bg-warning-soft';
 crud.components.widgets.wHasmany =Vue.component('w-hasmany', {
     extends: crud.components.widgets.coreWHasmany,
     template: '#w-hasmany-template',
-    data : function () {
-        var _conf = this._getConf();
-        return {
-            bgClass : _conf.bgClass || 'bg-warning-soft',
-        }
-    }
+    // data : function () {
+    //     var _conf = this._getConf();
+    //     return {
+    //         bgClass : _conf.bgClass || 'bg-warning-soft',
+    //     }
+    // }
 });
 
 crud.components.widgets.wHasmanyThrough =Vue.component('w-hasmany-through', {
@@ -204,15 +205,16 @@ crud.components.widgets.wHasmanyList = Vue.component('w-hasmany-list', {
     template: '#w-hasmany-list-template',
 });
 
+crud.conf['w-hasmany-view'].titleClass = 'text-amber-900';
 crud.components.widgets.wHasmanyView = Vue.component('w-hasmany-view', {
     extends : crud.components.widgets.coreWHasmanyView,
     template: '#w-hasmany-view-template',
-    data : function () {
-        var _conf = this._getConf();
-        return {
-            titleClass : _conf.titleClass || ' text-amber-900',
-        }
-    }
+    // data : function () {
+    //     var _conf = this._getConf();
+    //     return {
+    //         titleClass : _conf.titleClass || ' text-amber-900',
+    //     }
+    // }
 });
 
 crud.conf['w-hasone'] =  {
@@ -286,16 +288,19 @@ crud.components.widgets.wSelect = Vue.component('w-select', {
     template: '#w-select-template',
 });
 
+crud.conf['w-swap'].switchClass = 'form-switch-success';
+crud.conf['w-swap'].dataSwitched = false;
+
 crud.components.widgets.wSwap = Vue.component('w-swap', {
     extends: crud.components.widgets.coreWSwap,
     template: '#w-swap-template',
-    data : function() {
-        var _c = this._getConf();
-        return {
-            switchClass : _c.switchClass || 'form-switch-success',
-            dataSwitched : _c.dataSwitched || false,
-        }
-    },
+    // data : function() {
+    //     var _c = this._getConf();
+    //     return {
+    //         switchClass : _c.switchClass || 'form-switch-success',
+    //         dataSwitched : _c.dataSwitched || false,
+    //     }
+    // },
     methods : {
         setRouteValues : function(route) {
             var that = this;
@@ -369,16 +374,18 @@ crud.components.widgets.wText = Vue.component('w-text',{
     template: '#w-text-template'
 });
 
+crud.conf['w-textarea'].maxlength = null;
+crud.conf['w-textarea'].charleft = false;
 crud.components.widgets.wTextarea = Vue.component('w-textarea', {
     extends : crud.components.widgets.coreWTextarea,
     template: '#w-textarea-template',
-    data : function () {
-        var _c = this._getConf();
-        return {
-            maxlength : _c.maxlength || null,
-            charleft : _c.charleft || false,
-        }
-    }
+    // data : function () {
+    //     var _c = this._getConf();
+    //     return {
+    //         maxlength : _c.maxlength || null,
+    //         charleft : _c.charleft || false,
+    //     }
+    // }
 });
 
 crud.components.widgets.wTextareaView = Vue.component('w-textarea-view', {

@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{!! Config::get('app.name') !!}</title>
-    <meta name="description" content="Contatti Espad">
+    <meta name="description" content="{!! Config::get('app.name') !!}">
 
     <meta name="viewport" content="width=device-width, maximum-scale=5, initial-scale=1, user-scalable=0">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -38,6 +38,7 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     {!! Theme::css('css/select2-bootstrap4.css') !!}
     {!! Theme::css('css/app.css') !!}
+    {!! Theme::css('assets/css/flag-icon.css') !!}
 
 
 </head>

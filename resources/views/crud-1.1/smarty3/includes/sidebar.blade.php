@@ -4,6 +4,7 @@
 
 					Note: overlay-opacity-* should match the footer (same opacity)
 				-->
+
 <aside id="aside-main"
        class="aside-start {{$layoutGradientColor}} font-weight-light aside-hide-xs d-flex align-items-stretch justify-content-lg-between align-items-start flex-column">
 
@@ -42,7 +43,7 @@
             .nav-deep-hover 	hover background slightly different
             .nav-deep-bordered	bordered links
         -->
-        <c-router ref="menu" inline-template c-content-id="middle">
+
             <nav class="nav-deep nav-deep-dark nav-deep-dark-contrast nav-deep-indicator-dot nav-deep-hover">
 
                 <ul class="nav flex-column">
@@ -73,38 +74,53 @@
                                 <ul class="nav flex-column">
                                     @foreach($menu['items'] as $voce)
                                         <li class="nav-item">
+                                            @if (Arr::get($voce,'vuepath'))
                                             <a class="nav-link"
-                                               href="#{{\Illuminate\Support\Arr::get($voce,'vuepath','/')}}">
-                                                {{\Illuminate\Support\Arr::get($voce,'nome','nonome')}}
-                                            </a>
+                                                    href="#{{Arr::get($voce,'vuepath','/')}}">
+                                                        {{Arr::get($voce,'nome','nonome')}}
+                                                </a>
+                                            @else
+                                                <a class="nav-link"
+                                                   href="{{Arr::get($voce,'path','/')}}">
+                                                    {{Arr::get($voce,'nome','nonome')}}
+                                                </a>
+                                            @endif
                                         </li>
                                     @endforeach
                                 </ul>
                             </li>
 
                         @elseif (count(Arr::get($menu,'items',[])) == 1)
-                            {{--                <li c-item-menu class="nav-title mt-5">--}}
-                            {{--                    <h6 class="fs--15 mb-1 text-white font-weight-normal">{{$key}}</h6>--}}
-                            {{--                </li>--}}
+                        {{--                <li c-item-menu class="nav-title mt-5">--}}
+                        {{--                    <h6 class="fs--15 mb-1 text-white font-weight-normal">{{$key}}</h6>--}}
+                        {{--                </li>--}}
 
                             <li c-item-menu class="nav-item">
-
-                                <a class="nav-link"
-                                   href="#{{\Illuminate\Support\Arr::get(current($menu['items']),'vuepath','/')}}">
-                                {{\Illuminate\Support\Arr::get(current($menu['items']),'nome','nonome')}}
-                                </a>
+                                @if (Arr::get(current($menu['items']),'vuepath'))
+                                    {{print_r(current($menu['items']),true)}}
+                                    <a class="nav-link"
+                                    href="#{{Arr::get(current($menu['items']),'vuepath','/')}}">
+                                        {{Arr::get(current($menu['items']),'nome','nonome')}}
+                                    </a>
+                                @else
+                                    <a class="nav-link"
+                                       href="{{Arr::get(current($menu['items']),'path','/')}}">
+                                        {{Arr::get(current($menu['items']),'nome','nonome')}}
+                                    </a>
+                                @endif
                             </li>
 
                         @endif
-                    @endforeach
-                </ul>
-            </nav>
-        </c-router>
+                @endforeach
+            </ul>
+        </nav>
 
-    </div>
+
+</div>
 
 
 </aside>
+
 <!-- /SIDEBAR -->
 
 
