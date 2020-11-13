@@ -66,6 +66,7 @@ class InstallCupparisPackage extends Command
          */
         foreach ($this->packages as $packageFilename) {
 
+            $packageName = substr($packageFilename,0,-5);
 
             /*
              * We try to guess if the current model file is indeed a Breeze model file
@@ -77,6 +78,8 @@ class InstallCupparisPackage extends Command
             $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
 
             $this->installUninstall($packageContents);
+
+            //$this->updateInstallScript($packageName,$packageContents);
 
         }
 
@@ -95,6 +98,7 @@ class InstallCupparisPackage extends Command
         $this->setModelconfs($currentJson,$packageContents,$currentJsonDotted);
         $this->setPermissions($currentJson,$packageContents,$currentJsonDotted);
         $this->setPolicies($currentJson,$packageContents,$currentJsonDotted);
+        $this->setComponents($currentJson,$packageContents,$currentJsonDotted);
     }
 
     protected function setFoorms(&$main,$package,$mainDotted) {
@@ -128,6 +132,13 @@ class InstallCupparisPackage extends Command
         $main['policies']['models'] = $values;
 
     }
+    protected function setComponents(&$main,$package,$mainDotted) {
+
+        $values = $this->buildPackageArrayValue('components',$main,$package,$mainDotted,false);
+
+        $main['components'] = $values;
+
+    }
 
     protected function install($packageContents) {
         $this->info("Package installed successfully");
@@ -135,4 +146,22 @@ class InstallCupparisPackage extends Command
     }
 
 
+//    protected function updateInstallScript($packageName,$packageContents) {
+//
+//        $installFile = base_path('cupparis/install.sh');
+//        if (!File::exists($installFile)) {
+//            File::put($installFile,"#Cupparis Packages installation file\n#####\n\n");
+//        }
+//        $installCurrentContents = File::get($installFile);
+//
+//        $installPackageContents = $this->getJsonValue('install',$packageContents,[],Arr::dot($packageContents));
+//
+//        $data = "#".$packageName."-start\n";
+//
+//        $data .= implode("\n",$installPackageContents) . "\n";
+//        $data .= "#".$packageName."-end\n";
+//
+//        File::append($installFile,$data);
+//        return;
+//    }
 }

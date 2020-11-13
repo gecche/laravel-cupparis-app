@@ -41,3 +41,32 @@ a.form-checkbox.active > i,
 .form-radio > i {
     margin-right: 5px;
 }
+
+/*
+    SEPARATOR HR
+ */
+.separatorHr {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.separatorHr::before, .separatorHr::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #245580;
+}
+.separatorHr::before {
+    margin-right: .25em;
+}
+.separatorHr::after {
+    margin-left: .25em;
+}
+
+
+/*
+    IN LABEL GROUP (RADIO E CHECKBOX)
+ */
+.in-label-group {
+    padding-top:19px;
+    padding-bottom:6px;
+}
