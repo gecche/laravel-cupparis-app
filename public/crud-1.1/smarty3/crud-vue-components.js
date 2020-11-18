@@ -39,6 +39,8 @@ crud.components.widgets.wAutocomplete = Vue.component('w-autocomplete', {
     }
 });
 
+crud.conf['w-b2-select2'].fieldName = null;
+crud.conf['w-b2-select2'].referredDataField = null;
 crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
     extends: crud.components.widgets.coreWB2Select2,
     template: '#w-b2-select2-template',
@@ -48,6 +50,20 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             route.setValues({foormName: that.foormName, viewType: that.viewType});
             return route;
         },
+        setReferredValue : function (data) {
+            var that = this;
+            if (that.value) {
+                var value = that.referredDataField ?
+                    that.modelData[that.referredDataField] :
+                    that.referredData;
+                console.log("SETREFERREDVALUR:::",value);
+                data.push({
+                    id: that.value,
+                    selected: true,
+                    text: that.getLabel(value)
+                });
+            }
+        },
         afterLoadResources: function () {
             var that = this;
             var data = [];
@@ -56,13 +72,7 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             //     that.afterLoadResources();
             // },2000)
             //console.log('w2-select MOUNTED',jQuery(that.$el).html());
-            if (that.value) {
-                data.push({
-                    id: that.value,
-                    selected: true,
-                    text: that.getLabel(that.referredData)
-                });
-            }
+            that.setReferredValue(data);
 
 
             that.jQe('[c-select2]').select2({
@@ -123,7 +133,47 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             } else
                 that.value = null;
 
-        }
+        },
+        /**
+         * configurazione ajax per la gestione dei risultati
+         * @return {{headers: *, delay: number, method: string, data: (function(*): {field: core-w-b2-select2.methods.name, value: *}), dataType: string, processResults: (function(*): {results: []}), url: *}}
+         * @private
+         */
+        _getAjaxConf : function() {
+            var that = this;
+            that.route = that._getRoute();
+            that.setRouteValues(that.route);
+            var url = that.route.getUrl();
+            var ajax = {
+                url : url,
+                method : that.route.getMethod(),
+                headers: Server.getHearders(),
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        value : params.term,
+                        field : that.fieldName ? that.fieldName : that.name,
+                    }
+                },
+                processResults: function (json) {
+                    // Tranforms the top-level key of the response object from 'items' to 'results'
+                    var items = [];
+                    for (var i in json.result) {
+                        items.push({
+                            id : json.result[i][that.primaryKey],
+                            text : that.getLabel(json.result[i]),
+                            record : json.result[i]
+                        });
+                    }
+                    //console.log(that.primaryKey,'items',items);
+                    return {
+                        results: items
+                    };
+                },
+            };
+            return ajax;
+        },
     }
 });
 
