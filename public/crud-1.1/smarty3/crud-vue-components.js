@@ -331,6 +331,44 @@ crud.components.widgets.wHasmanyListed = Vue.component('w-hasmany-listed', {
             return conf;
         }
     }
+});
+
+crud.conf['w-hasmany-listed-constraint'] = {
+    lastRefId: 0,
+    confParent: 'crud.conf.w-hasmany',
+    hasManyListConf: {
+        routeName: 'list-constraint',
+        actions: ['action-delete', 'action-insert', 'action-edit'],
+
+        methods: {
+            completed: function () {
+                var that = this;
+
+
+            }
+        },
+        mounted: function () {
+
+        },
+        customActions: {
+
+        }
+    }
+}
+crud.components.widgets.wHasmanyListedConstraint = Vue.component('w-hasmany-listed-constraint', {
+    extends: crud.components.widgets.wHasmany,
+    template: '#w-hasmany-listed-constraint-template',
+
+    methods: {
+        dynamicData: function (conf) {
+            var that = this;
+            conf.hasManyListConf.cRef = that._uid + conf.hasManyListConf.hasManyName;
+            conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
+            console.log("hasManyLISTCONF::: ", conf, that);
+            conf.hasManyListConf.constraintValue = conf.modelData.id;
+            return conf;
+        }
+    }
     // data : function () {
     //     var _conf = this._getConf();
     //     return {
