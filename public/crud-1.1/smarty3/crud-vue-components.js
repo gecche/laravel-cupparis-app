@@ -6,7 +6,7 @@ crud.components.widgets.wAutocomplete = Vue.component('w-autocomplete', {
         setRouteValues: function (route, term) {
             var that = this;
             //var r = that.$crud.createRoute(that.conf.routeName);
-            route.setValues({foormName:that.foormName,viewType:that.viewType});
+            route.setValues({foormName: that.foormName, viewType: that.viewType});
 
             //var r = new Route(routeConf);
 
@@ -39,6 +39,8 @@ crud.components.widgets.wAutocomplete = Vue.component('w-autocomplete', {
     }
 });
 
+crud.conf['w-b2-select2'].fieldName = null;
+crud.conf['w-b2-select2'].referredDataField = null;
 crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
     extends: crud.components.widgets.coreWB2Select2,
     template: '#w-b2-select2-template',
@@ -48,6 +50,20 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             route.setValues({foormName: that.foormName, viewType: that.viewType});
             return route;
         },
+        setReferredValue : function (data) {
+            var that = this;
+            if (that.value) {
+                var value = that.referredDataField ?
+                    that.modelData[that.referredDataField] :
+                    that.referredData;
+                console.log("SETREFERREDVALUR:::",value);
+                data.push({
+                    id: that.value,
+                    selected: true,
+                    text: that.getLabel(value)
+                });
+            }
+        },
         afterLoadResources: function () {
             var that = this;
             var data = [];
@@ -56,13 +72,7 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             //     that.afterLoadResources();
             // },2000)
             //console.log('w2-select MOUNTED',jQuery(that.$el).html());
-            if (that.value) {
-                data.push({
-                    id: that.value,
-                    selected: true,
-                    text: that.getLabel(that.referredData)
-                });
-            }
+            that.setReferredValue(data);
 
 
             that.jQe('[c-select2]').select2({
@@ -123,7 +133,47 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             } else
                 that.value = null;
 
-        }
+        },
+        /**
+         * configurazione ajax per la gestione dei risultati
+         * @return {{headers: *, delay: number, method: string, data: (function(*): {field: core-w-b2-select2.methods.name, value: *}), dataType: string, processResults: (function(*): {results: []}), url: *}}
+         * @private
+         */
+        _getAjaxConf : function() {
+            var that = this;
+            that.route = that._getRoute();
+            that.setRouteValues(that.route);
+            var url = that.route.getUrl();
+            var ajax = {
+                url : url,
+                method : that.route.getMethod(),
+                headers: Server.getHearders(),
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        value : params.term,
+                        field : that.fieldName ? that.fieldName : that.name,
+                    }
+                },
+                processResults: function (json) {
+                    // Tranforms the top-level key of the response object from 'items' to 'results'
+                    var items = [];
+                    for (var i in json.result) {
+                        items.push({
+                            id : json.result[i][that.primaryKey],
+                            text : that.getLabel(json.result[i]),
+                            record : json.result[i]
+                        });
+                    }
+                    //console.log(that.primaryKey,'items',items);
+                    return {
+                        results: items
+                    };
+                },
+            };
+            return ajax;
+        },
     }
 });
 
@@ -186,7 +236,7 @@ crud.components.widgets.wDownload = Vue.component('w-download', {
 });
 
 crud.conf['w-hasmany'].bgClass = 'bg-warning-soft';
-crud.components.widgets.wHasmany =Vue.component('w-hasmany', {
+crud.components.widgets.wHasmany = Vue.component('w-hasmany', {
     extends: crud.components.widgets.coreWHasmany,
     template: '#w-hasmany-template',
     // data : function () {
@@ -196,6 +246,99 @@ crud.components.widgets.wHasmany =Vue.component('w-hasmany', {
     //     }
     // }
 });
+
+crud.conf['w-hasmany-listed'] = {
+    lastRefId: 0,
+    confParent: 'crud.conf.w-hasmany',
+    hasManyListConf: {
+        routeName: null,
+        actions: ['delete', 'newItem'],
+
+        methods: {
+            completed: function () {
+                var that = this;
+
+
+            }
+        },
+        mounted: function () {
+
+        },
+        customActions: {
+            delete: {
+                type: 'record',
+                icon: 'fa fa-trash text-danger',
+                css: 'btn-outline-danger',
+                execute: function () {
+                    var that = this;
+                    // console.log("MODELDATA::: ", that.modelData);
+                    // console.log("MDATA::",that.modelData);
+                    // jQuery(that.$el).closest('tr').remove();
+                    console.log("B::: ",that.view.value);
+                    for (var i=0;i < that.view.value.length;i++) {
+                        console.log("I::: ",i,that.modelData.refId);
+                        if (that.modelData.refId === that.view.value[i].refId) {
+                            that.view.value.splice(i, 1);
+                            that.view.loading = true;
+                            setTimeout(function () {
+                                that.view.reload();
+                            },50)
+                            return;
+                        }
+                    }
+                }
+            },
+            newItem: {
+                type: 'collection',
+                icon: 'fa fa-plus text-success',
+                css: 'btn-outline-success',
+                execute: function () {
+                    var that = this;
+
+                    if (that.view.value.length >= that.view.limit) {
+                        that.messageDialog('Limite massimo raggiunto');
+                        return;
+                    }
+                    ;
+                    var values = that.merge({}, that.view.fieldsDefaults);
+                    values.refId = 'a' + Math.random();
+                    that.view.value.push(values);
+                    that.view.reload();
+                }
+            }
+        }
+    }
+}
+crud.components.widgets.wHasmanyListed = Vue.component('w-hasmany-listed', {
+    extends: crud.components.widgets.wHasmany,
+    template: '#w-hasmany-listed-template',
+
+    methods: {
+        dynamicData: function (conf) {
+            var that = this;
+            conf.hasManyListConf.cRef = that._uid + conf.hasManyListConf.hasManyName;
+            conf.hasManyListConf.value = conf.value;
+            for (var i in conf.hasManyListConf.value) {
+                conf.hasManyListConf.value[i].refId = i;
+            }
+            conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
+            console.log("hasManyLISTCONF::: ", conf, that);
+            conf.hasManyListConf.methods = {
+                getFieldName: function (key) {
+                    return conf.hasManyListConf.hasManyName + "-" + key + '[]';
+                }
+            }
+            return conf;
+        }
+    }
+    // data : function () {
+    //     var _conf = this._getConf();
+    //     return {
+    //         bgClass : _conf.bgClass || 'bg-warning-soft',
+    //     }
+    // }
+});
+
 
 crud.components.widgets.wHasmanyThrough = Vue.component('w-hasmany-through', {
     extends: crud.components.widgets.coreWHasmanyThrough,
@@ -278,6 +421,7 @@ crud.components.widgets.wImage = Vue.component('w-image', {
     template: '#w-image-template'
 });
 
+crud.conf['w-input'].labelGroup = true;
 crud.components.widgets.wInput = Vue.component('w-input', {
     extends: crud.components.widgets.coreWInput,
     template: '#w-input-template',
@@ -331,8 +475,8 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
     //         dataSwitched : _c.dataSwitched || false,
     //     }
     // },
-    methods : {
-        setRouteValues : function(route) {
+    methods: {
+        setRouteValues: function (route) {
             var that = this;
             console.log('rswap RIDEFINITO', that.modelName, that.modelName)
             var dV = that.getDV();
@@ -359,10 +503,10 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
 });
 
 
-crud.conf['w-swap-smarty'] =  {
-    confParent : 'crud.conf.w-swap',
-    switchClass : 'form-switch-success',
-    dataSwitched : false,
+crud.conf['w-swap-smarty'] = {
+    confParent: 'crud.conf.w-swap',
+    switchClass: 'form-switch-success',
+    dataSwitched: false,
 }
 crud.components.widgets.wSwapSmarty = Vue.component('w-swap-smarty', {
     extends: crud.components.widgets.wSwap,
@@ -374,13 +518,13 @@ crud.components.widgets.wSwapSmarty = Vue.component('w-swap-smarty', {
     //         dataSwitched : _c.dataSwitched || false,
     //     }
     // },
-    methods : {
-        _swap : function (key) {
+    methods: {
+        _swap: function (key) {
             var that = this;
             var r = that._getRoute();
             that.setRouteValues(r);
             var dV = that.getDV();
-            Server.route(r,function (json) {
+            Server.route(r, function (json) {
                 if (json.error) {
                     that.errorDialog(json.msg);
                     return;
@@ -463,7 +607,7 @@ crud.components.widgets.wMap = Vue.component('w-map', {
 crud.components.widgets.wMapView = Vue.component('w-map-view', {
     extends: crud.components.widgets.coreWMapView,
     template: '#w-map-view-template',
-    methods : {
+    methods: {
         dynamicData: function (conf) {
             var that = this;
             var _md = conf.modelData || {};
@@ -490,10 +634,10 @@ crud.components.widgets.wDateText = Vue.component('w-date-text', {
 crud.conf['v-edit'].beforeForm = null;
 
 crud.components.views.vEdit = Vue.component('v-edit', {
-    extends : crud.components.views.coreVEdit,
-    template : '#v-edit-template',
-    methods : {
-        dynamicData : function (conf) {
+    extends: crud.components.views.coreVEdit,
+    template: '#v-edit-template',
+    methods: {
+        dynamicData: function (conf) {
             if (!conf.langContext && conf.langContext !== null) {
                 conf.langContext = conf.modelName ? conf.modelName : this.cModel
                 conf.langContext += '.fields';
@@ -513,6 +657,15 @@ crud.components.views.vHasmany = Vue.component('v-hasmany', {
     template: '#v-hasmany-template',
 });
 
+crud.conf['v-hasmany-listed'] = {
+    confParent: 'crud.conf.v-hasmany',
+    item: {}
+}
+crud.components.views.vHasmanyListed = Vue.component('v-hasmany-listed', {
+    extends: crud.components.views.vHasmany,
+    template: '#v-hasmany-listed-template',
+});
+
 crud.components.views.vHasmanyView = Vue.component('v-hasmany-view', {
     extends: crud.components.views.coreVHasmanyView,
     template: '#v-hasmany-view-template',
@@ -526,8 +679,8 @@ crud.components.views.vHasmanyList = Vue.component('v-hasmany-list', {
 crud.components.views.vInsert = Vue.component('v-insert', {
     extends: crud.components.views.coreVInsert,
     template: '#v-insert-template',
-    methods : {
-        dynamicData : function (conf) {
+    methods: {
+        dynamicData: function (conf) {
             if (!conf.langContext && conf.langContext !== null) {
                 conf.langContext = conf.modelName ? conf.modelName : this.cModel
                 conf.langContext += '.fields';
@@ -538,18 +691,19 @@ crud.components.views.vInsert = Vue.component('v-insert', {
 });
 
 crud.conf['v-list'].helpText = '';
+crud.conf['v-list'].hasFooter = true;
 crud.components.views.vList = Vue.component('v-list', {
     extends: crud.components.views.coreVList,
     template: '#v-list-template',
-    methods : {
-        dynamicData : function (conf) {
+    methods: {
+        dynamicData: function (conf) {
             if (!conf.langContext && conf.langContext !== null) {
                 conf.langContext = conf.modelName ? conf.modelName : this.cModel
                 conf.langContext += '.fields';
             }
             return conf;
         },
-        hasHelp : function (key) {
+        hasHelp: function (key) {
             var that = this;
             if (this.fieldsConfig[key]) {
                 return this.fieldsConfig[key].helpText || false;
@@ -620,70 +774,70 @@ crud.components.actions.actionSave = Vue.component('action-save', {
 });
 
 Vue.component('action-save-back', {
-    extends : crud.components.actions.actionSave,
-    template : '#action-square-template'
+    extends: crud.components.actions.actionSave,
+    template: '#action-square-template'
 });
 
 Vue.component('action-insert', {
-    extends : crud.components.actions.actionBase
+    extends: crud.components.actions.actionBase
 });
 
 Vue.component('action-back', {
-    extends : crud.components.actions.actionBase,
-    template : '#action-square-template'
+    extends: crud.components.actions.actionBase,
+    template: '#action-square-template'
 });
 
 Vue.component('action-search', {
-    extends : crud.components.actions.actionBase,
-    template : '#action-square-template'
+    extends: crud.components.actions.actionBase,
+    template: '#action-square-template'
 });
 
 Vue.component('action-reset', {
-    extends : crud.components.actions.actionBase,
-    template : '#action-square-template'
+    extends: crud.components.actions.actionBase,
+    template: '#action-square-template'
 });
 
 Vue.component('action-delete', {
-    extends : crud.components.actions.actionBase
+    extends: crud.components.actions.actionBase
 });
 
 Vue.component('action-delete-selected', {
-    extends : crud.components.actions.actionBase
+    extends: crud.components.actions.actionBase
 });
 
-Vue.component('action-edit-mode',{
-    extends : crud.components.actions.actionBase
+Vue.component('action-edit-mode', {
+    extends: crud.components.actions.actionBase
 });
 
-Vue.component('action-view-mode',{
-    extends : crud.components.actions.actionBase
+Vue.component('action-view-mode', {
+    extends: crud.components.actions.actionBase
 });
 
-Vue.component('action-save-row',{
-    extends : crud.components.actions.actionBase
+Vue.component('action-save-row', {
+    extends: crud.components.actions.actionBase
 });
 
 
-crud.components.actions.actionOrder = Vue.component('action-order',{
-    extends : crud.components.actions.coreActionOrder,
+crud.components.actions.actionOrder = Vue.component('action-order', {
+    extends: crud.components.actions.coreActionOrder,
     template: '#action-order-template'
 });
 
 
 //-----------------   MISCELLANEOUS ---------------------
 
-crud.components.misc.cLoading = Vue.component('c-loading',{
-    extends : crud.components.misc.coreCLoading,
-    template : '#c-loading-template',
+crud.components.misc.cLoading = Vue.component('c-loading', {
+    extends: crud.components.misc.coreCLoading,
+    template: '#c-loading-template',
 });
 
-crud.components.misc.cPaginator  = Vue.component('c-paginator',{
-    extends : crud.components.misc.coreCPaginator,
-    template : '#c-paginator-template',
+crud.components.misc.cPaginator = Vue.component('c-paginator', {
+    extends: crud.components.misc.coreCPaginator,
+    template: '#c-paginator-template',
 });
 
-crud.components.misc.cWait = Vue.component('c-wait',{
-    extends : crud.components.misc.coreCWait,
+crud.components.misc.cWait = Vue.component('c-wait', {
+    extends: crud.components.misc.coreCWait,
     template: '#c-wait-template',
 });
 
@@ -693,14 +847,14 @@ Vue.component('tpl-record', {
     template: '#tpl-record-template'
 });
 
-Vue.component('tpl-record2',{
-    extends : crud.components.misc.tplBase,
-    template : '#tpl-record2-template'
+Vue.component('tpl-record2', {
+    extends: crud.components.misc.tplBase,
+    template: '#tpl-record2-template'
 });
 
 Vue.component('tpl-list', {
-    extends : crud.components.misc.tplBase,
-    template : '#tpl-list-template'
+    extends: crud.components.misc.tplBase,
+    template: '#tpl-list-template'
 });
 
 Vue.component('tpl-no', {
@@ -714,18 +868,18 @@ Vue.component('tpl-full-no', {
 });
 
 crud.components.misc.dConfirm = Vue.component('d-confirm', {
-    extends : crud.components.misc.coreDConfirm,
-    template : '#d-confirm-template'
+    extends: crud.components.misc.coreDConfirm,
+    template: '#d-confirm-template'
 });
 
 crud.components.misc.dMessage = Vue.component('d-message', {
-    extends : crud.components.misc.coreDMessage,
-    template : '#d-message-template'
+    extends: crud.components.misc.coreDMessage,
+    template: '#d-message-template'
 });
 
 crud.components.misc.dError = Vue.component('d-error', {
-    extends : crud.components.misc.coreDError,
-    template : '#d-error-template'
+    extends: crud.components.misc.coreDError,
+    template: '#d-error-template'
 });
 crud.components.misc.dWarning = Vue.component('d-warning', {
     extends: crud.components.misc.coreDWarning,

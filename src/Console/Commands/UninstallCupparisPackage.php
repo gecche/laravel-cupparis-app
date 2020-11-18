@@ -151,7 +151,9 @@ class UninstallCupparisPackage extends Command
 
         $foormsDir = config_path('foorms' . DIRECTORY_SEPARATOR);
         $foormsLangDir = resource_path('lang'.DIRECTORY_SEPARATOR.'it'.DIRECTORY_SEPARATOR.'foorms' . DIRECTORY_SEPARATOR);
+        $foormsAppDir = app_path('Foorm' . DIRECTORY_SEPARATOR);
         $foorms = $this->getJsonValue('foorm.entities',$packageContents,[]);
+
         foreach ($foorms as $foorm) {
             $foormFile = $foormsDir . $foorm . '.php';
             $this->info($foormFile);
@@ -159,6 +161,13 @@ class UninstallCupparisPackage extends Command
             $foormLangFile = $foormsLangDir . $foorm . '.php';
             $this->info($foormLangFile);
             File::delete($foormLangFile);
+
+            $foormAppName = Str::studly($foorm);
+            if (File::isDirectory($foormsAppDir.$foormAppName)) {
+                File::deleteDirectory($foormsAppDir.$foormAppName);
+            }
+
+
         }
 
         $modelconfsDir = public_path('admin'.DIRECTORY_SEPARATOR.'ModelConfs'.DIRECTORY_SEPARATOR);

@@ -389,7 +389,8 @@
 </template>
 
 <template id="w-checkbox-template">
-    <div class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
+    <div
+        class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
         <div class="in-label-group" v-for="key in domainValuesOrder">
             <input class="form-check-input" v-bind:name="getFieldName()" type="checkbox" :value="key"
                    v-model="value"
@@ -494,6 +495,81 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasmany-listed-template">
+    <div class="portlet">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <span class="d-block text-danger text-truncate font-weight-medium" v-if="outOfLimit()">
+                    <!-- Limite massimo raggiunto -->
+                    {{ 'app.limite-raggiunto' | translate }}
+                </span>
+                <button v-else v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <input type="hidden" value="1">
+
+            <div class="container-fluid py-1">
+                    <v-list :c-conf="hasManyListConf">
+
+                    </v-list>
+
+
+<!--                <div class="table-responsive" style="white-space:nowrap;">-->
+<!--                    <table class="table table-framed table-striped table-bordered">-->
+<!--                        <thead>-->
+<!--                        <tr v-if="confViews.length > 0">-->
+<!--                            <th></th>-->
+<!--                            <th v-for="(item,index) in confViews" :key="index" v-if="!isHiddenField(index)"-->
+<!--                                class="text-gray-500 font-weight-normal fs&#45;&#45;14" :class="index">-->
+<!--                                <span style="cursor:default"-->
+<!--                                      class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs&#45;&#45;14"-->
+<!--                                >{{index+'.label' | translate(langContext) }}</span>-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        <tr v-if="confViews.length == 0">-->
+<!--                            <th class="text-gray-500 w&#45;&#45;50">-->
+<!--                                {{"app.nessun-elemento" | translate }}-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        &lt;!&ndash; product &ndash;&gt;-->
+<!--                                <v-hasmany-listed v-for="(item,index) in confViews" :key="index" v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany-listed>-->
+<!--                        </tbody>-->
+
+<!--                        <tfoot>-->
+<!--                        <tr v-if="confViews.length > 0">-->
+<!--                            <th></th>-->
+<!--                            <th v-for="(item,index) in confViews" v-if="!isHiddenField(index)"-->
+<!--                                class="text-gray-500 font-weight-normal fs&#45;&#45;14" :class="index">-->
+<!--                                <span style="cursor:default"-->
+<!--                                      class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs&#45;&#45;14"-->
+<!--                                >{{index+'.label' | translate(langContext) }}</span>-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        <tr v-if="confViews.length == 0">-->
+<!--                            <th class="text-gray-500 w&#45;&#45;50">-->
+<!--                                {{"app.nessun-elemento" | translate }}-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        </tfoot>-->
+
+
+<!--                    </table>-->
+<!--                </div>-->
+
+
             </div>
         </div>
     </div>
@@ -607,7 +683,6 @@
 
 <template id="w-hasone-list-template">
     <div>
-        pippo
         <div class="list-unstyled">
 
             <!--  -- contenitore lista hasmany data dal template  default_hasmany_view_items_tpl-- -->
@@ -921,7 +996,7 @@
                                 </tr>
                                 </tbody>
 
-                                <tfoot>
+                                <tfoot v-if="hasFooter">
                                 <tr v-if="widgets.length > 0">
                                     <th v-if="needSelection" class="text-gray-500 w--50">
 
@@ -1145,6 +1220,21 @@
             <v-widget v-for="(widget, key) in widgets" :c-widget="widget"></v-widget>
         </div>
     </div>
+</template>
+
+<template id="v-hasmany-listed-template">
+    <tr v-if="!loading" >
+        <th>
+            <button class="btn-danger btn-pill btn-xs "
+                    type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
+            </button>
+
+        </th>
+
+        <td v-for="(widget, key) in widgets">
+            <v-widget :c-widget="widget" :key="key"></v-widget>
+        </td>
+    </tr>
 </template>
 
 <!--<template id="v-hasone-template">-->
