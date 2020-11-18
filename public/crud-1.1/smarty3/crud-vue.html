@@ -628,6 +628,22 @@
     </div>
 </template>
 
+<template id="w-hasone-real-template">
+    <div class="portlet mb-1">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <button v-if="nullable && (value != null)" v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <v-hasone v-if="loaded" :c-conf="viewConf"></v-hasone>
+        </div>
+    </div>
+</template>
 
 <template id="w-swap-template">
     <button type="button" class="btn btn-sm btn-pill px-2 py-1 fs--15 btn btn-outline-secondary btn-sm rounded-circle"
@@ -1164,6 +1180,14 @@
             <template v-for="(action,name) in actionsConf">
                 <component v-bind:is="name" v-bind:c-conf="action"></component>
             </template>
+        </div>
+    </div>
+</template>
+
+<template id="v-hasone-template">
+    <div>
+        <div  v-for="(widget, key) in widgets" :key="key">
+            <v-widget :c-widget="widget"></v-widget>
         </div>
     </div>
 </template>

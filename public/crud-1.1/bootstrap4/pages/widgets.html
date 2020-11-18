@@ -3,6 +3,9 @@
         <gestore-links c-conf="GestoreLinks" inline-template>
         <ul>
             <li>
+                <a :href="getHref()" v-on:click="doCmd('w-hasone-real?cConf=hasoneConf&targetId=componentArea')">Hasone real</a>
+            </li>
+            <li>
                 <a :href="getHref()" v-on:click="doCmd('w-hasmany?cConf=hasmanyConf&targetId=componentArea')">Hasmany</a>
             </li>
             <li>
@@ -60,6 +63,20 @@
         }
     });
 
+    var hasoneConf = {
+        cRef : 'wTest',
+        name : 'prova',
+        //label : 'pbo',
+        viewConf : {
+            //fields : ['status'],
+            modelName : 'setting',
+            langContext : 'pippo',
+        },
+        value : {
+            status : 'updated',
+            name : 'prova'
+        }
+    }
     var hasmanyConf = {
         cRef : 'wTest',
         name : 'prova',

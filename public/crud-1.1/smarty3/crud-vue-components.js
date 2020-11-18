@@ -230,6 +230,34 @@ crud.components.widgets.wHasone = Vue.component('w-hasone', {
     template: '#w-hasone-template',
 });
 
+
+crud.conf['w-hasone-real'] = {
+    confParent : 'crud.conf.w-base',
+    nullable: false,
+    bgClass : 'bg-warning-soft',
+    viewConf : {
+        routeName : null,
+        actions : [],
+        value : {},
+    },
+    loaded : false,
+}
+
+crud.components.widgets.wHasoneReal = Vue.component('w-hasone-real', {
+    extends: crud.components.widgets.wBase,
+    template: '#w-hasone-real-template',
+    mounted : function() {
+        var that = this;
+        //that.viewConf.fields = ['status'];
+        that.viewConf.value = that.value  || {};
+        that.viewConf.cRef = that._uid + "_vhasone";
+        that.loaded = true;
+        that.$forceUpdate();
+        console.log('viewConf',that.viewConf);
+    },
+});
+
+
 crud.conf['w-hasone-view'] = {
     confParent: 'crud.conf.w-hasone',
     titleClass: ' text-amber-900',
@@ -473,6 +501,11 @@ crud.components.views.vEdit = Vue.component('v-edit', {
             return conf;
         },
     }
+});
+
+crud.components.views.vHasone = Vue.component('v-hasone', {
+    extends: crud.components.views.coreVHasone,
+    template: '#v-hasone-template',
 });
 
 crud.components.views.vHasmany = Vue.component('v-hasmany', {
