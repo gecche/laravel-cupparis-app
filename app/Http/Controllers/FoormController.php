@@ -36,13 +36,6 @@ class FoormController extends Controller
         return $this->_json();
     }
 
-    public function getListConstrained($foormName, $constraintField, $constraintValue, $type = 'list')
-    {
-        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
-        $this->buildAndGetFoormResult($foormName, $type, null, $params);
-        return $this->_json();
-    }
-
     public function getList($foormName, $type = 'list')
     {
         $this->buildAndGetFoormResult($foormName, $type);
@@ -82,35 +75,58 @@ class FoormController extends Controller
     }
 
     /*
-     * QUESTA VA VISTA E SE E COME SPOSTARLA NELLE ACTIONS O ADDIRITTURA FUORI DA QUI
+     * CONSTRAINTS METHOD
      */
 
-    public function uploadfile()
+    public function getListConstrained($foormName, $constraintField, $constraintValue, $type = 'list')
     {
-        try {
-            $type = Request::get("resource_type", "foto");
-
-            $uploadService = UploadService::getInstance();
-
-            $uploadService->validate($type, Request::all());
-
-            //PASSO LA VALIDAZIONE
-
-
-            $file = Request::file('file');
-
-            $tempFileArray = $uploadService->saveTempFile($type, $file);
-
-
-            // $temp_array = array_merge($temp_array, array_intersect_key(Request::all(), $temp_array));
-            $this->json['msg'] = Lang::get('app.upload_success');
-            $this->json['result'] = $tempFileArray;
-        } catch (\Exception $e) {
-            $this->_error($e->getMessage());
-            $this->json['result'] = [];
-        }
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, null, $params);
         return $this->_json();
     }
+
+    public function getSearchConstrained($foormName, $constraintField, $constraintValue, $type = 'search')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, null, $params);
+        return $this->_json();
+    }
+
+    public function getNewConstrained($foormName, $constraintField, $constraintValue, $type = 'insert')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, null, $params);
+        return $this->_json();
+    }
+
+    public function postCreateConstrained($foormName, $constraintField, $constraintValue, $type = 'insert')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, null, $params, ['save']);
+        return $this->_json();
+    }
+
+    public function getEditConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'edit')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, $pk, $params);
+        return $this->_json();
+    }
+
+    public function postUpdateConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'edit')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, $pk, $params, ['save']);
+        return $this->_json();
+    }
+
+    public function getShowConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'view')
+    {
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
+        $this->buildAndGetFoormResult($foormName, $type, $pk, $params);
+        return $this->_json();
+    }
+
 
     protected function _error($msg)
     {
@@ -158,6 +174,7 @@ class FoormController extends Controller
             $this->foormAuthorization($pk);
             $this->performFurtherActionsOnFoorm($furtherActions);
             $this->getFoormResult();
+            $this->addExtrasToResult();
         } catch (ValidationException $e) {
             $this->_error($e->errors());
         } catch (\Exception $e) {
@@ -229,4 +246,45 @@ class FoormController extends Controller
 
     }
 
+    /*
+     * QUESTA VA VISTA E SE E COME SPOSTARLA NELLE ACTIONS O ADDIRITTURA FUORI DA QUI
+     */
+
+    public function uploadfile()
+    {
+        try {
+            $type = Request::get("resource_type", "foto");
+
+            $uploadService = UploadService::getInstance();
+
+            $uploadService->validate($type, Request::all());
+
+            //PASSO LA VALIDAZIONE
+
+
+            $file = Request::file('file');
+
+            $tempFileArray = $uploadService->saveTempFile($type, $file);
+
+
+            // $temp_array = array_merge($temp_array, array_intersect_key(Request::all(), $temp_array));
+            $this->json['msg'] = Lang::get('app.upload_success');
+            $this->json['result'] = $tempFileArray;
+        } catch (\Exception $e) {
+            $this->_error($e->getMessage());
+            $this->json['result'] = [];
+        }
+        return $this->_json();
+    }
+
+    protected function addExtrasToResult() {
+        $role = Auth::id() ? Auth::user()->mainrole->name : null;
+        $this->json['app'] = [
+            'auth' => [
+                'id' => Auth::id(),
+                'role' => $role,
+                'isAdmin' => in_array($role,['Superutente','Superadmin','Admin']),
+            ]
+        ];
+    }
 }
