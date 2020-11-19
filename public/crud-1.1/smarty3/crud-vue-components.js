@@ -50,13 +50,13 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
             route.setValues({foormName: that.foormName, viewType: that.viewType});
             return route;
         },
-        setReferredValue : function (data) {
+        setReferredValue: function (data) {
             var that = this;
             if (that.value) {
                 var value = that.referredDataField ?
                     that.modelData[that.referredDataField] :
                     that.referredData;
-                console.log("SETREFERREDVALUR:::",value);
+                console.log("SETREFERREDVALUR:::", value);
                 data.push({
                     id: that.value,
                     selected: true,
@@ -139,21 +139,21 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
          * @return {{headers: *, delay: number, method: string, data: (function(*): {field: core-w-b2-select2.methods.name, value: *}), dataType: string, processResults: (function(*): {results: []}), url: *}}
          * @private
          */
-        _getAjaxConf : function() {
+        _getAjaxConf: function () {
             var that = this;
             that.route = that._getRoute();
             that.setRouteValues(that.route);
             var url = that.route.getUrl();
             var ajax = {
-                url : url,
-                method : that.route.getMethod(),
+                url: url,
+                method: that.route.getMethod(),
                 headers: Server.getHearders(),
                 dataType: 'json',
                 delay: 250,
-                data: function(params) {
+                data: function (params) {
                     return {
-                        value : params.term,
-                        field : that.fieldName ? that.fieldName : that.name,
+                        value: params.term,
+                        field: that.fieldName ? that.fieldName : that.name,
                     }
                 },
                 processResults: function (json) {
@@ -161,9 +161,9 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
                     var items = [];
                     for (var i in json.result) {
                         items.push({
-                            id : json.result[i][that.primaryKey],
-                            text : that.getLabel(json.result[i]),
-                            record : json.result[i]
+                            id: json.result[i][that.primaryKey],
+                            text: that.getLabel(json.result[i]),
+                            record: json.result[i]
                         });
                     }
                     //console.log(that.primaryKey,'items',items);
@@ -255,11 +255,7 @@ crud.conf['w-hasmany-listed'] = {
         actions: ['delete', 'newItem'],
 
         methods: {
-            completed: function () {
-                var that = this;
 
-
-            }
         },
         mounted: function () {
 
@@ -274,15 +270,15 @@ crud.conf['w-hasmany-listed'] = {
                     // console.log("MODELDATA::: ", that.modelData);
                     // console.log("MDATA::",that.modelData);
                     // jQuery(that.$el).closest('tr').remove();
-                    console.log("B::: ",that.view.value);
-                    for (var i=0;i < that.view.value.length;i++) {
-                        console.log("I::: ",i,that.modelData.refId);
+                    console.log("B::: ", that.view.value);
+                    for (var i = 0; i < that.view.value.length; i++) {
+                        console.log("I::: ", i, that.modelData.refId);
                         if (that.modelData.refId === that.view.value[i].refId) {
                             that.view.value.splice(i, 1);
                             that.view.loading = true;
                             setTimeout(function () {
                                 that.view.reload();
-                            },50)
+                            }, 50)
                             return;
                         }
                     }
@@ -299,7 +295,6 @@ crud.conf['w-hasmany-listed'] = {
                         that.messageDialog('Limite massimo raggiunto');
                         return;
                     }
-                    ;
                     var values = that.merge({}, that.view.fieldsDefaults);
                     values.refId = 'a' + Math.random();
                     that.view.value.push(values);
@@ -323,16 +318,15 @@ crud.components.widgets.wHasmanyListed = Vue.component('w-hasmany-listed', {
             }
             conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
             console.log("hasManyLISTCONF::: ", conf, that);
-            conf.hasManyListConf.methods = {
-                getFieldName: function (key) {
-                    return conf.hasManyListConf.hasManyName + "-" + key + '[]';
-                }
+            conf.hasManyListConf.methods.getFieldName = function (key) {
+
+                return conf.hasManyListConf.hasManyName + "-" + key + '[]';
+
             }
             return conf;
         }
     }
 });
-
 
 
 crud.conf['w-hasmany-listed-constraint'] = {
@@ -343,11 +337,7 @@ crud.conf['w-hasmany-listed-constraint'] = {
         actions: ['action-delete', 'action-insert', 'action-edit-popup'],
 
         methods: {
-            completed: function () {
-                var that = this;
 
-
-            }
         },
         mounted: function () {
 
@@ -368,6 +358,11 @@ crud.components.widgets.wHasmanyListedConstraint = Vue.component('w-hasmany-list
             conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
             console.log("hasManyLISTCONF::: ", conf, that);
             conf.hasManyListConf.constraintValue = conf.modelData.id;
+            conf.hasManyListConf.methods.getFieldName = function (key) {
+
+                return conf.hasManyListConf.hasManyName + "-" + key + '[]';
+
+            }
             return conf;
         }
     }
@@ -415,28 +410,28 @@ crud.components.widgets.wHasone = Vue.component('w-hasone', {
 
 
 crud.conf['w-hasone-real'] = {
-    confParent : 'crud.conf.w-base',
+    confParent: 'crud.conf.w-base',
     nullable: false,
-    bgClass : 'bg-warning-soft',
-    viewConf : {
-        routeName : null,
-        actions : [],
-        value : {},
+    bgClass: 'bg-warning-soft',
+    viewConf: {
+        routeName: null,
+        actions: [],
+        value: {},
     },
-    loaded : false,
+    loaded: false,
 }
 
 crud.components.widgets.wHasoneReal = Vue.component('w-hasone-real', {
     extends: crud.components.widgets.wBase,
     template: '#w-hasone-real-template',
-    mounted : function() {
+    mounted: function () {
         var that = this;
         //that.viewConf.fields = ['status'];
-        that.viewConf.value = that.value  || {};
+        that.viewConf.value = that.value || {};
         that.viewConf.cRef = that._uid + "_vhasone";
         that.loaded = true;
         that.$forceUpdate();
-        console.log('viewConf',that.viewConf);
+        console.log('viewConf', that.viewConf);
     },
 });
 
