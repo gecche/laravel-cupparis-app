@@ -315,6 +315,7 @@ crud.components.widgets.wHasmanyListed = Vue.component('w-hasmany-listed', {
             conf.hasManyListConf.value = conf.value;
             for (var i in conf.hasManyListConf.value) {
                 conf.hasManyListConf.value[i].refId = i;
+                conf.hasManyListConf.value[i].status = 'updated';
             }
             conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
             console.log("hasManyLISTCONF::: ", conf, that);
