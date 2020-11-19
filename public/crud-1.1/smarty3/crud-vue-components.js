@@ -333,12 +333,14 @@ crud.components.widgets.wHasmanyListed = Vue.component('w-hasmany-listed', {
     }
 });
 
+
+
 crud.conf['w-hasmany-listed-constraint'] = {
     lastRefId: 0,
     confParent: 'crud.conf.w-hasmany',
     hasManyListConf: {
         routeName: 'list-constraint',
-        actions: ['action-delete', 'action-insert', 'action-edit'],
+        actions: ['action-delete', 'action-insert', 'action-edit-popup'],
 
         methods: {
             completed: function () {
@@ -351,7 +353,7 @@ crud.conf['w-hasmany-listed-constraint'] = {
 
         },
         customActions: {
-
+            // 'action-edit' :
         }
     }
 }

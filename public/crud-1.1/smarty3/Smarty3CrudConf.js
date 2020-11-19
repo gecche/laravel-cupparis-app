@@ -141,6 +141,31 @@ crud.conf['action-insert'].execute = function () {
     document.location.href = '#v-insert?cModel='+that.view.modelName;
 }
 
+
+crud.conf['action-edit-popup'] = {
+    type : 'record',
+    confParent : 'crud.conf.action-edit',
+    execute : function () {
+        var that = this;
+        var id = that.modelData[that.view.primaryKey];
+        var cConf = {
+            modelName : that.view.modelName,
+            pk : id,
+            customActions : {
+                'action-save' : {
+                    afterExecute() {
+                        that.view.reload();
+                    }
+                }
+            }
+        };
+        that.createModalView('v-edit',{
+            cConf : cConf
+        },"Modifica")
+    }
+}
+
+
 crud.conf['action-previous'] = {
     text : '<<',
     title : 'Precedente',
