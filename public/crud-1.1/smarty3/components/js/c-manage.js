@@ -1,3 +1,25 @@
+crud.conf['c-manage'] = {
+    listComponentName : 'v-list',
+    searchComponentName :'v-search',
+    listEditComponentName: 'v-list-edit',
+    editComponentName : 'v-edit',
+    insertComponentName: 'v-insert',
+    viewComponentName: 'v-view',
+
+
+    listComp : null,
+    searchComp: null,
+    listEditComp: null,
+    editComp: null,
+    insertComp: null,
+    viewComp: null,
+
+    layoutGradientColor : null,
+    manageHeaderClass : null,
+    manageHeaderTextClass : 'text-dark',
+    updateTitle: '',
+    viewTitle: '',
+}
 crud.components.cManage = Vue.component('c-manage', {
     extends: crud.components.cComponent,
     props: ['cModel', 'cInlineEdit','cCollapsible'],
@@ -14,41 +36,75 @@ crud.components.cManage = Vue.component('c-manage', {
         if (this.insertComp) this.insertComp.$destroy();
     },
 
-    data: function () {
-        var thisManage = this;
-        var _conf = this._getConf() || {};
-
-        var modelName = thisManage.cModel ? thisManage.cModel : _conf.modelName;
-        if (!modelName)
-            throw 'model Name not found!';
-        //console.log('CONF MANAGE',_conf);
-        var d = {
-            layoutGradientColor: crud.layoutGradientColor,
-            modelName: modelName,
-            updateTitle: '',
-            viewTitle: '',
-        };
-        d.manageHeaderClass = _conf.manageHeaderClass || null;
-        d.manageHeaderTextClass = _conf.manageHeaderTextClass || 'text-dark';
-        console.log(modelName , thisManage.cCollapsible);
-        var collapsibleElement = (thisManage.cCollapsible !== undefined) ? thisManage.cCollapsible :
-            (_conf.collapsible !== undefined) ? _conf.collapsible :
-            true;
-        d.collapsible = (collapsibleElement === true || collapsibleElement === 'collapsed');
-        d.collapsed =  (collapsibleElement === 'collapsed');
-        d.collapseId = _conf.collapseId || 'manageCollapse'+modelName;
-
-        d = Object.assign(d, thisManage._getListConfiguration(_conf, modelName))
-        d = Object.assign(d, thisManage._getSearchConfiguration(_conf, modelName))
-        d = Object.assign(d, thisManage._getListEditConfiguration(_conf, modelName))
-        d = Object.assign(d, thisManage._getEditConfiguration(_conf, modelName))
-        d = Object.assign(d, thisManage._getInsertConfiguration(_conf, modelName))
-        d = Object.assign(d, thisManage._getViewConfiguration(_conf, modelName))
-        //console.log('ddddd',d);
-        return d;
-    },
+    // data: function () {
+    //     var thisManage = this;
+    //     var _conf = this._getConf() || {};
+    //
+    //     var modelName = thisManage.cModel ? thisManage.cModel : _conf.modelName;
+    //     if (!modelName)
+    //         throw 'model Name not found!';
+    //     //console.log('CONF MANAGE',_conf);
+    //     var d = {
+    //         layoutGradientColor: crud.layoutGradientColor,
+    //         modelName: modelName,
+    //         updateTitle: '',
+    //         viewTitle: '',
+    //     };
+    //     d.manageHeaderClass = _conf.manageHeaderClass || null;
+    //     d.manageHeaderTextClass = _conf.manageHeaderTextClass || 'text-dark';
+    //     console.log(modelName , thisManage.cCollapsible);
+    //     var collapsibleElement = (thisManage.cCollapsible !== undefined) ? thisManage.cCollapsible :
+    //         (_conf.collapsible !== undefined) ? _conf.collapsible :
+    //         true;
+    //     d.collapsible = (collapsibleElement === true || collapsibleElement === 'collapsed');
+    //     d.collapsed =  (collapsibleElement === 'collapsed');
+    //     d.collapseId = _conf.collapseId || 'manageCollapse'+modelName;
+    //
+    //     d = Object.assign(d, thisManage._getListConfiguration(_conf, modelName))
+    //     d = Object.assign(d, thisManage._getSearchConfiguration(_conf, modelName))
+    //     d = Object.assign(d, thisManage._getListEditConfiguration(_conf, modelName))
+    //     d = Object.assign(d, thisManage._getEditConfiguration(_conf, modelName))
+    //     d = Object.assign(d, thisManage._getInsertConfiguration(_conf, modelName))
+    //     d = Object.assign(d, thisManage._getViewConfiguration(_conf, modelName))
+    //     //console.log('ddddd',d);
+    //     return d;
+    // },
 
     methods: {
+        dynamicData(conf) {
+            var thisManage = this;
+            //var _conf = this._getConf() || {};
+
+            if (!conf.modelName)
+                conf.modelName = thisManage.cModel ? thisManage.cModel : null;
+            if (!conf.modelName)
+                throw 'model Name not found!';
+            conf.layoutGradientColor = crud.layoutGradientColor;
+
+            console.log(conf.modelName , thisManage.cCollapsible);
+            var collapsibleElement = (thisManage.cCollapsible !== undefined) ? thisManage.cCollapsible :
+                (conf.collapsible !== undefined) ? conf.collapsible :
+                    true;
+            conf.collapsible = (collapsibleElement === true || collapsibleElement === 'collapsed');
+            conf.collapsed =  (collapsibleElement === 'collapsed');
+            conf.collapseId = conf.collapseId || 'manageCollapse'+conf.modelName;
+
+            conf = thisManage._getListConfiguration(conf);
+            conf = thisManage._getSearchConfiguration(conf);
+            conf = thisManage._getListEditConfiguration(conf);
+            conf = thisManage._getEditConfiguration(conf);
+            conf = thisManage._getInsertConfiguration(conf);
+            conf = thisManage._getViewConfiguration(conf);
+
+            //conf = Object.assign(conf, thisManage._getListConfiguration(conf, conf.modelName))
+            //conf = Object.assign(conf, thisManage._getSearchConfiguration(conf, conf.modelName))
+            //conf = Object.assign(conf, thisManage._getListEditConfiguration(conf, conf.modelName))
+            //conf = Object.assign(conf, thisManage._getEditConfiguration(conf, conf.modelName))
+            //conf = Object.assign(conf, thisManage._getInsertConfiguration(conf, conf.modelName))
+            // conf = Object.assign(conf, thisManage._getViewConfiguration(conf, conf.modelName))
+            console.log('CONF MANAGE',conf);
+            return conf;
+        },
         createList: function () {
             var that = this;
             if (that.listComp)
@@ -238,37 +294,25 @@ crud.components.cManage = Vue.component('c-manage', {
                 }
             }
         },
-        _getListConfiguration: function (conf, modelName) {
+        _getListConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
-            //console.log('modelName',modelName,modelConf,originalConf);
+            //console.log('conf.modelName',conf.modelName,modelConf,originalConf);
             var listConf = null;
 
             if (!thisManage.cInlineEdit && !conf.inlineEdit) {
                 listConf = conf.listConf || originalConf.list || {};
                 listConf = thisManage.mergeConfView(thisManage.$crud.conf.list, listConf);
-
+                // se sono presente l'action-edit,action-view o action-insert le ridefinisco per la gestione automatica da parte della c-manage
                 if (listConf.actions.indexOf('action-edit') >= 0) {
-
-                    // listConf.customActions['action-edit'] = {
-                    //     execute : function () {
-                    //         thisManage._createEdit(this);
-                    //     }
-                    // }
                     var aEdit = listConf.customActions['action-edit'] || {};
                     aEdit.execute = function () {
                         thisManage._createEdit(this);
                     }
                     listConf.customActions['action-edit'] = aEdit;
-
                 }
                 if (listConf.actions.indexOf('action-view') >= 0) {
-                    // listConf.customActions['action-view'] = {
-                    //     execute : function () {
-                    //         thisManage._createView(this);
-                    //     }
-                    // }
                     var aView = listConf.customActions['action-view'] || {};
                     aView.execute = function () {
                         thisManage._createView(this);
@@ -277,11 +321,6 @@ crud.components.cManage = Vue.component('c-manage', {
                 }
 
                 if (listConf.actions.indexOf('action-insert') >= 0) {
-                    // listConf.customActions['action-insert'] = {
-                    //     execute : function () {
-                    //         thisManage._createInsert(this);
-                    //     }
-                    // }
                     var aInsert = listConf.customActions['action-insert'] || {};
                     aInsert.execute = function () {
                         thisManage._createInsert(this);
@@ -289,19 +328,20 @@ crud.components.cManage = Vue.component('c-manage', {
                     listConf.customActions['action-insert'] = aInsert;
                 }
             }
-
-            var d = {
-                listComponentName: conf.listComponentName || 'v-list',
-                listComp: null,
-                listConf: listConf,
-            };
-            return d;
+            conf.listConf = listConf;
+            return conf;
+            // var d = {
+            //     listComponentName: conf.listComponentName || 'v-list',
+            //     listComp: null,
+            //     listConf: listConf,
+            // };
+            // return d;
         },
-        _getListEditConfiguration: function (conf, modelName) {
+        _getListEditConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
-            //console.log('modelName',modelName,modelConf,originalConf);
+            //console.log('conf.modelName',conf.modelName,modelConf,originalConf);
             var listEditConf = null;
 
             if (thisManage.cInlineEdit || conf.inlineEdit) {
@@ -324,17 +364,18 @@ crud.components.cManage = Vue.component('c-manage', {
                     }
                 }
             }
-
-            var d = {
-                listEditComponentName: conf.listEditComponentName || 'v-list-edit',
-                listEditComp: null,
-                listEditConf: listEditConf,
-            };
-            return d;
+            conf.listEditConf = listEditConf;
+            return conf;
+            // var d = {
+            //     listEditComponentName: conf.listEditComponentName || 'v-list-edit',
+            //     listEditComp: null,
+            //     listEditConf: listEditConf,
+            // };
+            // return d;
         },
-        _getSearchConfiguration: function (conf, modelName) {
+        _getSearchConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
             var searchConf = conf.searchConf || originalConf.search || {};
             searchConf = thisManage.mergeConfView(thisManage.$crud.conf.search, searchConf);
@@ -351,16 +392,18 @@ crud.components.cManage = Vue.component('c-manage', {
                 return;
             };
             searchConf.customActions['action-search'] = acSearch;
-            var d = {
-                searchComponentName: conf.searchComponentName || 'v-search',
-                searchComp: null,
-                searchConf: searchConf,
-            };
-            return d;
+            conf.searchConf = searchConf;
+            return conf;
+            // var d = {
+            //     searchComponentName: conf.searchComponentName || 'v-search',
+            //     searchComp: null,
+            //     searchConf: searchConf,
+            // };
+            // return d;
         },
-        _getEditConfiguration: function (conf, modelName) {
+        _getEditConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
 
             var editConf = conf.editConf || originalConf.edit || {};
@@ -378,16 +421,18 @@ crud.components.cManage = Vue.component('c-manage', {
             if (editConf.actions.indexOf('action-save-back') < 0)
                 editConf.actions.push('action-save-back');
             console.log("EDITCONFACTIONS::: ",editConf.actions);
-            var d = {
-                editComponentName: conf.editComponentName || 'v-edit',
-                editComp: null,
-                editConf: editConf,
-            };
-            return d;
+            conf.editConf = editConf;
+            return conf;
+            // var d = {
+            //     editComponentName: conf.editComponentName || 'v-edit',
+            //     editComp: null,
+            //     editConf: editConf,
+            // };
+            // return d;
         },
-        _getInsertConfiguration: function (conf, modelName) {
+        _getInsertConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
             var editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit, (originalConf.edit || {}));
             var insertConf = conf.insertConf || originalConf.insert || editConf;
@@ -407,25 +452,31 @@ crud.components.cManage = Vue.component('c-manage', {
             if (actionSaveIndex >= 0) {
                 delete insertConf.actions[actionSaveIndex];
             }
-            var d = {
-                insertComponentName: conf.insertComponentName || 'v-insert',
-                insertComp: null,
-                insertConf: insertConf,
-            };
-            return d;
+            conf.insertConf = insertConf;
+            return conf;
+
+            // var d = {
+            //     insertComponentName: conf.insertComponentName || 'v-insert',
+            //     insertComp: null,
+            //     insertConf: insertConf,
+            // };
+            // return d;
         },
-        _getViewConfiguration: function (conf, modelName) {
+        _getViewConfiguration: function (conf) {
             var thisManage = this;
-            var modelConf = "Model" + thisManage.pascalCase(modelName);
+            var modelConf = "Model" + thisManage.pascalCase(conf.modelName);
             var originalConf = window[modelConf] ? window[modelConf] : {};
             var viewConf = conf.viewConf || originalConf.view || {};
             viewConf = thisManage.mergeConfView(thisManage.$crud.conf.view, viewConf);
-            var d = {
-                viewComponentName: conf.viewComponentName || 'v-view',
-                viewComp: null,
-                viewConf: viewConf //conf.viewConf || viewConf,
-            };
-            return d;
+            conf.viewConf = viewConf;
+            return conf;
+
+            // var d = {
+            //     viewComponentName: conf.viewComponentName || 'v-view',
+            //     viewComp: null,
+            //     viewConf: viewConf //conf.viewConf || viewConf,
+            // };
+            // return d;
         }
     },
     template: '#c-manage-template'
