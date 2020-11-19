@@ -37,6 +37,19 @@ crud.routes['list-constraint'] = {
     method : 'get'
 };
 
+crud.routes['edit-constraint'] = {
+    url : '/foormc/{modelName}/{constraintKey}/{constraintValue}/{pk}/edit',
+    resultType : 'record',
+    protocol : 'record',
+    method : 'get'
+};
+
+crud.routes['insert-constraint'] = {
+    url : '/foormc/{modelName}/{constraintKey}/{constraintValue}/new',
+    resultType : 'record',
+    protocol : 'record',
+    method : 'get'
+};
 
 Vue.component('tpl-search', {
     extends : crud.components.misc.tplBase,
