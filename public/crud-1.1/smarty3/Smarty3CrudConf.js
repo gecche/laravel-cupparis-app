@@ -38,14 +38,14 @@ crud.routes['list-constraint'] = {
 };
 
 crud.routes['edit-constraint'] = {
-    url : '/foormc/{modelName}/{constraintKey}/{constraintValue}/{pk}/edit',
+    url : '/foormc/{modelName}/{pk}/edit/{constraintKey}/{constraintValue}',
     resultType : 'record',
     protocol : 'record',
     method : 'get'
 };
 
 crud.routes['insert-constraint'] = {
-    url : '/foormc/{modelName}/{constraintKey}/{constraintValue}/new',
+    url : '/foormc/{modelName}/new/{constraintKey}/{constraintValue}',
     resultType : 'record',
     protocol : 'record',
     method : 'get'
@@ -162,6 +162,10 @@ crud.conf['action-edit-popup'] = {
         var that = this;
         var id = that.modelData[that.view.primaryKey];
         var modalObj = null;
+        var defaultConf = {};
+        try {
+            defaultConf = window['Model'+this.pascalCase(that.view.modelName)].edit;
+        } catch (e) {};
         var cConf = {
             modelName : that.view.modelName,
             pk : id,
@@ -170,11 +174,12 @@ crud.conf['action-edit-popup'] = {
                     afterExecute() {
                         that.view.reload();
                         // se vogliamo chiudere la popup subito dopo il salvataggio
-                        modalObj.modal('hide');
+                        modalObj.hide();
                     }
                 }
             }
         };
+        cConf = that.mergeConfView(defaultConf,cConf);
         modalObj = that.createModalView('v-edit',{
             cConf : cConf
         },"Modifica")
@@ -187,6 +192,15 @@ crud.conf['action-insert-popup'] = {
     execute : function () {
         var that = this;
         var modalObj = null;
+        var defaultConf = {};
+        // prima provo se ha l'edit poi l'insert
+        try {
+            defaultConf = window['Model'+this.pascalCase(that.view.modelName)].insert;
+        } catch (e) {
+            try {
+                defaultConf = window['Model'+this.pascalCase(that.view.modelName)].edit;
+            } catch (e) {};
+        };
         var cConf = {
             modelName : that.view.modelName,
             customActions : {
@@ -194,11 +208,12 @@ crud.conf['action-insert-popup'] = {
                     afterExecute() {
                         that.view.reload();
                         // se vogliamo chiudere la popup subito dopo il salvataggio
-                        modalObj.modal('hide');
+                        modalObj.hide();
                     }
                 }
             }
         };
+        cConf = that.mergeConfView(defaultConf,cConf);
         modalObj = that.createModalView('v-edit',{
             cConf : cConf
         },"Modifica")
