@@ -161,6 +161,7 @@ crud.conf['action-edit-popup'] = {
     execute : function () {
         var that = this;
         var id = that.modelData[that.view.primaryKey];
+        var modalObj = null;
         var cConf = {
             modelName : that.view.modelName,
             pk : id,
@@ -168,11 +169,37 @@ crud.conf['action-edit-popup'] = {
                 'action-save' : {
                     afterExecute() {
                         that.view.reload();
+                        // se vogliamo chiudere la popup subito dopo il salvataggio
+                        modalObj.modal('hide');
                     }
                 }
             }
         };
-        that.createModalView('v-edit',{
+        modalObj = that.createModalView('v-edit',{
+            cConf : cConf
+        },"Modifica")
+    }
+}
+
+crud.conf['action-insert-popup'] = {
+    confParent : 'crud.conf.action-insert',
+    type : 'record',
+    execute : function () {
+        var that = this;
+        var modalObj = null;
+        var cConf = {
+            modelName : that.view.modelName,
+            customActions : {
+                'action-save' : {
+                    afterExecute() {
+                        that.view.reload();
+                        // se vogliamo chiudere la popup subito dopo il salvataggio
+                        modalObj.modal('hide');
+                    }
+                }
+            }
+        };
+        modalObj = that.createModalView('v-edit',{
             cConf : cConf
         },"Modifica")
     }

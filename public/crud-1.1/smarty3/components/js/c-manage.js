@@ -437,7 +437,7 @@ crud.components.cManage = Vue.component('c-manage', {
             var editConf = thisManage.mergeConfView(thisManage.$crud.conf.edit, (originalConf.edit || {}));
             var insertConf = conf.insertConf || originalConf.insert || editConf;
             insertConf = thisManage.mergeConfView(thisManage.$crud.conf.insert, insertConf);
-            insertConf.routeName = 'insert';
+            //insertConf.routeName = 'insert';
             // prendo eventuali configurazioni locali al modello.
             var _asb = insertConf.customActions['action-save-back'] || {};
             insertConf = thisManage.mergeConfView(insertConf, {
