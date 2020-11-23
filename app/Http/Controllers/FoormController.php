@@ -106,21 +106,21 @@ class FoormController extends Controller
         return $this->_json();
     }
 
-    public function getEditConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'edit')
+    public function getEditConstrained($foormName, $pk, $constraintField, $constraintValue, $type = 'edit')
     {
         $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
         $this->buildAndGetFoormResult($foormName, $type, $pk, $params);
         return $this->_json();
     }
 
-    public function postUpdateConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'edit')
+    public function postUpdateConstrained($foormName, $pk, $constraintField, $constraintValue, $type = 'edit')
     {
         $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
         $this->buildAndGetFoormResult($foormName, $type, $pk, $params, ['save']);
         return $this->_json();
     }
 
-    public function getShowConstrained($foormName, $constraintField, $constraintValue, $pk, $type = 'view')
+    public function getShowConstrained($foormName, $pk, $constraintField, $constraintValue, $type = 'view')
     {
         $params = $this->prepareFixedConstraints($constraintField, $constraintValue);
         $this->buildAndGetFoormResult($foormName, $type, $pk, $params);

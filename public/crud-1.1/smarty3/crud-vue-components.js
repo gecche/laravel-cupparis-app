@@ -56,7 +56,7 @@ crud.components.widgets.wB2Select2 = Vue.component('w-b2-select2', {
                 var value = that.referredDataField ?
                     that.modelData[that.referredDataField] :
                     that.referredData;
-                console.log("SETREFERREDVALUR:::", value);
+                //console.log("SETREFERREDVALUR:::", that.modelData,value);
                 data.push({
                     id: that.value,
                     selected: true,
@@ -335,7 +335,7 @@ crud.conf['w-hasmany-listed-constraint'] = {
     confParent: 'crud.conf.w-hasmany',
     hasManyListConf: {
         routeName: 'list-constraint',
-        actions: ['action-delete', 'action-insert', 'action-edit-popup'],
+        actions: ['action-delete', 'action-insert-popup', 'action-edit-popup'],
 
         methods: {
 

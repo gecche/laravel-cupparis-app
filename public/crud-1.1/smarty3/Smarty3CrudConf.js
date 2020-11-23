@@ -180,7 +180,7 @@ crud.conf['action-edit-popup'] = {
             }
         };
         cConf = that.mergeConfView(defaultConf,cConf);
-        modalObj = that.createModalView('v-edit',{
+        modalObj = that.createBigModalView('v-edit',{
             cConf : cConf
         },"Modifica")
     }
@@ -188,7 +188,10 @@ crud.conf['action-edit-popup'] = {
 
 crud.conf['action-insert-popup'] = {
     confParent : 'crud.conf.action-insert',
-    type : 'record',
+    type : 'collection',
+    icon: 'fa fa-plus text-success',
+    css: 'btn-outline-success',
+    text: '',
     execute : function () {
         var that = this;
         var modalObj = null;
@@ -214,9 +217,9 @@ crud.conf['action-insert-popup'] = {
             }
         };
         cConf = that.mergeConfView(defaultConf,cConf);
-        modalObj = that.createModalView('v-edit',{
+        modalObj = that.createBigModalView('v-edit',{
             cConf : cConf
-        },"Modifica")
+        },"Inserimento")
     }
 }
 
