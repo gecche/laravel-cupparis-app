@@ -1,8 +1,8 @@
 <script type="text/x-template" id="action-square-template">
     <button
-        class="btn"
-        v-if="controlType=='button'" type="button" v-show="_visible"
-        :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
+            class="btn"
+            v-if="controlType=='button'" type="button" v-show="_visible"
+            :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
         <i class="m-1" v-show="icon" :class="icon"></i>
         <span>{{text | translate}}</span>
     </button>
@@ -390,7 +390,7 @@
 
 <template id="w-checkbox-template">
     <div
-        class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
+            class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
         <div class="in-label-group" v-for="key in domainValuesOrder">
             <input class="form-check-input" v-bind:name="getFieldName()" type="checkbox" :value="key"
                    v-model="value"
@@ -520,9 +520,9 @@
             <input type="hidden" value="1">
 
             <div class="container-fluid py-1">
-                    <v-list :c-conf="hasManyListConf">
+                <v-list :c-conf="hasManyListConf">
 
-                    </v-list>
+                </v-list>
             </div>
         </div>
     </div>
@@ -555,6 +555,89 @@
         </div>
     </div>
 </template>
+
+<template id="w-hasmany-listed-squared-constraint-template">
+    <div class="">
+
+        <input type="hidden" value="1">
+
+        <v-list-constraint :c-conf="hasManyListConf" inline-template>
+
+            <!-- start:portlet -->
+
+            <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+            <div v-else class="portlet">
+                <div class="portlet-body pb-0">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6 mt-1 mb-2 text-center" v-show="collectionActionsName.length">
+                            <template v-for="name in collectionActionsName">
+                                <component v-bind:is="name" v-bind:c-conf="collectionActions[name]"></component>
+                            </template>rud-vu
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                                <span v-for="(row,index) in widgets" :key="index">
+                                    <div class="card" >
+                                        <div class="card-header" v-if="row.header">
+                                                <v-widget :c-widget="row.header"></v-widget>
+                                        </div>
+                                        <div class="card-body">
+                                            <v-widget :c-widget="widget" v-for="(widget, key) in row"
+                                                v-if="(!isHiddenField(key) && key !== 'header')" :class="key"></v-widget>
+                                            <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                                                <v-widget :c-widget="widget" :key="key"></v-widget>
+                                            </template>
+                                        </div>
+                                        <div class="card-footer btn-group" role="group" v-show="recordActionsName.length">
+                                                <template v-for="(action,name) in recordActions[index]">
+                                                    <v-action :c-action="action" :key="name"></v-action>
+                                                </template>
+                                            </div>
+                                    </div>
+                                </span>
+                        <!--<div class="container-fluid py-1">-->
+                    </div>
+
+
+                    <!--<div class="table-responsive" style="white-space:nowrap;" :class="modelName">-->
+                    <!--<table class="table table-framed table-striped table-bordered">-->
+                    <!--<tbody>-->
+                    <!--&lt;!&ndash; product &ndash;&gt;-->
+                    <!--<tr v-for="(row,index) in widgets" :key="index">-->
+                    <!--<th v-show="recordActionsName.length">-->
+                    <!--<div class="btn-group" role="group">-->
+                    <!--<template v-for="(action,name) in recordActions[index]">-->
+                    <!--<v-action :c-action="action" :key="name"></v-action>-->
+                    <!--</template>-->
+                    <!--</div>-->
+
+                    <!--</th>-->
+
+                    <!--<td v-for="(widget, key) in row" v-if="!isHiddenField(key)" :class="key">-->
+                    <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                    <!--</td>-->
+                    <!--<template v-for="(widget, key) in row" v-if="isHiddenField(key)">-->
+                    <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                    <!--</template>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+
+
+                    <!--</table>-->
+                    <!--</div>-->
+
+
+                    <!--</div>-->
+                    <!-- end:portlet -->
+                </div>
+            </div>
+
+        </v-list-constraint>
+    </div>
+</template>
+
 
 <template id="w-hasmany-view-template">
     <div class="portlet">
@@ -952,7 +1035,7 @@
                                     <th v-if="needSelection">
 
                                         <label
-                                            class="form-checkbox form-checkbox-primary float-start">
+                                                class="form-checkbox form-checkbox-primary float-start">
                                             <input c-row-check type="checkbox">
                                             <i></i>
                                         </label>
@@ -1204,7 +1287,7 @@
 </template>
 
 <template id="v-hasmany-listed-template">
-    <tr v-if="!loading" >
+    <tr v-if="!loading">
         <th>
             <button class="btn-danger btn-pill btn-xs "
                     type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
@@ -1257,7 +1340,7 @@
 
 <template id="v-hasone-template">
     <div>
-        <div  v-for="(widget, key) in widgets" :key="key">
+        <div v-for="(widget, key) in widgets" :key="key">
             <v-widget :c-widget="widget"></v-widget>
         </div>
     </div>
