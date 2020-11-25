@@ -478,7 +478,7 @@
         <div class="portlet-body">
             <input type="hidden" value="1">
             <div class="row">
-                <div class="col-12 col-lg-6 col-xl-4 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)"
+                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews" v-show="showItem(item.cRef)"
                      :key="index">
                     <div class="card p-1 m-0
                      shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
@@ -486,7 +486,7 @@
                         <!--{{cConf.metadata.modelName}}-->
                         <!--</div>-->
                         <div class="card-header bg-white">
-                            <button v-on:click="deleteItem(index)" class="btn-danger btn-pill btn-xs pull-right"
+                            <button v-on:click="deleteItem(item.cRef)" class="btn-danger btn-pill btn-xs pull-right"
                                     type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -884,26 +884,28 @@
 </template>
 
 <template id="w-upload-ajax-template">
-    <div class="row">
-        <div class="col-8">
-            <div v-show="error" class="alert alert-danger">{{errorMessage}}</div>
-            <input type="hidden" v-model="value" :name="getFieldName()">
-            <div>
-                <div v-show="extensions">
-                    <span crud-label="app.accepted-extensions">Estensioni accettate: </span>
-                    <span v-show="extensions">{{extensions.join(',')}}</span>
-                </div>
-                <div v-show="maxFileSize">
-                    Dimensione massima: <span crud-label="app.upload-max-filesize">{{maxFileSize}}</span>
-                </div>
+    <div>
+        <div class="row">
+            <div class="col-8">
+                <div v-show="error" class="alert alert-danger">{{errorMessage}}</div>
+                <input type="hidden" v-model="value" :name="getFieldName()">
                 <div>
-                    <input c-file class="btn btn-outline-secondary" type="file" v-on:change="validate()"
-                           v-bind:c-marker="cMarker">
+                    <div v-show="extensions">
+                        <span crud-label="app.accepted-extensions">Estensioni accettate: </span>
+                        <span v-show="extensions">{{extensions.join(',')}}</span>
+                    </div>
+                    <div v-show="maxFileSize">
+                        Dimensione massima: <span crud-label="app.upload-max-filesize">{{maxFileSize}}</span>
+                    </div>
+                    <div>
+                        <input c-file class="" type="file" v-on:change="validate()"
+                               v-bind:c-marker="cMarker">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <w-preview :c-conf="previewConf"></w-preview>
+            <div class="col-4">
+                <w-preview :c-conf="previewConf"></w-preview>
+            </div>
         </div>
     </div>
 </template>
