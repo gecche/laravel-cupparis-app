@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 /**
  * Created by PhpStorm.
@@ -20,33 +21,29 @@ trait CupparisPackageTrait {
     /**
      * @var array
      */
-    protected $packages = [];
+    protected $package = [];
 
     /**
      * @var array
      */
-    protected $packagesErrors = [];
+    protected $packageErrors = [];
 
 
     /**
      *
      */
-    protected function prepareData()
+    protected function getPackageJson($packageName)
     {
 
 
-        $this->packagesFolder = $this->option('dir') ?:
+        $modulesDir = Config::get('cupparis-app.modules-dir') ?: base_path('Modules');
+        $jsonDir = $this->option('dir') ?:
             (Config::get('cupparis-app.json-dir') ?:
-                base_path('cupparis'));
+                'cupparis');
 
-        /*
-         * Here we get the models files: if the 'model' option is set, we get only that model, otherwise we
-         * get all the models in modelsFolder
-         */
-        $packageName = $this->argument('package');
-        $this->packages = ($packageName == 'all')
-            ? glob($this->packagesFolder . DIRECTORY_SEPARATOR . '*.json')
-            : [$this->packagesFolder . DIRECTORY_SEPARATOR . $packageName . '.json'];
+        return [$packageName => $modulesDir . DIRECTORY_SEPARATOR .
+            Str::studly($packageName) . DIRECTORY_SEPARATOR .
+            $jsonDir . DIRECTORY_SEPARATOR . Str::studly($packageName) . '.json'];
 
 
     }
@@ -60,7 +57,7 @@ trait CupparisPackageTrait {
 
 
         if (!File::exists($packageFilename)) {
-            $this->packagesErrors[$packageFilename] = "File inesistente";
+            $this->packageErrors[$packageFilename] = "File inesistente";
             return false;
         }
 
@@ -68,7 +65,7 @@ trait CupparisPackageTrait {
         $packageContents = json_decode(File::get($packageFilename),true);
 
         if (is_null($packageContents)) {
-            $this->packagesErrors[$packageFilename] = "File json incorretto";
+            $this->packageErrors[$packageFilename] = "File json incorretto";
             return false;
         }
 

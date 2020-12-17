@@ -25,7 +25,6 @@ class UninstallCupparisPackage extends Command
      */
     protected $signature = 'uninstall-cupparis-package
                             {package : Package to uninstall}
-                            {--json : also delete the package json file (default: no)}
                             {--force : it forces initialization without prompting (default: no)}
                             {--dir= : Directory of the models}';
 
@@ -47,10 +46,6 @@ class UninstallCupparisPackage extends Command
     {
 
         $mainJsonFile = base_path('cupparis-app.json');
-        /*
-         * We set the folder, the namespace of the models and the models for compiling relations
-         */
-        $this->prepareData();
 
 
         $currentJson = json_decode(File::get($mainJsonFile),true);
@@ -61,12 +56,14 @@ class UninstallCupparisPackage extends Command
 
         $currentJsonDotted = Arr::dot($currentJson);
 
-        $this->packagesErrors = [];
+        $packageJson = $this->getPackageJson($this->argument('package'));
+
+        $this->packageErrors = [];
 
         /*
          * For each model encountered we compile the relations defined in the Breeze relational array
          */
-        foreach ($this->packages as $packageFilename) {
+        foreach ($packageJson as $packageFilename) {
 
 
             /*
@@ -85,12 +82,8 @@ class UninstallCupparisPackage extends Command
 
         File::put($mainJsonFile,cupparis_json_encode($currentJson));
 
-        if ($this->option('json')) {
-            File::delete($packageFilename);
-        }
-
         $this->info('Cupparis app json updated successfully.');
-        foreach ($this->packagesErrors as $packageFileName => $packageError) {
+        foreach ($this->packageErrors as $packageFileName => $packageError) {
             $this->info($packageFileName.' ::: '.$packageError);
         }
 

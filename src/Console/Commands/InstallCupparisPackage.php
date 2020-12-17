@@ -23,8 +23,8 @@ class InstallCupparisPackage extends Command
      * @var string
      */
     protected $signature = 'install-cupparis-package
+                            {package : package to install}
                             {--force : it forces initialization without prompting (default: no)}
-                            {package : package to install (all scans for all the cupparis packages json files)}
                             {--dir= : Directory of the models}';
 
     /**
@@ -45,10 +45,6 @@ class InstallCupparisPackage extends Command
     {
 
         $mainJsonFile = base_path('cupparis-app.json');
-        /*
-         * We set the folder, the namespace of the models and the models for compiling relations
-         */
-        $this->prepareData();
 
 
         $currentJson = json_decode(File::get($mainJsonFile),true);
@@ -59,12 +55,14 @@ class InstallCupparisPackage extends Command
 
         $currentJsonDotted = Arr::dot($currentJson);
 
-        $this->packagesErrors = [];
+        $packageJson = $this->getPackageJson($this->argument('package'));
+
+        $this->packageErrors = [];
 
         /*
          * For each model encountered we compile the relations defined in the Breeze relational array
          */
-        foreach ($this->packages as $packageFilename) {
+        foreach ($packageJson as $packageFilename) {
 
             $packageName = substr($packageFilename,0,-5);
 
@@ -86,7 +84,7 @@ class InstallCupparisPackage extends Command
         File::put($mainJsonFile,cupparis_json_encode($currentJson));
 
         $this->info('Cupparis app json updated successfully.');
-        foreach ($this->packagesErrors as $packageFileName => $packageError) {
+        foreach ($this->packageErrors as $packageFileName => $packageError) {
             $this->info($packageFileName.' ::: '.$packageError);
         }
 
