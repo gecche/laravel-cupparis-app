@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 class InstallCupparisPackage extends Command
 {
 
-    use CupparisJsonTrait;
     use CupparisPackageTrait;
 
     /**
@@ -74,6 +73,7 @@ class InstallCupparisPackage extends Command
             }
 
             $this->updateJson($currentJson,$packageContents,$currentJsonDotted);
+            $this->updateMix();
 
             $this->installUninstall($packageContents);
 
@@ -81,7 +81,7 @@ class InstallCupparisPackage extends Command
 
         }
 
-        File::put($mainJsonFile,cupparis_json_encode($currentJson));
+        File::put($mainJsonFile,$this->jsonEncode($currentJson));
 
         $this->info('Cupparis app json updated successfully.');
         foreach ($this->packageErrors as $packageFileName => $packageError) {
@@ -137,6 +137,7 @@ class InstallCupparisPackage extends Command
         $main['components'] = $values;
 
     }
+
 
     protected function install($packageContents) {
         $this->info("Package installed successfully");

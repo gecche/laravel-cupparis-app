@@ -1,5 +1,6 @@
 <?php namespace Gecche\Cupparis\App\Console\Commands;
 
+use Gecche\Cupparis\App\CupparisJsonTrait;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 
 trait CupparisPackageTrait {
 
+    use CupparisJsonTrait;
     /**
      * @var
      */
@@ -108,6 +110,36 @@ trait CupparisPackageTrait {
         }
 
         return $values;
+    }
+
+    protected function updateMix($install = true)
+    {
+
+        $packageMixFilename = base_path('Modules/CupGeo/public/mix-manifest.json');
+        if (!File::exists($packageMixFilename)) {
+            return;
+        }
+
+        $mainMixFilename = public_path('mix-manifest.json');
+        if (File::exists($mainMixFilename)) {
+            $mainMixJson = json_decode(File::get($mainMixFilename), true);
+        } else {
+            $mainMixJson = [];
+        }
+
+        $pMixJson = json_decode(File::get($packageMixFilename), true);
+
+        if ($install) {
+            foreach ($pMixJson as $mixKey => $mixValue) {
+                $mainMixJson[$mixKey] = $mixValue;
+            }
+        } else {
+            foreach ($pMixJson as $mixKey => $mixValue) {
+                unset($mainMixJson[$mixKey]);
+            }
+        }
+
+        File::put($mainMixFilename, $this->jsonEncode($mainMixJson));
     }
 
     protected function installUninstall($packageContents,$uninstall = false) {
