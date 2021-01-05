@@ -62,15 +62,14 @@ class FoormManager extends BaseFoormManager
             ];
         }
 
-        if (array_key_exists('order_field',$input)) {
+        if (array_key_exists('order_field', $input)) {
             $input['order_params'] = [
                 'field' => $input['order_field'],
-                'direction' => strtoupper(Arr::get($input,'order_direction','ASC')),
+                'direction' => strtoupper(Arr::get($input, 'order_direction', 'ASC')),
             ];
             unset($input['order_field']);
             unset($input['order_direction']);
         }
-
 
 
         unset($input['page']);
@@ -128,7 +127,7 @@ class FoormManager extends BaseFoormManager
             throw new \InvalidArgumentException("Model class $fullModelName does not exists");
 
         $finalConfig = array_merge($finalConfig, $this->getRealFoormClass($formConfig, $relativeModelName, $this->foormType));
-        $this->normalizedFoormType = Arr::get($finalConfig,'form_type',$this->foormType);
+        $this->normalizedFoormType = Arr::get($finalConfig, 'form_type', $this->foormType);
 
         $finalConfig['model'] = $snakeModelName;
         $finalConfig['relative_model_name'] = $relativeModelName;
@@ -187,6 +186,46 @@ class FoormManager extends BaseFoormManager
             'form_type' => $snakeFormName,
             'relative_form_name' => $relativeFormName,
             'full_form_name' => $fullFormName,
+        ];
+
+    }
+
+    protected function getRealFoormActionClass($action)
+    {
+
+
+        $relativeFormName = Arr::get($this->config, 'relative_form_name');
+        $relativeModelName = Arr::get($this->config, 'relative_model_name');
+
+        $snakeEntityName = Arr::get($this->config, 'entity', $this->foormEntity);
+        $relativeEntityName = Str::studly($snakeEntityName);
+
+        $fullFormActionName = $this->baseConfig['foorms_namespace'] . $relativeEntityName
+            . "\\Actions\\" . Str::studly($action);
+
+
+        if (!class_exists($fullFormActionName)) {//Example: exists App\Foorm\User\List class?
+
+            $fullFormActionName = $this->baseConfig['foorms_namespace'] . $relativeModelName
+                . "\\Actions\\" . Str::studly($action);
+            if (!class_exists($fullFormActionName)) {
+
+                $fullFormActionName = $this->baseConfig['foorms_namespace'] . "Actions\\" . Str::studly($action);
+                if (!class_exists($fullFormActionName)) {//Example: exists App\Foorm\List class?
+                    $fullFormActionName = $this->baseConfig['foorms_defaults_namespace']
+                        . "Actions\\" . Str::studly($action);
+
+                    if (!class_exists($fullFormActionName)) {//Example: exists Gecche\Foorm\List class?
+                        throw new \InvalidArgumentException("Foorm Action class not found");
+                    }
+
+                }
+            }
+
+        }
+
+        return [
+            'full_form_action_name' => $fullFormActionName,
         ];
 
     }
