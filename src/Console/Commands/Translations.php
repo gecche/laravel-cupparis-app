@@ -158,7 +158,8 @@ class Translations extends Command
 
         $filename = public_path($this->dirjs . "/" . $lang . '-translations.js');
 
-        $this->files->put($filename, "crud.lang = " . cupparis_json_encode($translations));
+//        $this->files->put($filename, "crud.lang = " . cupparis_json_encode($translations));
+        $this->files->put($filename, "crud.lang = " . json_encode($translations,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
         $this->comment('Traduzioni completate');
 
