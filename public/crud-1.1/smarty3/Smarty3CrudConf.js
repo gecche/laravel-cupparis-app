@@ -208,6 +208,8 @@ crud.conf['action-insert-popup'] = {
         } catch (e) {
             try {
                 defaultConf = window['Model'+this.pascalCase(that.view.modelName)].edit;
+                defaultConf = that.mergeConfView({},defaultConf);
+                defaultConf.routeName = 'insert';
             } catch (e) {};
         };
         var cConf = {

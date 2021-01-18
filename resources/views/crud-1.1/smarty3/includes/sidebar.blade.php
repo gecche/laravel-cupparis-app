@@ -97,7 +97,6 @@
 
                             <li c-item-menu class="nav-item">
                                 @if (Arr::get(current($menu['items']),'vuepath'))
-                                    {{print_r(current($menu['items']),true)}}
                                     <a class="nav-link"
                                     href="#{{Arr::get(current($menu['items']),'vuepath','/')}}">
                                         {{Arr::get(current($menu['items']),'nome','nonome')}}

@@ -3,6 +3,7 @@
 namespace Gecche\Cupparis\App\Foorm;
 
 use Gecche\Foorm\FoormManager as BaseFoormManager;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -59,15 +60,14 @@ class FoormManager extends BaseFoormManager
             ];
         }
 
-        if (array_key_exists('order_field',$input)) {
+        if (array_key_exists('order_field', $input)) {
             $input['order_params'] = [
                 'field' => $input['order_field'],
-                'direction' => strtoupper(Arr::get($input,'order_direction','ASC')),
+                'direction' => strtoupper(Arr::get($input, 'order_direction', 'ASC')),
             ];
             unset($input['order_field']);
             unset($input['order_direction']);
         }
-
 
 
         unset($input['page']);
@@ -75,7 +75,5 @@ class FoormManager extends BaseFoormManager
 
         return $input;
     }
-
-
 
 }

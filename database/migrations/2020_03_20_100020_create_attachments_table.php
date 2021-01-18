@@ -25,7 +25,8 @@ class CreateAttachmentsTable extends Migration {
             $table->integer('mediable_id')->unsigned()->nullable();
             $table->timestamps();
             $table->nullableOwnerships();
-            $table->unique(['mediable_type','mediable_id','ordine']);
+//            $table->unique(['mediable_type','mediable_id','ordine']);
+            $table->index(['mediable_type','mediable_id','ordine']);
 		});
 	}
 

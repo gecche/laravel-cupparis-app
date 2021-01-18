@@ -90,7 +90,7 @@
             @foreach($fields as $fieldKey)
 
                 <td width="{{$foormAction->getFieldWidth($field)}}%" class="data">
-                <td width="{{$labelWidth}}%" class="data {{$foormAction->getFieldStyle($field)}}">
+                <td width="{{$foormAction->getLabelWidth($field)}}%" class="data {{$foormAction->getFieldStyle($field)}}">
                     {{$foormAction->getPdfField($fieldKey,$itemArrayDotted)}}
                 </td>
 

@@ -375,6 +375,45 @@ crud.components.widgets.wHasmanyListedConstraint = Vue.component('w-hasmany-list
     // }
 });
 
+crud.conf['w-hasmany-listed-squared-constraint'] = {
+    lastRefId: 0,
+    confParent: 'crud.conf.w-hasmany',
+    hasManyListConf: {
+        routeName: 'list-constraint',
+        actions: ['action-delete', 'action-insert-popup', 'action-edit-popup'],
+
+        methods: {
+
+        },
+        mounted: function () {
+
+        },
+        customActions: {
+            // 'action-edit' :
+        }
+    }
+}
+crud.components.widgets.wHasmanyListedSquaredConstraint = Vue.component('w-hasmany-listed-squared-constraint', {
+    extends: crud.components.widgets.wHasmanyListedConstraint,
+    template: '#w-hasmany-listed-squared-constraint-template',
+
+    methods: {
+        dynamicData: function (conf) {
+            var that = this;
+            conf.hasManyListConf.cRef = that._uid + conf.hasManyListConf.hasManyName;
+            conf.hasManyListConf.fieldsConfig = that.merge(conf.hasManyListConf.fieldsConfig, conf.relationConf);
+            console.log("hasManyLISTCONF::: ", conf, that);
+            conf.hasManyListConf.constraintValue = conf.modelData.id;
+            conf.hasManyListConf.methods.getFieldName = function (key) {
+
+                return conf.hasManyListConf.hasManyName + "-" + key + '[]';
+
+            }
+            return conf;
+        }
+    }
+});
+
 
 crud.components.widgets.wHasmanyThrough = Vue.component('w-hasmany-through', {
     extends: crud.components.widgets.coreWHasmanyThrough,

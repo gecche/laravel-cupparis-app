@@ -46,4 +46,8 @@ trait CupparisJsonTrait
         $part = array_shift($parts);
         return $this->getGroup($part,$parts,$array);
     }
+
+    public function jsonEncode($json) {
+        return json_encode($json,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
 }

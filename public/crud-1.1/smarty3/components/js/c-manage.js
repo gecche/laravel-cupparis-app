@@ -452,6 +452,7 @@ crud.components.cManage = Vue.component('c-manage', {
             if (actionSaveIndex >= 0) {
                 delete insertConf.actions[actionSaveIndex];
             }
+            insertConf.routeName = 'insert';
             conf.insertConf = insertConf;
             return conf;
 
