@@ -1,3 +1,9 @@
+crud.routes['menu'] = {
+    url : 'crud/menu',
+    method : 'get',
+    resultType : 'list',
+    protocol:'record',
+}
 crud.routes['csv-exporta'] = {
     url : 'foormaction/csv-export/{foorm}/{foormtype}',///{foormpk?}',
     method : 'post',
