@@ -27,7 +27,7 @@ crud.conf['csv-dashboard'] = {
     },
     viewUpload : {
         cRef : 'viewUpload',
-        routeName : null,
+        routeName : 'datafile_insert',
         fields : [],
         actions : ['action-save','action-cancel'],
         customActions : {
@@ -197,6 +197,7 @@ Vue.component('csv-dashboard', {
         _uploadConf() {
             var that = this;
             var userConf = that.merge({},that.viewUpload);
+            userConf.modelName = that.providerName;
             userConf.customActions = that.viewUpload.customActions || {};
             userConf.fieldsConfig = that.viewUpload.fieldsConfig || {};
             console.log('aaaa',userConf,'viewUpload',that.viewUpload);
@@ -283,4 +284,20 @@ crud.routes.datafile_data = {
     url         : '/foormc/{modelName}/datafile_id/{jobId}',
     resultType  : 'list',
     protocol    : 'list'
+};
+
+// route per eventuali configurazioni dati in ingresso prima dell'upload
+crud.routes.datafile_insert = {
+    method      : "get",
+    url         : '/foorm/{modelName}/new',
+    resultType  : 'record',
+    protocol    : 'record'
+};
+
+// route per eventuali configurazioni dati in ingresso prima del save
+crud.routes.datafile_import = {
+    method      : "get",
+    url         : '/foorm/{modelName}/import/{jobId}',
+    resultType  : 'record',
+    protocol    : 'record'
 };
