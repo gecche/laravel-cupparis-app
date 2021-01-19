@@ -8,7 +8,8 @@
         </div>
         <div v-if="uploadEnabled" class="panel panel-default" >
             <div>Seleziona file csv da importare</div>
-            <w-upload-ajax :c-conf="confUpload" v-on:success="uploadsuccess"></w-upload-ajax>
+<!--            <w-upload-ajax :c-conf="confUpload" v-on:success="uploadsuccess"></w-upload-ajax>-->
+            <v-edit :c-conf="_uploadConf()"></v-edit>
         </div>
         <div v-if="progressEnabled">
             <div v-if="status=='loading'">Loading</div>
@@ -19,7 +20,8 @@
         </div>
         <div v-if="saveEnabled">
             <div>File csv caricato e controllato</div>
-            <v-list-data :c-model="cProviderName" :c-conf="datafileConf"></v-list-data>
+            <v-edit :c-conf="_saveConf()"></v-edit>
+            <v-list-data :c-conf="_listConf()"></v-list-data>
 <!--            <v-action c-name="action-base" :c-action="saveAction"></v-action>-->
         </div>
     </div>

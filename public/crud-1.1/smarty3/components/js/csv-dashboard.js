@@ -1,3 +1,60 @@
+crud.conf['csv-dashboard'] = {
+    jobId : null,
+    progressValue : 20,
+    saveEnabled : false,
+    uploadEnabled : true,
+    progressEnabled : false,
+    status : 'upload',
+    confUpload : {
+        name : 'resource',
+        type : 'w-upload-ajax',
+        maxFileSize: "2M",
+        modelName : null, //'cup_geo_nazioni_istat',
+        extensions: [
+            "csv",
+        ],
+        ajaxFields: {
+            field : 'resource',
+        },
+        methods :  {
+            change() {
+                // TODO gestire eventuale errore
+                var that = this;
+                var viewUpload = that.getComponent('viewUpload');
+                viewUpload.getAction('action-save').setEnabled(true);
+            }
+        }
+    },
+    viewUpload : {
+        cRef : 'viewUpload',
+        routeName : null,
+        fields : [],
+        actions : ['action-save','action-cancel'],
+        customActions : {
+            'action-save': {
+                text : 'app.importa-csv'
+            }
+        }
+    },
+    viewSave : {
+        cRef : 'viewSave',
+        routeName : null,
+        fields :[],
+        actions : ['action-save-import'],
+        customActions : {
+            'action-save-import': {
+                text : 'Salva Csv Caricato',
+                css : 'btn bnt-outline-secondary btn-info',
+                type : 'record',
+            }
+        }
+    },
+    viewList : {
+        routeName : 'datafile_data',
+        actions : [],
+    }
+}
+
 Vue.component('csv-dashboard', {
     extends : crud.components.cComponent,
     props: ['cProviderName'],
@@ -8,100 +65,34 @@ Vue.component('csv-dashboard', {
                 setRouteValues : function (route) {
                     route.setValues({
                         jobId : this.$parent.jobId,
-                        modelName : this.$parent.cProviderName,
+                        modelName : this.$parent.providerName,
                     });
                     return route;
                 }
             }
         })
     },
-    data: function () {
-        var csvD = this;
-        CSVD = this;
-        console.log('this.options',csvD.$options.components);
-        crud.components.actions.actionSaveImport = csvD.$options.components['action-save-import'];
-        var d = {
-            jobId : null,
-            progressValue : 20,
-            saveEnabled : false,
-            uploadEnabled : true,
-            progressEnabled : false,
-            status : 'upload',
-            // confUpload : {
-            //     "value": null,
-            //     "name": "resource",
-            //     "modelName" : csvD.cProviderName,
-            //     "maxFileSize": "2M",
-            //     "extensions": [
-            //         "csv",
-            //     ],
-            //     "ajaxFields": {
-            //         resource_type: "attachment",
-            //         field : 'dizionario_comune',
-            //     },
-            // },
-            datafileConf : csvD.mergeConfView(csvD.$crud.conf.list,{
-                routeName : 'datafile_data',
-                actions : ['action-save-import'],
-                customActions : {
-                    'action-save-import' : {
-                        extends : crud.components.actions.actionBase,
-                        text : 'Salva Csv Caricato',
-                        css : 'btn bnt-outline-secondary btn-info',
-                        type : 'collection',
-                        execute : function () {
-                            var that = this;
-                            var r = that.createRoute('save_datafile');
-                            r.setParams({
-                                datafile_load_id : csvD.jobId,
-                                datafileProviderName : csvD.cProviderName,
-                            });
-                            Server.route(r,function (json) {
-                                if (json.error) {
-                                    that.errorDialog(json.msg);
-                                    return ;
-                                }
-                                csvD.jobId = json.jobId;
-                                csvD.status = 'saving';
-                                csvD.progressEnabled = true;
-                                csvD.checkStatus();
-                            })
-                        }
-                    }
-                }
-            })
-        }
-        return d;
+    mounted() {
+        var that = this;
+        that.$crud.EventBus.$on('start-import',function (params) {
+            console.log('event',params);
+            that.jobId = params.jobId;
+            that.progressEnabled = true;
+            that.checkStatus();
+        })
+
     },
     methods : {
-        uploadsuccess : function (uploadComp) {
+
+        dynamicData(conf) {
             var that = this;
-            console.log('value',uploadComp);
-            that.confirmDialog('Procedo con l\'importazione del csv?',{
-                ok : function () {
-                    that.status = 'loading';
-                    var value = JSON.parse(uploadComp.value);
-                    var r = that.createRoute('load_datafile');
-                    r.setParams({
-                        'fileName': value.id,
-                        'datafileProviderName': that.cProviderName,
-                    });
-                    console.log('ROUTE',r.getConf());
-                    Server.route(r,function (json) {
-                        console.log('json',json);
-                        var checkError = that.checkJobError(json);
-                        if (checkError.error) {
-                            that.status = 'upload';
-                            that.errorDialog(checkError.msg);
-                            return ;
-                        }
-                        that.jobId = json.jobId;
-                        that.progressEnabled = true;
-                        that.checkStatus();
-                    })
-                }
-            })
+            if (that.cProviderName)
+                conf.providerName = that.cProviderName;
+            conf.confUpload.modelName = conf.confUpload.modelName || conf.providerName;
+            console.log('dynamic data ',conf);
+            return conf;
         },
+
         checkStatus : function () {
             var that = this;
             var r = that.createRoute('status_queue');
@@ -127,20 +118,21 @@ Vue.component('csv-dashboard', {
                 return ;
             }
             if (json.job.end) {
+                console.log('job end',that.status)
                 that.progressEnabled = false;
                 if (that.status == 'loading') {
                     that.status = 'tosave';
                     that.saveEnabled = true;
                     that.uploadEnabled = false;
-                    that.datafileConf.jobId = that.jobId;
-                    that.modelName = that.csvProviderName;
+                    //that.datafileConf.jobId = that.jobId;
+                    //that.modelName = that.csvProviderName;
                 }
                 if (that.status == 'saving') {
                     that.status = 'upload';
                     that.uploadEnabled = true;
                     that.saveEnabled = false;
                 }
-
+                console.log('job end 2',that.status,that.saveEnabled,that.uploadEnabled)
                 return ;
             }
             setTimeout(that.checkStatus,
@@ -165,39 +157,99 @@ Vue.component('csv-dashboard', {
                 error : 0
             };
         },
-        _loadConf : function() {
+        _listConf() {
             var that = this;
-            let conf = null;
-            var d = {};
-            var providerName = that.cProviderName;
-            if (that.cConf) {
-                if (typeof that.cConf === 'string' || that.cConf instanceof String) {
-                    conf = this.$crud.getDescendantProp(window, that.cConf);
-                    if (!conf) {
-                        conf = this.$crud.getDescendantProp(this.$crud.conf, that.cConf);
+            var userConf = that.merge({},that.viewList);
+            userConf.modelName = that.providerName;
+            return userConf;
+        },
+        _saveConf() {
+            var that = this;
+            var userConf = that.merge({},that.viewSave);
+            userConf.customActions = that.viewSave.customActions || {};;
+            userConf.fieldsConfig = that.viewSave.fieldsConfig || {};
+            var aS = userConf.customActions['action-save-import'] || {};
+            aS.csvDashboard = that;
+            aS.execute = function () {
+                var thatAction = this;
+                var r = thatAction.createRoute('save_datafile');
+                var viewParams = thatAction.view.getViewData();
+                var params = thatAction.merge(viewParams,{
+                    datafile_load_id : thatAction.csvDashboard.jobId,
+                    datafileProviderName : thatAction.csvDashboard.providerName,
+                })
+                r.setParams(params);
+                Server.route(r,function (json) {
+                    if (json.error) {
+                        thatAction.errorDialog(json.msg);
+                        return ;
                     }
-                } else
-                    conf = that.cConf;
-            } else if (providerName && window[that.pascalCase(providerName)] ) {
-                if (window[that.pascalCase(providerName)]) {
-                    conf = window[that.pascalCase(providerName)];
-                }
+                    thatAction.csvDashboard.jobId = json.jobId;
+                    thatAction.csvDashboard.status = 'saving';
+                    thatAction.csvDashboard.progressEnabled = true;
+                    thatAction.csvDashboard.checkStatus();
+                })
             }
-            if (!conf) {
-                console.trace();
-                throw "Nessuna configurazione trovata per questa csv-dashboard " + that.pascalCase(providerName);
-            }
+            userConf.customActions['action-save'] = aS;
 
-            for (var k in conf) {
-                if (k == 'methods')
-                    continue;
-                d[k] = conf[k];
+            return  userConf;
+        },
+        _uploadConf() {
+            var that = this;
+            var userConf = that.merge({},that.viewUpload);
+            userConf.customActions = that.viewUpload.customActions || {};
+            userConf.fieldsConfig = that.viewUpload.fieldsConfig || {};
+            console.log('aaaa',userConf,'viewUpload',that.viewUpload);
+
+            var rsName = that.confUpload.name;
+            userConf.fields.push(rsName);
+            //userConf.fields.push('resource');
+            userConf.fieldsConfig[rsName] = that.confUpload;
+            var aS = userConf.customActions['action-save'] || {};
+            aS.enabled =  false;
+            aS.csvDashboard = that;
+            aS.execute = function () {
+                var thatAction = this;
+                thatAction.csvDashboard.status = 'loading';
+                var w = thatAction.view.getWidget('resource');
+                var value = JSON.parse(w.getValue());
+                var r = thatAction.createRoute('load_datafile');
+                var viewParams = thatAction.view.getViewData();
+                var params = thatAction.merge(viewParams,{
+                    'fileName': value.id,
+                    'datafileProviderName': thatAction.csvDashboard.providerName,
+                })
+                r.setParams(params);
+                console.log('ROUTE',r.getConf());
+                Server.route(r,function (json) {
+                    console.log('json',json);
+                    var checkError = thatAction.csvDashboard.checkJobError(json);
+                    if (checkError.error) {
+                        thatAction.csvDashboard.status = 'upload';
+                        thatAction.errorDialog(checkError.msg);
+                        return ;
+                    }
+                    var params = {
+                        jobId : json.jobId,
+                        progressEnabled : true,
+                    }
+                    thatAction.$crud.EventBus.$emit('start-import',params);
+                    // return ;
+                    // that.jobId = json.jobId;
+                    // that.progressEnabled = true;
+                    // that.checkStatus();
+                })
+
+                // that.confirmDialog('Procedo con l\'importazione del csv?',{
+                //     ok : function () {
+                //
+                //     }
+                // })
             }
-            d.conf = conf;
-            console.log('finalConf', conf);
-            return d;
+            userConf.customActions['action-save'] = aS;
+
+            return  userConf;
         }
-
     },
     template : '#csv-dashboard-template'
 });
