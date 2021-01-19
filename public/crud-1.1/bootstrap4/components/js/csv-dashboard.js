@@ -232,3 +232,10 @@ crud.routes.datafile_data = {
     resultType  : 'list',
     protocol    : 'list'
 };
+
+crud.routes.datafile_insert = {
+    method      : "get",
+    url         : '/foorm/{modelName}',
+    resultType  : 'record',
+    protocol    : 'record'
+};
