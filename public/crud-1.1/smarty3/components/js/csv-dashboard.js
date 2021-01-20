@@ -37,8 +37,17 @@ crud.conf['csv-dashboard'] = {
         }
     },
     viewSave : {
+        methods : {
+            setRouteValues : function (route) {
+                route.setValues({
+                    jobId : this.$parent.jobId,
+                    modelName : this.$parent.providerName,
+                });
+                return route;
+            }
+        },
         cRef : 'viewSave',
-        routeName : null,
+        routeName : 'datafile_import',
         fields :[],
         actions : ['action-save-import'],
         customActions : {
@@ -166,6 +175,7 @@ Vue.component('csv-dashboard', {
         _saveConf() {
             var that = this;
             var userConf = that.merge({},that.viewSave);
+            userConf.modelName = that.providerName;
             userConf.customActions = that.viewSave.customActions || {};;
             userConf.fieldsConfig = that.viewSave.fieldsConfig || {};
             var aS = userConf.customActions['action-save-import'] || {};
