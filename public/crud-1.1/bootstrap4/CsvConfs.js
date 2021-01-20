@@ -36,6 +36,7 @@ var CupGeoNazioniIstat = {
     },
     viewSave : {
         fields : ['nomeSave','tipoSave'],
+        routeName : null,
     },
     viewList : {
 

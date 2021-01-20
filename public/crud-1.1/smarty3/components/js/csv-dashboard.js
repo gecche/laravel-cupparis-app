@@ -39,10 +39,12 @@ crud.conf['csv-dashboard'] = {
     viewSave : {
         methods : {
             setRouteValues : function (route) {
-                route.setValues({
-                    jobId : this.$parent.jobId,
-                    modelName : this.$parent.providerName,
-                });
+                if (route) {
+                    route.setValues({
+                        jobId : this.$parent.jobId,
+                        modelName : this.$parent.providerName,
+                    });
+                }
                 return route;
             }
         },
