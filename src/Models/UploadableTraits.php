@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  * This is used by Eloquent permissions provider.
  */
 trait UploadableTraits {
-   
+
     protected $dirPolicy = null;
 
     public function getDir() {
@@ -75,17 +75,17 @@ trait UploadableTraits {
         }
         return $this->prefix.'_'.$id.'_';
     }
-   
+
     public function delete($id = NULL) {
         if (file_exists($this->getStorageFilename()))
             unlink($this->getStorageFilename());
         return parent::delete($id);
     }
 
-    public function filesOps($inputArray = array()) {
+    public function filesOps($inputArray = array(),$field = 'resource') {
         $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
 
-        $resource = json_decode(Arr::get($inputArray,'resource',""),true);
+        $resource = json_decode(Arr::get($inputArray,$field,""),true);
 
         $tempfilename = Arr::get($resource,'id',false);
         if ($tempfilename && !Storage::exists($tempfilename)) {
@@ -105,12 +105,12 @@ trait UploadableTraits {
 
 
         }
-        
+
     }
 
-    public function setFieldsFromResource($inputArray = array()) {
+    public function setFieldsFromResource($inputArray = array(),$field = 'resource') {
 
-        $resource = json_decode(Arr::get($inputArray,'resource',""),true);
+        $resource = json_decode(Arr::get($inputArray,$field,""),true);
 
         $resourceId = Arr::get($resource,'id',false);
 
@@ -121,7 +121,7 @@ trait UploadableTraits {
     public function deleteOldFiles($id = null) {
         File::delete(File::glob(storage_path('files/'.$this->getDir()).'/'.$this->getPrefixFile($id).'*'));
     }
-    
+
     public static function fullCreate($data = array(), $path = null) {
         $item = new static;
         $item->fill($data);
