@@ -77,8 +77,9 @@ trait UploadableTraits {
     }
 
     public function delete($id = NULL) {
-        if (file_exists($this->getStorageFilename()))
-            unlink($this->getStorageFilename());
+        if ($this->fileExists()) {
+            Storage::delete($this->getStorageFilename());
+        }
         return parent::delete($id);
     }
 
