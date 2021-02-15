@@ -16,6 +16,7 @@ class CreateDatafileErrorTable extends Migration
         Schema::create('datafile_error', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('datafile_table_id')->unsigned()->nullable();
+            $table->string('datafile_sheet')->nullable();
             $table->string('datafile_table_type')->nullable();
             $table->integer('datafile_id')->unsigned()->nullable();
             $table->string('field_name');

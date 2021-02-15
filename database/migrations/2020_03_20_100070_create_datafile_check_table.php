@@ -16,6 +16,7 @@ class CreateDatafileCheckTable extends Migration
         Schema::create('datafile_check', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('datafile_table_id')->unsigned()->nullable();
+            $table->string('datafile_sheet')->nullable();
             $table->integer('datafile_id')->unsigned()->nullable();
             $table->string('field_name');
             $table->string('function_name');
