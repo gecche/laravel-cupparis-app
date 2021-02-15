@@ -203,7 +203,15 @@ Vue.component('csv-dashboard', {
                 })
             }
             userConf.customActions['action-save'] = aS;
-
+            userConf.actions.push('action-annulla');
+            userConf.customActions['action-annulla'] = {
+                text : 'app.annulla',
+                execute : function () {
+                    that.status = 'upload';
+                    that.uploadEnabled = true;
+                    that.saveEnabled = false;
+                }
+            }
             return  userConf;
         },
         _uploadConf() {
@@ -234,7 +242,9 @@ Vue.component('csv-dashboard', {
                 })
                 r.setParams(params);
                 console.log('ROUTE',r.getConf());
+                that.waitStart();
                 Server.route(r,function (json) {
+                    that.waitEnd();
                     console.log('json',json);
                     var checkError = thatAction.csvDashboard.checkJobError(json);
                     if (checkError.error) {
