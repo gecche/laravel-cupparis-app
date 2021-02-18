@@ -16,7 +16,7 @@ class CreateDatafilesTable extends Migration {
 		{
             			$table->increments('id');
 			$table->integer('datafile_id')->unsigned();
-            $table->string('datafile_sheet')->nullable();
+            $table->text('datafile_sheet')->nullable();
             $table->string('datafile_type')->nullable();
 			$table->text('data')->nullable();
 			$table->nullableTimestamps();
