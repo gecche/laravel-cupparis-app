@@ -3,6 +3,7 @@
 namespace Gecche\Cupparis\App\Foorm\Base;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 trait CupparisDatafileFoormListTrait
 {
@@ -42,6 +43,37 @@ trait CupparisDatafileFoormListTrait
 
         }
 
+    }
+
+    public function setFormMetadata() {
+        parent::setFormMetadata();
+
+        $this->setFormMetadataHasErrors();
+    }
+
+    protected function setFormMetadataHasErrors() {
+        $fixedConstraints = Arr::get($this->params, 'fixed_constraints', []);
+        $datafileId = null;
+        foreach ($fixedConstraints as $fixedConstraint) {
+            if (Arr::get($fixedConstraint, 'field') == 'datafile_id') {
+                $datafileId = Arr::get($fixedConstraint, 'value');
+            }
+        }
+
+        $hasErrors = 0;
+        if ($datafileId) {
+            $hasErrors = DB::table('datafile_error')
+                ->select(['datafile_table_id'])
+                ->where("datafile_id", $datafileId)
+                ->where('datafile_table_type', get_class($this->model))
+                ->groupBy('datafile_table_id')
+                ->get();
+
+            $hasErrors = $hasErrors->count();
+
+        }
+
+        $this->formMetadata['has_datafile_errors'] = $hasErrors;
     }
 
 
