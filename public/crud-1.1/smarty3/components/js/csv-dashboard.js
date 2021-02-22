@@ -9,6 +9,7 @@ crud.conf['csv-dashboard'] = {
         name : 'resource',
         type : 'w-upload-ajax',
         maxFileSize: "2M",
+        template : 'tpl-no',
         modelName : null, //'cup_geo_nazioni_istat',
         extensions: [
             "csv",
@@ -32,6 +33,7 @@ crud.conf['csv-dashboard'] = {
         actions : ['action-save','action-cancel'],
         customActions : {
             'action-save': {
+                icon : null,
                 text : 'app.importa-csv'
             }
         }
@@ -61,8 +63,115 @@ crud.conf['csv-dashboard'] = {
         }
     },
     viewList : {
+        cRef : 'csvViewList',
+        errorClass : 'bg-danger-soft .border-top .border-primary .bw--2',
         routeName : 'datafile_data',
-        actions : [],
+        actions : ['action-mostra-tutti','action-show-error'],
+        showError : false,
+        canEdit : false,
+        multiSheets : false,
+        // configurazione select
+        selectSheetConf : {
+            cRef : 'sheetSelect',
+            methods : {
+                change() {
+                    var sheetName = this.domainValues[this.getValue()];
+                    this.$parent.setSheet(sheetName);
+                }
+            }
+        },
+        editError : {
+            title : 'app.modifica',
+            icon : 'fa fa-edit',
+            execute() {
+                alert('modirica' + this.index + " " + this.key);
+            }
+        },
+        customActions : {
+            'action-show-error' : {
+                text : 'Mostra solo errori',
+                css : 'btn-outline-danger',
+                type : 'collection',
+                execute() {
+                    this.view.showError = true;
+                    this.view.reload();
+                },
+                visible() {
+                    if (this.view.metadata.has_datafile_errors)
+                        return true
+                    return false;
+                }
+            },
+            'action-mostra-tutti' : {
+                text : 'Mostra tutti',
+                type : 'collection',
+                execute() {
+                    this.view.showError = false;
+                    this.view.reload();
+                },
+                visible() {
+                    if (this.view.metadata.has_datafile_errors)
+                        return true
+                    return false;
+                }
+
+            }
+        },
+        methods : {
+
+            editErrorConf(index,key) {
+                var that = this;
+                var conf =  that.merge(that.editError,{
+                    index : index,
+                    key : key,
+                    view : that,
+                })
+                console.log('conf Edit',conf);
+                return conf;
+            },
+            setErrors() {
+                var that = this;
+                console.log('csvdata ',this);
+                for (var i in that.value) {
+                    var rowData = that.value[i];
+                    if (rowData.errors && rowData.errors.length) {
+                        var rowJQ = jQuery(that.jQe().find('tbody tr').get(i));
+                        for (var c in rowData.errors) {
+                            var error = rowData.errors[c];
+                            console.log("found error",'.field-'+error.field_name,error.field_name,rowJQ.find('.field-'+error.field_name).length);
+                            var colJQ = rowJQ.find('.field-'+error.field_name);
+                            colJQ.addClass('danger')
+                                .attr('data-toggle',"tooltip")
+                                .attr('data-errors',error)
+                                .attr('title',error.error_name);
+                            //.attr('title','bosadf afdaf ');
+                            $(colJQ).tooltip({
+                                container : 'body',
+                                html : true,
+                            });
+                            if (that.hasClassError(error.field_name)) {
+                                colJQ.attr('data-error_index',i+":"+c);
+                                colJQ.click(function () {
+                                    var error_index = $(this).attr('data-error_index');
+                                    var idx = error_index.split(':');
+                                    var error = that.value[idx[0]].errors[idx[1]];
+                                    that.app.log.debug('cliccato',error_index,error);
+                                    that.errorClicked(error);
+                                });
+                            }
+                        }
+                        //.addClass('danger');
+                    }
+                }
+            },
+            hasClassError : function (fieldName) {
+                var that = this;
+                console.log('fieldName',fieldName,that.value[fieldName].errors)
+                if (that.value[fieldName].errors)
+                    return true;
+                return false;
+            },
+        }
     }
 }
 
@@ -73,14 +182,65 @@ Vue.component('csv-dashboard', {
         'v-list-data' : Vue.component('v-list-data',{
             extends : crud.components.views.vList,
             methods : {
+                tdClass(index,key) {
+                    var that = this;
+                    if (that.hasError(index,key))
+                        return 'field-' + key + ' ' + that.errorClass;
+                    return 'field-' + key;
+                },
+                hasError(index,key) {
+                    var that = this;
+                    var errors = that.value[index].errors || [];
+                    if (errors.length > 0) {
+                        for (var i in errors) {
+                            if (key == errors[i].field_name)
+                                return true
+                        }
+
+                    }
+                    return false;
+                },
+                setSheet(sheetName) {
+                    var that = this;
+                    console.log('setSheet',sheetName);
+                    var params = that.route.getParams();
+                    if (sheetName)
+                        params['s_datafile_sheet'] = sheetName;
+                    else
+                        params['s_datafile_sheet'] = '';
+                    that.reload();
+
+                },
                 setRouteValues : function (route) {
+                    var that = this;
                     route.setValues({
                         jobId : this.$parent.jobId,
                         modelName : this.$parent.providerName,
                     });
+                    var params = route.getParams();
+                    if (that.showError) {
+                        params ['datafile_only_errors'] = 1;
+                    } else {
+                        params['datafile_only_errors'] =  0;
+                    }
+                    route.setParams(params);
                     return route;
+                },
+                completed() {
+                    console.log('v-list csv completed',this.metadata);
+                    this.getComponent('sheetSelect').setDomainValues(this.metadata.sheets,this.metadata.sheets_order);
+                    var params = this.route.getParams();
+                    var selectedSheetName = params['s_datafile_sheet'];
+                    if (selectedSheetName) {
+                        this.getComponent('sheetSelect').setValue(Object.values(this.metadata.sheets).indexOf(selectedSheetName));
+                    }
+
+                    // this.selectSheetConf.domainValues = this.metadata.sheets;
+                    // this.selectSheetConf.domainValuesOrder = this.metadata.sheets_order;
+                    this.multiSheets = (this.metadata.sheets_order.length > 0)
                 }
-            }
+            },
+            template : '#csv-dashboard-v-list-data-template'
         })
     },
     mounted() {
@@ -112,6 +272,7 @@ Vue.component('csv-dashboard', {
             });
             Server.route(r,function (json) {
                 if (json.error) {
+                    that.waitEnd();
                     that.progressEnabled = false;
                     that.errorDialog(json.msg);
                     return ;
@@ -124,12 +285,14 @@ Vue.component('csv-dashboard', {
             var checkError = that.checkJobError(json);
 
             if (checkError.error ) {
+                that.waitEnd();
                 that.progressEnabled = false;
                 that.errorDialog(checkError.msg);
                 return ;
             }
             if (json.job.end) {
                 console.log('job end',that.status)
+                that.waitEnd();
                 that.progressEnabled = false;
                 if (that.status == 'loading') {
                     that.status = 'tosave';
@@ -184,32 +347,63 @@ Vue.component('csv-dashboard', {
             aS.csvDashboard = that;
             aS.execute = function () {
                 var thatAction = this;
-                var r = thatAction.createRoute('save_datafile');
-                var viewParams = thatAction.view.getViewData();
-                var params = thatAction.merge(viewParams,{
-                    datafile_load_id : thatAction.csvDashboard.jobId,
-                    datafileProviderName : thatAction.csvDashboard.providerName,
-                })
-                r.setParams(params);
-                Server.route(r,function (json) {
-                    if (json.error) {
-                        thatAction.errorDialog(json.msg);
-                        return ;
-                    }
-                    thatAction.csvDashboard.jobId = json.jobId;
-                    thatAction.csvDashboard.status = 'saving';
-                    thatAction.csvDashboard.progressEnabled = true;
-                    thatAction.csvDashboard.checkStatus();
-                })
+                var vL = thatAction.getComponent('csvViewList');
+                var __save = function () {
+                    thatAction.waitStart('Salvataggio dati in corso...');
+                    var r = thatAction.createRoute('save_datafile');
+                    var viewParams = thatAction.view.getViewData();
+                    var params = thatAction.merge(viewParams,{
+                        datafile_load_id : thatAction.csvDashboard.jobId,
+                        datafileProviderName : thatAction.csvDashboard.providerName,
+                    })
+                    r.setParams(params);
+                    Server.route(r,function (json) {
+                        if (json.error) {
+                            thatAction.waitEnd();
+                            thatAction.errorDialog(json.msg);
+                            return ;
+                        }
+                        thatAction.csvDashboard.jobId = json.jobId;
+                        thatAction.csvDashboard.status = 'saving';
+                        thatAction.csvDashboard.progressEnabled = true;
+                        thatAction.csvDashboard.checkStatus();
+                    })
+                }
+                if (vL && vL.metadata.has_datafile_errors) {
+                    thatAction.confirmDialog('Il file contiene degli errori, le righe con errore verranno scartate. Salvo Comunque?',{
+                        ok() {
+                            __save()
+                        }
+
+                    })
+                    return ;
+                }
+                __save();
             }
             userConf.customActions['action-save'] = aS;
             userConf.actions.push('action-annulla');
             userConf.customActions['action-annulla'] = {
                 text : 'app.annulla',
                 execute : function () {
-                    that.status = 'upload';
-                    that.uploadEnabled = true;
-                    that.saveEnabled = false;
+                    that.waitStart('Cancellazione dati...')
+                    var r = that.createRoute('datafile_cancel');
+                    r.setValues({
+                        foorm : that.providerName,
+                        foormtype: 'list',
+                        constraintField : 'datafile_id',
+                        constraintValue : that.jobId,
+                    })
+                    Server.route(r,function (json) {
+                        that.waitEnd();
+                        if (json.error) {
+                            that.errorDialog(json.msg);
+                            return ;
+                        }
+                        that.status = 'upload';
+                        that.uploadEnabled = true;
+                        that.saveEnabled = false;
+                    })
+
                 }
             }
             return  userConf;
@@ -242,12 +436,12 @@ Vue.component('csv-dashboard', {
                 })
                 r.setParams(params);
                 console.log('ROUTE',r.getConf());
-                that.waitStart();
+                that.waitStart('Validazione dati in corso...');
                 Server.route(r,function (json) {
-                    that.waitEnd();
                     console.log('json',json);
                     var checkError = thatAction.csvDashboard.checkJobError(json);
                     if (checkError.error) {
+                        that.waitEnd();
                         thatAction.csvDashboard.status = 'upload';
                         thatAction.errorDialog(checkError.msg);
                         return ;
@@ -320,6 +514,13 @@ crud.routes.datafile_insert = {
 crud.routes.datafile_import = {
     method      : "get",
     url         : '/foorm/{modelName}/import/{jobId}',
+    resultType  : 'record',
+    protocol    : 'record'
+};
+// route per annullare l'ìmportazione
+crud.routes.datafile_cancel = {
+    method      : "post",
+    url         : '/foormcaction/flush-datafile/{foorm}/{foormtype}/{constraintField}/{constraintValue}',
     resultType  : 'record',
     protocol    : 'record'
 };
