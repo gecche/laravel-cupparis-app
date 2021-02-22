@@ -52,6 +52,10 @@ class FlushDatafile extends FoormAction
                 ->where('datafile_id', $datafileId)
                 ->delete();
 
+            DB::table('datafiles')
+                ->where('datafile_id', $datafileId)
+                ->delete();
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
