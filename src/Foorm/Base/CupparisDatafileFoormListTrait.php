@@ -12,6 +12,7 @@ trait CupparisDatafileFoormListTrait
     protected $displayOnlyErrors = false;
 
     protected $datafileId;
+    protected $datafileModel;
 
     protected function init()
     {
@@ -66,9 +67,18 @@ trait CupparisDatafileFoormListTrait
         foreach ($fixedConstraints as $fixedConstraint) {
             if (Arr::get($fixedConstraint, 'field') == 'datafile_id') {
                 $this->datafileId = Arr::get($fixedConstraint, 'value');
+                $this->datafileModel = Datafile::where('datafile_id',$this->datafileId)->first();
                 return;
             }
         }
+    }
+
+    public function getDatafileId() {
+        return $this->datafileId;
+    }
+
+    public function getDatafileModel() {
+        return $this->datafileModel;
     }
 
     protected function setFormMetadataHasErrors()
@@ -99,11 +109,8 @@ trait CupparisDatafileFoormListTrait
         $sheets = [
 
         ];
-        if ($this->datafileId) {
-            $datafile = Datafile::find($this->datafileId);
-            if ($datafile) {
-                $sheets = $datafile->datafile_sheet;
-            }
+        if ($this->datafileModel) {
+            $sheets = $this->datafileModel->datafile_sheet;
         }
 
         $sheets = $anyOption + $sheets;
