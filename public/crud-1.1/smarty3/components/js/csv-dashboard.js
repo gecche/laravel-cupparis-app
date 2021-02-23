@@ -436,7 +436,7 @@ Vue.component('csv-dashboard', {
                 })
                 r.setParams(params);
                 console.log('ROUTE',r.getConf());
-                that.waitStart('Validazione dati in corso...');
+                that.waitStart('Importazione e validazione dati in corso...');
                 Server.route(r,function (json) {
                     console.log('json',json);
                     var checkError = thatAction.csvDashboard.checkJobError(json);

@@ -1,10 +1,10 @@
 <script type="text/x-template" id="csv-dashboard-template">
     <div id="tabContent">
         <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">Importazione csv,excel</h4>
-            <p>Importazione modello <strong>{{cProviderName}}</strong> da file csv,xls,xlsx</p>
+            <h4 class="alert-heading">Importazione dati</h4>
+            <p>Importazione modello <strong>{{providerName | translate}}</strong></p>
             <hr>
-            <p class="mb-0">L'importazione avverrà in due fasi, la lettura del file csv e check degli errori e salvataggio del csv importato</p>
+            <p class="mb-0">L'importazione avverrà in due fasi, la lettura del file dati e check degli errori e salvataggio dei dati importati</p>
         </div>
         <div v-if="uploadEnabled" class="panel panel-default" >
             <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-primary bl-0 br-0 bb-0 bw--2">
