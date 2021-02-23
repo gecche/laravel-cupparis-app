@@ -41,12 +41,20 @@ trait CupparisDatafileFoormListTrait
         $this->formBuilder = $modelClass::acl();
 
         if ($this->displayOnlyErrors) {
-            $this->paginateSelect = array($this->model->getTable() . ".*");
+//            $errorIds = DB::table('datafile_error')
+//                ->where('datafile_error.datafile_table_type', $modelClass)
+//                ->where('datafile_id',$this->getDatafileId())
+//                ->select(['id'])
+//                ->get()
+//                ->pluck('id', 'id')->all();
+
+//            $this->paginateSelect = array($this->model->getTable() . ".*");
             $this->model->setDefaultOrderColumns(["datafile_sheet" => 'ASC', "row" => "ASC"]);
-            $this->formBuilder = $this->formBuilder->join('datafile_error', "datafile_error.datafile_table_id", "=",
-                $this->model->getTable() . ".id")
-                ->where('datafile_error.datafile_table_type', $modelClass)
-                ->groupBy("datafile_error.datafile_table_id");
+            $this->formBuilder->has('errors');
+//            $this->formBuilder = $this->formBuilder->join('datafile_error', "datafile_error.datafile_table_id", "=",
+//                $this->model->getTable() . ".id")
+//                ->whereIn('datafile_error.id', $errorIds)
+//                ->groupBy($this->model->getTable() . ".id");
 
         }
 
