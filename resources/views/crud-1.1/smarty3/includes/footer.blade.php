@@ -1,20 +1,13 @@
 <!-- FOOTER -->
 <footer id="footer">
-    <div class="{{$layoutGradientColor}} rounded text-white px-3 py-1 fs--14">
+    <div class="{{$layoutGradientColor}} rounded text-white p-3 fs--14">
 
-        <div class="z-index-1 d-flex justify-content-between">
+        <div class="z-index-1">
 
-            <div class="d-middle">
                 <span data-gfont="Sriracha" class="text-white">
                             {{env('APP_NAME')}}
                 </span>
                 <small style="font-size: .6em !important;">ver. {{config('app.version')}}</small>
-            </div>
-
-            <div>
-                <img src="{!! Theme::url('assets/images/logo-cnr-abruzzo.png') !!}" width="80"
-                     alt="{{env('APP_NAME')}}">
-            </div>
 
             {{--            <div class="d-inline-block float-end dropdown">--}}
             {{--                <ul class="list-inline m-0">--}}

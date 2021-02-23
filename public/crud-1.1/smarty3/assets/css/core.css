@@ -20,7 +20,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #287AC8;
+  --primary: #4285F4;
   --secondary: #6c757d;
   --success: #6dbb30;
   --info: #73e7f7;
@@ -10884,13 +10884,8 @@ input.text-white::-moz-placeholder {
   color: #adb5bd; }
 
 .bg-gradient-primary {
-    background: #287AC8;
-    background: -webkit-gradient(linear, top left, bottom right, from(#0966be), to(#287AC8)) !important;
-    /*background: linear-gradient(to bottom right, #0966be 0%, #287AC8 100%) !important;*/
-    background: linear-gradient(to bottom right, #287AC8 0%, #0966be 100%) !important;
-}
-  /*background: #4285F4;*/
-  /*background: linear-gradient(to bottom, #699ef6 0%, #4285F4 100%) !important; }*/
+  background: #4285F4;
+  background: linear-gradient(to bottom, #699ef6 0%, #4285F4 100%) !important; }
 
 .bg-gradient-secondary {
   background: #6c757d;

@@ -157,10 +157,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
-                            'app.ok' |
-                                translate
-                        }}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{ 'app.ok' |
+                        translate}}
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="cancel">
                         {{ 'app.annulla' | translate }}
@@ -189,10 +187,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
-                            'app.ok' |
-                                translate
-                        }}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
                     </button>
                 </div>
             </div>
@@ -218,10 +214,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
-                            'app.ok' |
-                                translate
-                        }}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
                     </button>
                 </div>
             </div>
@@ -248,10 +242,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
-                            'app.ok' |
-                                translate
-                        }}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
                     </button>
                 </div>
             </div>
@@ -486,8 +478,7 @@
         <div class="portlet-body">
             <input type="hidden" value="1">
             <div class="row">
-                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews"
-                     v-show="showItem(item.cRef)"
+                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews" v-show="showItem(item.cRef)"
                      :key="index">
                     <div class="card p-1 m-0
                      shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
@@ -594,14 +585,12 @@
                                         </div>
                                         <div class="card-body">
                                             <v-widget :c-widget="widget" v-for="(widget, key) in row"
-                                                      v-if="(!isHiddenField(key) && key !== 'header')"
-                                                      :class="key"></v-widget>
+                                                v-if="(!isHiddenField(key) && key !== 'header')" :class="key"></v-widget>
                                             <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
                                                 <v-widget :c-widget="widget" :key="key"></v-widget>
                                             </template>
                                         </div>
-                                        <div class="card-footer btn-group" role="group"
-                                             v-show="recordActionsName.length">
+                                        <div class="card-footer btn-group" role="group" v-show="recordActionsName.length">
                                                 <template v-for="(action,name) in recordActions[index]">
                                                     <v-action :c-action="action" :key="name"></v-action>
                                                 </template>
@@ -804,14 +793,12 @@
 </template>
 
 <template id="w-swap-smarty-template">
-    <div>
         <label class="form-switch form-switch-pill  d-block" :class="switchClass" v-on:click="swap" :title="title">
             <input type="checkbox" v-model="value">
             <i v-if="dataSwitched" data-on="&#10005;" data-off="&#10004;"
                style="font-family:Zapf Dingbats,font-regular,sans-serif !important"></i>
             <i v-else data-on="&#10004;" data-off="&#10005;"></i>
         </label>
-    </div>
 </template>
 
 <template id="w-status-template">
