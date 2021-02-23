@@ -1,16 +1,16 @@
 <script type="text/x-template" id="action-square-template">
     <button
-            class="btn"
-            v-if="controlType=='button'" type="button" v-show="_visible"
-            :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
+        class="btn"
+        v-if="controlType=='button'" type="button" v-show="_visible"
+        :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
         <i class="m-1" v-show="icon" :class="icon"></i>
-        <span>{{text | translate}}</span>
+        <span>{{ text | translate }}</span>
     </button>
     <a v-else
        class="btn" :target="target" :href="href" v-show="_visible"
        :title="title | translate" :class="css" :disabled="_disabled">
         <i class="m-1" v-show="icon" :class="icon"></i>
-        <span>{{text | translate}}</span>
+        <span>{{ text | translate }}</span>
     </a>
 </script>
 
@@ -18,12 +18,12 @@
     <button class="btn btn-sm btn-pill px-2 py-1 fs--15" v-if="controlType=='button'" type="button" v-show="_visible"
             :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
         <i class="m-1" v-show="icon" :class="icon"></i>
-        <span>{{text | translate}}</span>
+        <span>{{ text | translate }}</span>
     </button>
     <a v-else class="btn btn-sm btn-pill px-2 py-1 fs--15" :target="target" :href="href" v-show="_visible"
        :title="title | translate" :class="css" :disabled="_disabled">
         <i class="m-1" v-show="icon" :class="icon"></i>
-        <span>{{text | translate}}</span>
+        <span>{{ text | translate }}</span>
     </a>
 </script>
 
@@ -31,7 +31,7 @@
     <button class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14" type="button" v-show="_visible"
             :title="title | translate" v-on:click="_execute" v-bind:disabled="_disabled">
         <i v-show="icon" :class="icon"></i>
-        <span>{{text | translate}}</span>
+        <span>{{ text | translate }}</span>
     </button>
 </script>
 
@@ -40,7 +40,7 @@
     <div class="col-lg-6 col-md-12 mb-2 form-label-group" v-else>
         <component :is="cWidget.type" :c-conf="cWidget"></component>
         <label :for="cWidget.name">
-            {{cWidget.label}}
+            {{ cWidget.label }}
         </label>
     </div>
 </template>
@@ -50,7 +50,7 @@
     <div class="col-lg-6 col-md-12 mb-2 form-label-group" :class="cWidget.name" v-else>
         <component :is="cWidget.type" :c-conf="cWidget"></component>
         <label :for="cWidget.name">
-            {{cWidget.label}}
+            {{ cWidget.label }}
         </label>
     </div>
 </template>
@@ -60,7 +60,7 @@
     <div class="col-lg-12 col-md-12 mb-2 form-label-group" v-else>
         <component :is="cWidget.type" :c-conf="cWidget"></component>
         <label :for="cWidget.name">
-            {{cWidget.label}}
+            {{ cWidget.label }}
         </label>
     </div>
 </template>
@@ -73,7 +73,7 @@
             <div class="form-label-group">
                 <component :is="cWidget.type" :c-conf="cWidget"></component>
                 <label :for="cWidget.name">
-                    {{cWidget.label}}
+                    {{ cWidget.label }}
                 </label>
             </div>
         </div>
@@ -157,11 +157,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{ 'app.ok' |
-                        translate}}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
+                            'app.ok' |
+                                translate
+                        }}
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="cancel">
-                        {{'app.annulla' | translate}}
+                        {{ 'app.annulla' | translate }}
                     </button>
                 </div>
             </div>
@@ -187,8 +189,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
-                        translate}}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
+                            'app.ok' |
+                                translate
+                        }}
                     </button>
                 </div>
             </div>
@@ -203,7 +207,7 @@
         <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ title | translate}}</h5>
+                    <h5 class="modal-title">{{ title | translate }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="fi fi-close fs--18" aria-hidden="true"></span>
                     </button>
@@ -214,8 +218,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
-                        translate}}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
+                            'app.ok' |
+                                translate
+                        }}
                     </button>
                 </div>
             </div>
@@ -242,8 +248,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
-                        translate}}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{
+                            'app.ok' |
+                                translate
+                        }}
                     </button>
                 </div>
             </div>
@@ -268,7 +276,7 @@
                 </div>
                 <div v-if="Object.keys(cCallbacks).length > 0" class="modal-footer">
                     <template v-for="(cb,key) in cCallbacks">
-                        <button type="button" class="btn btn-primary" v-on:click="callCb(key)">{{key | translate}}
+                        <button type="button" class="btn btn-primary" v-on:click="callCb(key)">{{ key | translate }}
                         </button>
                     </template>
                 </div>
@@ -279,17 +287,17 @@
 
 <template id="c-loading-template">
     <div v-if="!errorMsg" class="spinner-border text-primary" role="status">
-        <span class="sr-only">{{'app.carico'|translate}}</span>
+        <span class="sr-only">{{ 'app.carico'|translate }}</span>
     </div>
     <div v-else>
-        <span class="text-danger text-2xl">{{errorMsg}}</span>
+        <span class="text-danger text-2xl">{{ errorMsg }}</span>
     </div>
 </template>
 
 <template id="c-wait-template">
     <div c-wait :class="{'crud-overlay-body': global, 'crud-overlay' : !global}">
         <span class="crud-wait-msg">
-            {{msg | translate}}
+            {{ msg | translate }}
         </span>
     </div>
 </template>
@@ -317,7 +325,7 @@
         <div>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                 <button v-for="dVal in domainValuesOrder" type="button" class="btn btn-outline-secondary"
-                        v-on:click="setValue(dVal)">{{domainValues[dVal]}}
+                        v-on:click="setValue(dVal)">{{ domainValues[dVal] }}
                 </button>
             </div>
         </div>
@@ -329,7 +337,7 @@
 </script>
 
 <script type="text/x-template" id="w-text-template">
-    <span>{{value}}</span>
+    <span>{{ value }}</span>
 </script>
 
 <script type="text/x-template" id="w-image-template">
@@ -370,7 +378,7 @@
     <select class="form-control" v-bind:name="getFieldName()" v-model="value" v-bind:c-marker="cMarker"
             v-on:change="change">
         <option v-for="key in domainValuesOrder" :value="key"
-        >{{domainValues[key]}}
+        >{{ domainValues[key] }}
         </option>
     </select>
 </script>
@@ -390,7 +398,7 @@
 
 <template id="w-checkbox-template">
     <div
-            class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
+        class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
         <div class="in-label-group" v-for="key in domainValuesOrder">
             <input class="form-check-input" v-bind:name="getFieldName()" type="checkbox" :value="key"
                    v-model="value"
@@ -403,7 +411,7 @@
 <template id="w-autocomplete-template">
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">{{label}}</span>
+            <span class="input-group-text">{{ label }}</span>
         </div>
         <input type="text" c-autocomplete class="form-control">
         <div class="input-group-append">
@@ -418,7 +426,7 @@
 <template id="w-belongsto-template">
     <div>
         <span v-for="(field, index) in labelFields">
-            {{value[field]}}&nbsp;
+            {{ value[field] }}&nbsp;
             <span v-if="index < labelFields.length - 1"> - </span>
         </span>
     </div>
@@ -478,7 +486,8 @@
         <div class="portlet-body">
             <input type="hidden" value="1">
             <div class="row">
-                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews" v-show="showItem(item.cRef)"
+                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews"
+                     v-show="showItem(item.cRef)"
                      :key="index">
                     <div class="card p-1 m-0
                      shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
@@ -579,18 +588,20 @@
 
 
                                 <span v-for="(row,index) in widgets" :key="index">
-                                    <div class="card" >
+                                    <div class="card">
                                         <div class="card-header" v-if="row.header">
                                                 <v-widget :c-widget="row.header"></v-widget>
                                         </div>
                                         <div class="card-body">
                                             <v-widget :c-widget="widget" v-for="(widget, key) in row"
-                                                v-if="(!isHiddenField(key) && key !== 'header')" :class="key"></v-widget>
+                                                      v-if="(!isHiddenField(key) && key !== 'header')"
+                                                      :class="key"></v-widget>
                                             <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
                                                 <v-widget :c-widget="widget" :key="key"></v-widget>
                                             </template>
                                         </div>
-                                        <div class="card-footer btn-group" role="group" v-show="recordActionsName.length">
+                                        <div class="card-footer btn-group" role="group"
+                                             v-show="recordActionsName.length">
                                                 <template v-for="(action,name) in recordActions[index]">
                                                     <v-action :c-action="action" :key="name"></v-action>
                                                 </template>
@@ -793,12 +804,14 @@
 </template>
 
 <template id="w-swap-smarty-template">
-    <label class="form-switch form-switch-pill  d-block" :class="switchClass" v-on:click="swap" :title="title">
-        <input type="checkbox" v-model="value">
-        <i v-if="dataSwitched" data-on="&#10005;" data-off="&#10004;"
-           style="font-family:Zapf Dingbats,font-regular,sans-serif !important"></i>
-        <i v-else data-on="&#10004;" data-off="&#10005;"></i>
-    </label>
+    <div>
+        <label class="form-switch form-switch-pill  d-block" :class="switchClass" v-on:click="swap" :title="title">
+            <input type="checkbox" v-model="value">
+            <i v-if="dataSwitched" data-on="&#10005;" data-off="&#10004;"
+               style="font-family:Zapf Dingbats,font-regular,sans-serif !important"></i>
+            <i v-else data-on="&#10004;" data-off="&#10005;"></i>
+        </label>
+    </div>
 </template>
 
 <template id="w-status-template">
@@ -830,10 +843,10 @@
                     <div>
                         <div crud-render_limit class="hide">
                             <!-- Limite massimo raggiunto -->
-                            {{'app.limite-raggiunto' | translate }}
+                            {{ 'app.limite-raggiunto' | translate }}
                         </div>
                         <button v-on:click="addItem" type="button" class="btn btn-primary btn-sm">
-                            <span>{{'app.aggiungi' | translate}}</span>&nbsp;
+                            <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
                             <!--                            <span crud-label="modelMetadata.singular"></span>&nbsp;-->
                         </button>
                     </div>
@@ -870,11 +883,11 @@
 <template id="w-upload-template">
     <div>
         <div v-show="extensions">
-            <span crud-label="app.accepted-extensions">{{'app.estensioni-accettate' | translate}} </span>
-            <span v-show="extensions">{{extensions.join(',')}}</span>
+            <span crud-label="app.accepted-extensions">{{ 'app.estensioni-accettate' | translate }} </span>
+            <span v-show="extensions">{{ extensions.join(',') }}</span>
         </div>
         <div v-show="maxFileSize">
-            Dimensione massima: <span crud-label="app.upload-max-filesize">{{maxFileSize}}</span>
+            Dimensione massima: <span crud-label="app.upload-max-filesize">{{ maxFileSize }}</span>
         </div>
         <div>
             <input :name="getFieldName()" c-file class="btn btn-outline-secondary" type="file" v-on:change="validate()"
@@ -887,15 +900,15 @@
     <div>
         <div class="row">
             <div class="col-8">
-                <div v-show="error" class="alert alert-danger">{{errorMessage}}</div>
+                <div v-show="error" class="alert alert-danger">{{ errorMessage }}</div>
                 <input type="hidden" v-model="value" :name="getFieldName()">
                 <div>
                     <div v-show="extensions">
                         <span crud-label="app.accepted-extensions">Estensioni accettate: </span>
-                        <span v-show="extensions">{{extensions.join(',')}}</span>
+                        <span v-show="extensions">{{ extensions.join(',') }}</span>
                     </div>
                     <div v-show="maxFileSize">
-                        Dimensione massima: <span crud-label="app.upload-max-filesize">{{maxFileSize}}</span>
+                        Dimensione massima: <span crud-label="app.upload-max-filesize">{{ maxFileSize }}</span>
                     </div>
                     <div>
                         <input c-file class="" type="file" v-on:change="validate()"
@@ -917,7 +930,7 @@
             <i :class="iconClass"></i>
         </a>
         <small v-else class="text-danger">
-            <span v-if="value.url">{{getType()}} mimetype non riconosciuto</span>
+            <span v-if="value.url">{{ getType() }} mimetype non riconosciuto</span>
         </small>
     </div>
 </template>
@@ -930,7 +943,7 @@
         <div class="mb-2 form-label-group">
             <input :placeholder="label" class="form-control" v-on:change="searchAddress">
             <label>
-                {{label}}
+                {{ label }}
             </label>
         </div>
 
@@ -950,7 +963,7 @@
 </template>
 
 <template id="w-date-text-template">
-    <span>{{formattedValue}}</span>
+    <span>{{ formattedValue }}</span>
 </template>
 
 <!-- views --->
@@ -965,7 +978,7 @@
             <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
             <div v-else class="portlet">
                 <div class="portlet-header border-bottom" :class="headerClass">
-                    <span v-show="viewTitle">{{viewTitle}}</span>
+                    <span v-show="viewTitle">{{ viewTitle }}</span>
                     <!-- options and pagination -->
                     <div class="row justify-content-end">
 
@@ -1011,7 +1024,7 @@
                                                       v-bind:c-conf="getOrderConf(key)"></action-order>
                                         <span style="cursor:default"
                                               class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
-                                              v-else>{{key+'.label' | translate(langContext) }}</span>
+                                              v-else>{{ key + '.label' | translate(langContext) }}</span>
                                         <button v-if="hasHelp(key)"
                                                 type="button"
                                                 class="btn-xs btn-squared btn-light"
@@ -1027,7 +1040,7 @@
                                 </tr>
                                 <tr v-if="widgets.length == 0">
                                     <th v-show="recordActionsName.length" class="text-gray-500 w--50">
-                                        {{"app.nessun-elemento" | translate }}
+                                        {{ "app.nessun-elemento" | translate }}
                                     </th>
                                 </tr>
                                 </thead>
@@ -1037,7 +1050,7 @@
                                     <th v-if="needSelection">
 
                                         <label
-                                                class="form-checkbox form-checkbox-primary float-start">
+                                            class="form-checkbox form-checkbox-primary float-start">
                                             <input c-row-check type="checkbox">
                                             <i></i>
                                         </label>
@@ -1074,7 +1087,7 @@
                                                       v-bind:c-conf="getOrderConf(key)"></action-order>
                                         <span style="cursor:default"
                                               class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
-                                              v-else>{{key+'.label' | translate(langContext) }}</span>
+                                              v-else>{{ key + '.label' | translate(langContext) }}</span>
                                         <button v-if="hasHelp(key)"
                                                 type="button"
                                                 class="btn-xs btn-squared btn-light"
@@ -1109,7 +1122,7 @@
 
 <script type="text/x-template" id="v-list-edit-template">
     <div>
-        <h4 v-show="viewTitle">{{viewTitle}}</h4>
+        <h4 v-show="viewTitle">{{ viewTitle }}</h4>
         <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
         <div v-else>
             <div class="float-none">
@@ -1131,16 +1144,16 @@
                         <th v-show="recordActionsName.length">
                             <input c-row-check-all v-on:change="selectAllRows" v-if="needSelection"
                                    class="btn btn-sm btn-outline-secondary" type="checkbox">
-                            <span>{{"app.azioni" | translate }}</span>
+                            <span>{{ "app.azioni" | translate }}</span>
                         </th>
                         <th v-for="key in keys" v-if="!isHiddenField(key)">
                             <action-order v-if="orderFields[key]" v-bind:c-conf="getOrderConf(key)"></action-order>
-                            <span v-else>{{key+'.label' | translate(langContext) }}</span>
+                            <span v-else>{{ key + '.label' | translate(langContext) }}</span>
                         </th>
                     </tr>
                     <tr v-if="widgets.length == 0">
                         <th v-show="recordActionsName.length">
-                            {{"app.nessun-elemento" | translate }}
+                            {{ "app.nessun-elemento" | translate }}
                         </th>
                     </tr>
                     </thead>
@@ -1209,7 +1222,7 @@
 
 <script type="text/x-template" id="v-view-template">
     <div class="container-fluid">
-        <slot card-title><h4 v-show="viewTitle">{{viewTitle}}</h4></slot>
+        <slot card-title><h4 v-show="viewTitle">{{ viewTitle }}</h4></slot>
         <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
         <div class="row" v-else>
             <v-widget v-for="(widget, key) in widgets" :c-widget="widget" v-if="!isHiddenField(key)"></v-widget>
