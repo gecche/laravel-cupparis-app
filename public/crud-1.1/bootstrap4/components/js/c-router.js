@@ -100,6 +100,11 @@ crud.components.cRouter = Vue.component('c-router',{
                 path : path
             })
             delete params['path'];
+
+            var targetId = params['targetId']?params['targetId']:that.contentId;
+            delete params['targetId'];
+
+
             route.setParams(params);
             Server.route(route,function (html) {
                 if (html.error) {
@@ -119,7 +124,7 @@ crud.components.cRouter = Vue.component('c-router',{
                 });
 
                 var id= 'd' + (new Date().getTime());
-                jQuery('#'+that.contentId).html('<div id="'+id+'" ></div>');
+                jQuery('#'+targetId).html('<div id="'+id+'" ></div>');
                 var componente = new cdef();
                 componente.$mount('#'+id);
                 that.lastComponent = componente;
