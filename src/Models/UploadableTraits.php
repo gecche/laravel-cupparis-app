@@ -18,6 +18,8 @@ trait UploadableTraits {
 
     protected $dirPolicy = null;
 
+    protected $nameField = 'nome';
+
     public function getDir() {
 
         $methodName = 'getDirPolicy'.Str::studly($this->dirPolicy);
@@ -39,6 +41,11 @@ trait UploadableTraits {
     public function storageResponse($id = null,$name = null, $headers = [], $disposition = 'attachment') {
         $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
         $filename = $this->getStorageFilename($id);
+        if (is_null($name)) {
+            if ($this->{$this->nameField}) {
+                $name = $this->{$this->nameField} . $this->ext();
+            }
+        }
         return Storage::disk($diskDriver)->response($filename,$name,$headers,$disposition);
     }
 
@@ -130,7 +137,15 @@ trait UploadableTraits {
 
         $item->deleteOldFiles();
         if ($path) {
-            File::copy($path, $item->getStorageFilename());
+            $diskDriver = property_exists($item,'disk_driver') ? $item->disk_driver : 'local';
+
+            if ($diskDriver == 'local') {
+                File::copy($path,storage_path($item->getStorageFilename()));
+            } else {
+                Storage::disk($diskDriver)->put($item->getStorageFilename(),File::get($path));
+
+            }
+
         }
         return $item;
     }
