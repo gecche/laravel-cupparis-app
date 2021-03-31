@@ -658,6 +658,7 @@ crud.components.widgets.wUploadAjax = Vue.component('w-upload-ajax', {
     template: '#w-upload-ajax-template',
 });
 
+crud.conf['w-map'].activateSearch = false;
 crud.components.widgets.wMap = Vue.component('w-map', {
     extends: crud.components.widgets.coreWMap,
     template: '#w-map-template',

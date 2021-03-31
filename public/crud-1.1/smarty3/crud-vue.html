@@ -927,7 +927,7 @@
         <!-- input hidden for form compatibiliy --->
         <input type="hidden" :name="lngName">
         <input type="hidden" :name="latName">
-        <div class="mb-2 form-label-group">
+        <div v-if="activateSearch" class="mb-2 form-label-group">
             <input :placeholder="label" class="form-control" v-on:change="searchAddress">
             <label>
                 {{ label }}
