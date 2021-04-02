@@ -84,7 +84,7 @@ crud.components.cManage = Vue.component('c-manage', {
             console.log(conf.modelName , thisManage.cCollapsible);
             var collapsibleElement = (thisManage.cCollapsible !== undefined) ? thisManage.cCollapsible :
                 (conf.collapsible !== undefined) ? conf.collapsible :
-                    true;
+                    false;
             conf.collapsible = (collapsibleElement === true || collapsibleElement === 'collapsed');
             conf.collapsed =  (collapsibleElement === 'collapsed');
             conf.collapseId = conf.collapseId || 'manageCollapse'+conf.modelName;
@@ -95,14 +95,7 @@ crud.components.cManage = Vue.component('c-manage', {
             conf = thisManage._getEditConfiguration(conf);
             conf = thisManage._getInsertConfiguration(conf);
             conf = thisManage._getViewConfiguration(conf);
-
-            //conf = Object.assign(conf, thisManage._getListConfiguration(conf, conf.modelName))
-            //conf = Object.assign(conf, thisManage._getSearchConfiguration(conf, conf.modelName))
-            //conf = Object.assign(conf, thisManage._getListEditConfiguration(conf, conf.modelName))
-            //conf = Object.assign(conf, thisManage._getEditConfiguration(conf, conf.modelName))
-            //conf = Object.assign(conf, thisManage._getInsertConfiguration(conf, conf.modelName))
-            // conf = Object.assign(conf, thisManage._getViewConfiguration(conf, conf.modelName))
-            console.log('CONF MANAGE',conf);
+            //console.log('CONF MANAGE',conf);
             return conf;
         },
         createList: function () {
@@ -155,25 +148,14 @@ crud.components.cManage = Vue.component('c-manage', {
             // monto la search
             var id = 'd' + (new Date().getTime());
             that.jQe('[c-search-container]').html('<div id="' + id + '"></div>');
-            // if (that.searchConf.inlineTemplate) {
-            //     var v = Vue.component(id,{
-            //         extends : that.$options.components[that.searchComponentName],
-            //         template : jQuery(that.searchConf.inlineTemplate).html()
-            //     });
-            //     that.searchComp = new v({
-            //         propsData: {
-            //             cModel: that.cModel,
-            //             cConf : that.searchConf,
-            //         }
-            //     });
-            // } else {
+
             that.searchComp = new that.$options.components[that.searchComponentName]({
                 propsData: {
                     cModel: that.cModel,
                     cConf: that.searchConf,
                 }
             });
-            //}
+
             that.searchComp.$mount('#' + id);
         },
         _createEdit: function (action) {
@@ -243,27 +225,14 @@ crud.components.cManage = Vue.component('c-manage', {
             thisManage.jQe('[c-edit-container]').html('<div id="' + id + '"></div>');
             if (thisManage.insertComp)
                 thisManage.insertComp.$destroy();
-            // if (thisManage.insertConf.inlineTemplate) {
-            //     var v = Vue.component(id,{
-            //         extends : thisManage.$options.components[thisManage.insertComponentName],
-            //         template : jQuery(thisManage.insertConf.inlineTemplate).html()
-            //     });
-            //
-            //
-            //     thisManage.insertComp = new v({
-            //         propsData: {
-            //             cModel: thisManage.modelName,
-            //             cConf: thisManage.insertConf
-            //         }
-            //     });
-            // } else {
+
             thisManage.insertComp = new thisManage.$options.components[thisManage.insertComponentName]({
                 propsData: {
                     cModel: thisManage.modelName,
                     cConf: thisManage.insertConf
                 }
             });
-            //}
+
             thisManage.insertComp.$mount('#' + id);
             thisManage.jQe('[c-collapse-edit]').collapse('show');
             thisManage.jQe('[c-collapse-list]').collapse('hide');
@@ -330,12 +299,6 @@ crud.components.cManage = Vue.component('c-manage', {
             }
             conf.listConf = listConf;
             return conf;
-            // var d = {
-            //     listComponentName: conf.listComponentName || 'v-list',
-            //     listComp: null,
-            //     listConf: listConf,
-            // };
-            // return d;
         },
         _getListEditConfiguration: function (conf) {
             var thisManage = this;
@@ -366,12 +329,6 @@ crud.components.cManage = Vue.component('c-manage', {
             }
             conf.listEditConf = listEditConf;
             return conf;
-            // var d = {
-            //     listEditComponentName: conf.listEditComponentName || 'v-list-edit',
-            //     listEditComp: null,
-            //     listEditConf: listEditConf,
-            // };
-            // return d;
         },
         _getSearchConfiguration: function (conf) {
             var thisManage = this;
@@ -420,15 +377,11 @@ crud.components.cManage = Vue.component('c-manage', {
             });
             if (editConf.actions.indexOf('action-save-back') < 0)
                 editConf.actions.push('action-save-back');
+            if (editConf.actions.indexOf('action-back') < 0)
+                editConf.actions.push('action-back');
             console.log("EDITCONFACTIONS::: ",editConf.actions);
             conf.editConf = editConf;
             return conf;
-            // var d = {
-            //     editComponentName: conf.editComponentName || 'v-edit',
-            //     editComp: null,
-            //     editConf: editConf,
-            // };
-            // return d;
         },
         _getInsertConfiguration: function (conf) {
             var thisManage = this;
@@ -448,6 +401,8 @@ crud.components.cManage = Vue.component('c-manage', {
             });
             if (insertConf.actions.indexOf('action-save-back') < 0)
                 insertConf.actions.push('action-save-back');
+            if (insertConf.actions.indexOf('action-back') < 0)
+                insertConf.actions.push('action-back');
             var actionSaveIndex = insertConf.actions.indexOf('action-save');
             if (actionSaveIndex >= 0) {
                 delete insertConf.actions[actionSaveIndex];
@@ -455,13 +410,6 @@ crud.components.cManage = Vue.component('c-manage', {
             insertConf.routeName = 'insert';
             conf.insertConf = insertConf;
             return conf;
-
-            // var d = {
-            //     insertComponentName: conf.insertComponentName || 'v-insert',
-            //     insertComp: null,
-            //     insertConf: insertConf,
-            // };
-            // return d;
         },
         _getViewConfiguration: function (conf) {
             var thisManage = this;
@@ -471,13 +419,6 @@ crud.components.cManage = Vue.component('c-manage', {
             viewConf = thisManage.mergeConfView(thisManage.$crud.conf.view, viewConf);
             conf.viewConf = viewConf;
             return conf;
-
-            // var d = {
-            //     viewComponentName: conf.viewComponentName || 'v-view',
-            //     viewComp: null,
-            //     viewConf: viewConf //conf.viewConf || viewConf,
-            // };
-            // return d;
         }
     },
     template: '#c-manage-template'
