@@ -18,6 +18,8 @@ trait UploadableTraits {
 
     protected $dirPolicy = null;
 
+    protected $nameField = 'nome';
+
     public function getDir() {
 
         $methodName = 'getDirPolicy'.Str::studly($this->dirPolicy);
@@ -39,6 +41,11 @@ trait UploadableTraits {
     public function storageResponse($id = null,$name = null, $headers = [], $disposition = 'attachment') {
         $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
         $filename = $this->getStorageFilename($id);
+        if (is_null($name)) {
+            if ($this->{$this->nameField}) {
+                $name = $this->{$this->nameField} . $this->ext();
+            }
+        }
         return Storage::disk($diskDriver)->response($filename,$name,$headers,$disposition);
     }
 
@@ -77,15 +84,16 @@ trait UploadableTraits {
     }
 
     public function delete($id = NULL) {
-        if (file_exists($this->getStorageFilename()))
-            unlink($this->getStorageFilename());
+        if ($this->fileExists()) {
+            Storage::delete($this->getStorageFilename());
+        }
         return parent::delete($id);
     }
 
-    public function filesOps($inputArray = array()) {
+    public function filesOps($inputArray = array(),$field = 'resource') {
         $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
 
-        $resource = json_decode(Arr::get($inputArray,'resource',""),true);
+        $resource = json_decode(Arr::get($inputArray,$field,""),true);
 
         $tempfilename = Arr::get($resource,'id',false);
         if ($tempfilename && !Storage::exists($tempfilename)) {
@@ -108,9 +116,9 @@ trait UploadableTraits {
 
     }
 
-    public function setFieldsFromResource($inputArray = array()) {
+    public function setFieldsFromResource($inputArray = array(),$field = 'resource') {
 
-        $resource = json_decode(Arr::get($inputArray,'resource',""),true);
+        $resource = json_decode(Arr::get($inputArray,$field,""),true);
 
         $resourceId = Arr::get($resource,'id',false);
 
@@ -129,7 +137,15 @@ trait UploadableTraits {
 
         $item->deleteOldFiles();
         if ($path) {
-            File::copy($path, $item->getStorageFilename());
+            $diskDriver = property_exists($item,'disk_driver') ? $item->disk_driver : 'local';
+
+            if ($diskDriver == 'local') {
+                File::copy($path,storage_path($item->getStorageFilename()));
+            } else {
+                Storage::disk($diskDriver)->put($item->getStorageFilename(),File::get($path));
+
+            }
+
         }
         return $item;
     }

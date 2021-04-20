@@ -4,10 +4,10 @@
 
         <div class="z-index-1">
 
-            <span data-gfont="Sriracha" class="text-white">
-                        {{env('APP_NAME')}}
-            </span>
-            <small style="font-size: .6em !important;">ver. {{config('app.version')}}</small>
+                <span data-gfont="Sriracha" class="text-white">
+                            {{env('APP_NAME')}}
+                </span>
+                <small style="font-size: .6em !important;">ver. {{config('app.version')}}</small>
 
             {{--            <div class="d-inline-block float-end dropdown">--}}
             {{--                <ul class="list-inline m-0">--}}

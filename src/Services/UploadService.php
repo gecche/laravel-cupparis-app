@@ -79,7 +79,7 @@ class UploadService {
     }
     public function getUploadValidationRules($type,$maxSize = null,$exts = null) {
 
-        if (is_array($this->validationRules) && $this->validationRules[$type]) {
+        if (is_array($this->validationRules) && array_key_exists($type,$this->validationRules) )  {
             return $this->validationRules[$type];
         }
 

@@ -95,7 +95,7 @@
 
         "gecche/laravel-cupparis-helpers": "2.0.*",
         "gecche/laravel-cupparis-assettime": "2.0.*",
-        "gecche/laravel-cupparis-datafile": "2.0.*",
+        "gecche/laravel-cupparis-datafile": "v2.x-dev",
         "gecche/laravel-cupparis-filesystem": "2.0.*",
         "gecche/laravel-cupparis-localization": "2.0.*",
         "gecche/laravel-cupparis-menus": "2.0.*",

@@ -7536,7 +7536,7 @@ input[type=number]::-webkit-outer-spin-button {
 /**
 
     Various Fixes
-	
+
 	This file should be as little as possible!
 	If not, means "fixing own bugs using two files"
 
@@ -7630,7 +7630,7 @@ input.text-white::-moz-placeholder {
 /**
 
 		- Width 					.w--*, .w-inherit, .w-auto
-									.mw-100, .min-w-0, 
+									.mw-100, .min-w-0,
 									.w-*vh, .min-w-*vh, .max-w-*vh
 
 **/
@@ -9921,7 +9921,7 @@ input.text-white::-moz-placeholder {
 
 /**
 
-		- Borders 					.bw--* 
+		- Borders 					.bw--*
 									.border--solid, .bborder--dashed, .bborder--dotted, .border-transparent
 
 **/
@@ -9986,7 +9986,7 @@ input.text-white::-moz-placeholder {
 .border-gray-400 {
   border: #ced4da 1px solid; }
 
-/* 
+/*
 
 	Soft borders
 		.border-*-soft
@@ -10198,7 +10198,7 @@ input.text-white::-moz-placeholder {
   box-shadow: 0 2.5rem 4rem rgba(22, 28, 45, 0.1) !important; }
 
 /*
-	
+
 	.shadow-primary-*
 	.shadow-secondary-*
 	.....
@@ -10608,7 +10608,7 @@ input.text-white::-moz-placeholder {
   bottom: -100%; }
 
 /**
-	
+
 	Right in the center
 
 **/
@@ -10809,7 +10809,7 @@ input.text-white::-moz-placeholder {
   opacity: .99; }
 
 /**
-		- Misc 
+		- Misc
 
 		- Gradients 				.bg-gradient-light-top, .bg-gradient-light-bottom
 									.bg-gradient-light-left, .bg-gradient-light-right
@@ -10821,8 +10821,8 @@ input.text-white::-moz-placeholder {
 									.bg-theme-color-light
 **/
 /**
-	
-	Misc 
+
+	Misc
 
 **/
 .bg-cover {
@@ -10848,7 +10848,7 @@ input.text-white::-moz-placeholder {
   background: linear-gradient(180deg, #2f2e80 0, #4c4bb5); }
 
 /**
-	
+
 	Gradients
 
 	Note: can be used together with any .bg-*
@@ -10924,7 +10924,7 @@ input.text-white::-moz-placeholder {
   background: linear-gradient(to bottom, #fa489a 0%, #f92084 100%) !important; }
 
 /**
-	
+
 	Backgrounds
 		.bg-*
 
@@ -10979,7 +10979,7 @@ input.bg-diff:focus,
 textarea.bg-diff:focus {
   background-color: rgba(0, 0, 0, 0.11); }
 
-/* 
+/*
 
 	Soft backgrounds
 		.bg-*-soft
@@ -11073,7 +11073,7 @@ textarea.bg-diff:focus {
 .bg-pink-soft-hover:hover {
   background-color: #fdabd1 !important; }
 
-/* 
+/*
 
 	Active backgrounds
 		.active.bg-*-active
@@ -11123,7 +11123,7 @@ textarea.bg-diff:focus {
   color: #ffffff !important;
   background-color: #f92084 !important; }
 
-/* 
+/*
 
 	Hover backgrounds
 		.bg-*-hover
@@ -11208,7 +11208,7 @@ textarea.bg-diff:focus {
 .text-dark-hover:hover {
   color: #000 !important; }
 
-/* 
+/*
 
 	Radial backgrounds
 
@@ -11445,9 +11445,9 @@ textarea.bg-diff:focus {
   height: auto;
   max-height: 100%; }
 
-/* 
+/*
 
-	scrollable horizontal 
+	scrollable horizontal
 	Do not use dropdowns inside
 
 	@Dependencies: 		_responsive.scss
@@ -11539,7 +11539,7 @@ textarea.bg-diff:focus {
 
 /**
 
-		- Hide 
+		- Hide
 
 **/
 .hide {
@@ -11552,7 +11552,7 @@ textarea.bg-diff:focus {
 .hide-empty:empty {
   display: none !important; }
 
-/* 
+/*
 
 	Items are hidden but visible on mouse over.
 	Example: seful to hide "delete" button but visible on hover
@@ -11580,7 +11580,7 @@ textarea.bg-diff:focus {
 .show-hover-container-all:hover .show-hover-item-all {
   visibility: visible !important; }
 
-/* 
+/*
 
 	VIZIBILITY CLASSES, EASIER|INTUITIVE (old bootstrap)
 	INSTEAD OF .d-*
@@ -11704,7 +11704,7 @@ textarea.bg-diff:focus {
 /**
 
 		- Bordered Grid 			.row-grid
-		
+
 **/
 /* bordered grid */
 .ul-grid,
@@ -11718,8 +11718,8 @@ textarea.bg-diff:focus {
   padding: 0;
   border-right: 1px solid #e9ecef; }
 
-/* 
-  Expanded bootstrap : grid 5 columns 
+/*
+  Expanded bootstrap : grid 5 columns
 */
 .col-5th,
 .col-sm-5th,
@@ -11756,7 +11756,7 @@ textarea.bg-diff:focus {
     flex: 0 0 20%;
     max-width: 20%; } }
 
-/* 
+/*
   Grid Gutters
 */
 .gutters-xxs {
@@ -11875,7 +11875,7 @@ textarea.bg-diff:focus {
 
 /**
 
-		- Table 
+		- Table
 
 **/
 /* bootstrap fix */
@@ -11930,7 +11930,7 @@ textarea.bg-diff:focus {
   text-decoration: none !important;
   transition: all 0.2s ease-in-out; }
 
-/* 
+/*
 
 	Links
 		.text-
@@ -12477,9 +12477,9 @@ a.text-pink-hover:hover {
 /**
 
 		- Responsive (mobile) 		.text-center-xs, .float-none-xs, .d-block-xs
-									.m--0-xs, .m*--0-xs, 
-									.p--0-xs, .p*--0-xs, 
-									.b--0-xs, .b*--0-xs, 
+									.m--0-xs, .m*--0-xs,
+									.p--0-xs, .p*--0-xs,
+									.b--0-xs, .b*--0-xs,
 
 **/
 @media only screen and (min-width: 991px) {
@@ -12732,7 +12732,7 @@ a.text-pink-hover:hover {
     font-size: 1.32812rem !important; }
   .h6-xs {
     font-size: 1.0625rem !important; }
-  /* 
+  /*
 	  Grid Gutters
 	*/
   .gutters-xxs--xs {
@@ -13553,7 +13553,7 @@ a.text-pink-hover:hover {
 			* cancel hover shadow by adding .btn-noshadow
 
 **/
-/* 
+/*
 
 	Icon Spacing|Correction
 
@@ -13574,8 +13574,8 @@ ul.list-icons > li > i,
   display: inline-block;
   margin-right: 10px; }
 
-/* 
-		using .group-icon 
+/*
+		using .group-icon
 		or icon is placed last one
 	*/
 .btn > span + .group-icon,
@@ -13588,7 +13588,7 @@ ul.list-icons > li > i,
 .btn + .btn {
   margin-left: .5rem; }
 
-/* 
+/*
 
 	Modal & Alert Close Buttons
 
@@ -13596,7 +13596,7 @@ ul.list-icons > li > i,
 button.close .fi {
   font-size: 18px; }
 
-/* 
+/*
 
 	Soft buttons
 		.btn-soft 			- transition to original button color
@@ -13669,7 +13669,7 @@ button.close .fi {
   border-color: #fdabd1;
   background-color: #fdabd1; }
 
-/* 
+/*
 
 	Shadowed buttons
 		* cancel hover shadow by adding .btn-noshadow -or- .shadow-none
@@ -13730,7 +13730,7 @@ button.close .fi {
 .btn-pink:not(.btn-noshadow):not(.btn-soft):active {
   box-shadow: 0 4px 11px rgba(249, 32, 132, 0.35); }
 
-/* 
+/*
 
 	Vendor buttons
 		* cancel hover shadow by adding .btn-noshadow
@@ -13846,7 +13846,7 @@ button.close .fi {
 .btn-email:active {
   box-shadow: 0 4px 11px rgba(4, 159, 179, 0.35); }
 
-/* 
+/*
 
 	Pill buttons
 	Also, we have .rounded-bill in bootstrap
@@ -13855,7 +13855,7 @@ button.close .fi {
 .btn-pill {
   border-radius: 50rem; }
 
-/* 
+/*
 
 	Icon buttons
 
@@ -13898,7 +13898,7 @@ button.close .fi {
   transform: translateY(-50%); }
 
 @media only screen and (max-width: 991px) {
-  /* 
+  /*
 	Example usage case
 
 	<a href="#" class="btn btn-sm rounded-circle-xs btn-primary">
@@ -14066,7 +14066,7 @@ a.btn-burger-menu.active:hover .burger-menu:after {
     -moz-column-count: 4;
          column-count: 4; } }
 
-/* 
+/*
 
   Soft badges
     .badge-soft
@@ -14174,14 +14174,14 @@ a.btn-burger-menu.active:hover .burger-menu:after {
 .badge-ico-sm > i:before {
   padding-top: 0; }
 
-/* 
+/*
 
 	DROPDOWN : GENERAL SETUP
-	
+
 	--
 
 	Bootstrap is "missing" nested|multilevel dropdowns and opening them on mouse over!
-	So, instead of developing new plugins reinventing the weel (more code, more issues), 
+	So, instead of developing new plugins reinventing the weel (more code, more issues),
 	we use dropdowns for almost everything!
 
 	++++++++++++++++++++++
@@ -14207,8 +14207,8 @@ a.btn-burger-menu.active:hover .burger-menu:after {
   color: #6c757d !important;
   pointer-events: none; }
 
-/* 
-	default dropdown link 
+/*
+	default dropdown link
 	hovers : see @media on bottom
 */
 .dropdown-link {
@@ -14246,7 +14246,7 @@ a.dropdown-footer:not(:hover),
 a.dropdown-item {
   position: relative; }
 
-/* 
+/*
 		highlighted/active color
 		hovers : see @media
 	*/
@@ -14274,7 +14274,7 @@ a.dropdown-item {
 .dropdown-menu .dropdown-item > a > i {
   margin-right: 15px; }
 
-/* 
+/*
 
 	DROPDOWN : UPPERCASE FORCED
 	also font scaled down to avoid too large looking
@@ -14284,10 +14284,10 @@ a.dropdown-item {
   text-transform: uppercase;
   font-size: 13px; }
 
-/* 
+/*
 
 	DROPDOWN : CLEAN
-	no background color on hover 
+	no background color on hover
 
 */
 .dropdown-menu-clean li.active > a:not(.btn),
@@ -14303,7 +14303,7 @@ a.dropdown-item {
 .dropdown-menu-clean:not(.prefix-link-icon) a:not(.btn):hover {
   color: #4285F4; }
 
-/* 
+/*
 
 	DROPDOWN : INVERT
 	open in oposite direction
@@ -14344,15 +14344,15 @@ a.dropdown-item {
 
 /* turn down icon */
 @media only screen and (max-width: 991px) {
-  /* 
-				deep links indicator 
+  /*
+				deep links indicator
 				turn icon down on active
 			*/
   .dropdown-menu:not(.dropdown-menu-invert) .dropdown-item.show > a:after {
     transform: rotate(90deg); } }
 
-/* 
-	DROPDOWN : MEGA 
+/*
+	DROPDOWN : MEGA
 	Dropdown links inside mega menu
 
 	Links are formatted for dropdown.
@@ -14374,7 +14374,7 @@ a.dropdown-item {
 /*
 
 	PREFIX ICON|INDICATOR
-		
+
 		Add to .dropdown-menu following classes:
 			.prefix-link-icon .prefix-icon-dot 		- link prefix
 			.prefix-link-icon .prefix-icon-line 	- link prefix
@@ -14478,7 +14478,7 @@ a.prefix-icon-arrow:not(.prefix-icon-ignore):before,
   .dropdown-menu-hover + .dropdown-menu:hover,
   .dropdown-menu-hover:hover + .dropdown-menu {
     display: block; }
-  /* 
+  /*
 		Dropdown mega menu / full width
 	*/
   .dropdown-mega > .dropdown-menu {
@@ -14490,7 +14490,7 @@ a.prefix-icon-arrow:not(.prefix-icon-ignore):before,
     padding: 25px; }
   /*
 
-		DROPDOWN : DARK 
+		DROPDOWN : DARK
 	*/
   .dropdown-menu-dark,
   .dropdown-menu-dark .dropdown-menu {
@@ -14519,13 +14519,13 @@ a.prefix-icon-arrow:not(.prefix-icon-ignore):before,
 
 /* mobile only */
 @media only screen and (max-width: 991px) {
-  /* 
-		default dropdown link 
+  /*
+		default dropdown link
 		do not keep it active on second click
 	*/
   a.dropdown-link:hover {
     color: inherit; }
-  /* 
+  /*
 		Dropdown mega menu / full width
 	*/
   /* links inside mega menu */
@@ -14625,15 +14625,15 @@ table.table-striped td {
   color: #6c757d !important; }
 
 /**
-	
+
 	SIDEBAR
 
 	Dropped .aside-left & .aside-right
-		.aside-start = left  on LTR 
-		.aside-start = right on RTL 
+		.aside-start = left  on LTR
+		.aside-start = right on RTL
 
-		.aside-end = right  on LTR 
-		.aside-end = left on RTL 
+		.aside-end = right  on LTR
+		.aside-end = left on RTL
 
 
 
@@ -14689,10 +14689,10 @@ aside.aside-end {
 .bg-aside {
   background-color: #1e1e2d; }
 
-/* 
+/*
 
 	Nav Item
-	Paddings 
+	Paddings
 	orig: .5rem 1rem
 
 */
@@ -14730,8 +14730,8 @@ aside .nav-deep.nav-deep-xs > ul > li ul > li > a {
   padding-top: .3rem;
   padding-bottom: .3rem; }
 
-/* 
-	hover & active background color 
+/*
+	hover & active background color
 	overwrite _navigations.scss
 */
 .aside-secondary nav.nav-deep-hover > ul > li.nav-item:hover,
@@ -14742,7 +14742,7 @@ aside .nav-deep.nav-deep-xs > ul > li ul > li > a {
 .aside-primary nav.nav-deep-hover > ul > li.nav-item.active {
   background-color: #31314a !important; }
 
-/* 
+/*
 	disabled links
 */
 .aside-secondary a.disabled {
@@ -14751,12 +14751,12 @@ aside .nav-deep.nav-deep-xs > ul > li ul > li > a {
 .aside-primary a.disabled {
   color: #919191 !important; }
 
-/* 
+/*
 	spacings
 */
 /*
 
-	EXTENDED NAV 
+	EXTENDED NAV
 	Like a secondary sidebar
 
 */
@@ -14799,7 +14799,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
 
 /*
 
-	Header : match sidebar 
+	Header : match sidebar
 	background color
 
 */
@@ -14811,12 +14811,12 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   background-color: #ffffff; }
 
 /**
-	
+
 	Responsive
 
 **/
 @media only screen and (min-width: 992px) {
-  /* 
+  /*
 		ASIDE : FOCUS
 		Push header
 	*/
@@ -14903,7 +14903,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
     z-index: 9999; } }
 
 /**
-	
+
 	Fullscreen Element
 
 **/
@@ -14955,9 +14955,9 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   border-top-right-radius: 50rem;
   border-bottom-right-radius: 50rem; }
 
-/* 
+/*
 
-	Thumbnail : Shadow drop 
+	Thumbnail : Shadow drop
 
 */
 .thumbnail-shadow-drop {
@@ -15129,7 +15129,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   transform: scaleX(2) scaleY(5) rotate(-8deg); }
 
 /**
-    
+
     Responsive
 
 **/
@@ -15147,7 +15147,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
 		1. Pill inputs/selects/textarea
 		2. Link over input/textarea
 		3. Switch
-		4. Radio 
+		4. Radio
 		5. Checkbox
 		6. Select
 		7. Material Design Style
@@ -15155,7 +15155,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
 		9. Selectors
 
 **/
-/* 
+/*
 
 	1. Pill Form
 		.form-tontrol-pill 		- used for each element or for the entire form
@@ -15177,7 +15177,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
 .input-group select {
   border-radius: 0 !important; }
 
-/* 
+/*
 
 	2. Link over input/textarea
 
@@ -15212,12 +15212,12 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   z-index: 5 !important;
   right: 0; }
 
-/* 
+/*
 
 	3. Switch
 
 */
-/* @toggle switch elements 
+/* @toggle switch elements
 -------------------------------------------------- */
 .form-switch {
   cursor: pointer;
@@ -15279,7 +15279,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
 .form-switch > input:focus + i:after {
   background: #fff; }
 
-/* @toggle switch normal state 
+/* @toggle switch normal state
 --------------------------------------------------------------- */
 .form-switch > input:checked + i {
   border-color: #333;
@@ -15341,7 +15341,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   /* mobile fix - because some characters like "✔" are emoji rewritten by vedors (apple/android/etc) */
   left: 1px; }
 
-/* @toggle switch normal state focus 
+/* @toggle switch normal state focus
 --------------------------------------------------------------------------------- */
 .form-switch-pill > i {
   border-radius: 13px; }
@@ -15369,7 +15369,7 @@ aside .nav-item.nav-item-extended.active > .aside-item {
   border-color: #e9ecef !important;
   background: #e9ecef !important; }
 
-/* 
+/*
 
 	4. Radio
 
@@ -15513,7 +15513,7 @@ a.form-radio.disabled > i,
   border-color: #e9ecef !important;
   background: #e9ecef !important; }
 
-/* 
+/*
 
 	5. Checkbox
 
@@ -15667,7 +15667,7 @@ a.form-checkbox.disabled > i,
   border-color: #e9ecef !important;
   background: #e9ecef !important; }
 
-/* 
+/*
 
 	6. Select
 
@@ -16135,14 +16135,14 @@ aside nav.nav-deep-dark.nav-deep-indicator-dot ul li .nav-item.active > .nav-lin
 aside nav.nav-deep-light.nav-deep-indicator-dot ul li .nav-item.active > .nav-link:before {
   background-color: #121212; }
 
-/* 
-	Bordered nav 
+/*
+	Bordered nav
 */
 .nav-deep-bordered > ul > li {
   border-bottom: rgba(0, 0, 0, 0.1) 1px solid; }
 
-/* 
-	Icons 
+/*
+	Icons
 */
 /* main link icon */
 nav.nav-deep > ul > li > a.nav-link > i.nav-icon {
@@ -16182,7 +16182,7 @@ nav.nav-deep > ul ul > li > a.nav-link > i {
   padding-left: 15px; }
 
 /**
-	
+
 	Simple quick default navigation
 	Nav : Default
 	For any list
@@ -16234,7 +16234,7 @@ nav.nav-deep > ul ul > li > a.nav-link > i {
   color: #495057; }
 
 /**
-	
+
 	Responsive
 
 **/
@@ -17936,7 +17936,7 @@ button.close {
   content: "\f1bc"; }
 
 /**
-	
+
 	LAYOUT :: HEADER
 
 	Note: Here are basic settings only!
@@ -17968,7 +17968,7 @@ header.main-nav a,
 .nav-item > .dropdown-menu {
   margin: 0; }
 
-/* 
+/*
 	Main Links :: Icon Indicator
 */
 .navbar-nav .nav-link.dropdown-toggle:not(.nav-link-caret-hide):before {
@@ -17991,7 +17991,7 @@ header.main-nav a,
 body.header-scroll-reveal.user-scrolled-down #header:not(.shadow-none) {
   box-shadow: 0 0 25px rgba(140, 152, 164, 0.1); }
 
-/* 
+/*
 	Navbar Toggler
 */
 .navbar-toggler {
@@ -18013,8 +18013,8 @@ body.header-scroll-reveal.user-scrolled-down #header:not(.shadow-none) {
   display: inline-block; }
 
 /*
-	
-	HEADER TOGGLE 
+
+	HEADER TOGGLE
 	up|down header
 
 */
@@ -18041,19 +18041,19 @@ body.layout-admin #wrapper_content.js-animation-enable {
   transition: all 150ms linear; }
 
 /**
-	
+
 	Responsive
 
 **/
 @media only screen and (min-width: 992px) {
   nav.navbar:not(.h-auto) {
     min-height: 80px; }
-  /* 
+  /*
 		Dropdown mega menu / full width
 	*/
   .nav-item.dropdown-mega {
     position: inherit; }
-  /* 
+  /*
 		Main Navigation Links
 	*/
   .navbar-nav:not(.navbar-sm) {
@@ -18068,7 +18068,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
     padding-left: 10px; }
   .navbar .navbar-nav .nav-link.dropdown-toggle:not(.nav-link-caret-hide) {
     padding-right: 30px; }
-  /* 
+  /*
 		.navbar-sm
 		used under large search
 		(header-variant-1.html)
@@ -18082,7 +18082,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
     padding-left: 0; }
   .navbar .navbar-nav a.nav-link {
     height: 100%; }
-  /* 
+  /*
 		Brand|Logo
 		Frontend only
 	*/
@@ -18108,7 +18108,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
     bottom: auto !important; } }
 
 @media only screen and (max-width: 991px) {
-  /* 
+  /*
 		@FIX
 		Main Links :: Icon Indicator
 	*/
@@ -18118,13 +18118,13 @@ body.layout-admin #wrapper_content.js-animation-enable {
   .navbar-nav .dropdown-menu {
     width: 100% !important;
     max-width: 100% !important; }
-  /* 
+  /*
 		Childs padding
 	*/
   .navbar-nav .dropdown-menu > .dropdown-item > .dropdown-menu {
     padding-left: 15px !important; }
   /*
-	
+
 		Styling
 
 	*/
@@ -18204,7 +18204,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
     font-size: inherit; } }
 
 /**
-	
+
 	DEFAULTS
 
 **/
@@ -18212,7 +18212,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
   color: #121212; }
 
 /**
-	
+
 	LAYOUT :: FOOTER
 
 **/
@@ -18245,7 +18245,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
   background-color: rgba(0, 0, 0, 0.03); }
 
 /**
-	
+
 	Responsive
 
 **/
@@ -18276,17 +18276,17 @@ body.layout-admin #wrapper_content.js-animation-enable {
     padding: 0; } }
 
 /**
-	
+
 	LAYOUT :: SIDEBAR
 
 **/
 /**
-	
+
 	Responsive
 
 **/
 /**
-	
+
 	LAYOUT :: GLOBALS
 
 **/
@@ -18305,7 +18305,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
   padding-right: 15px; }
 
 /**
-	
+
 	Ignore Bootstrap breakpoints (< 1200px)
 	Should be used with (.container) class
 
@@ -18314,7 +18314,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
   .container-ignore-breakpoints {
     max-width: 100%; } }
 
-/* 
+/*
 	.container-xlg container (+200px)
 	Bootstrap is up to 1200
 */
@@ -18327,7 +18327,7 @@ body.layout-admin #wrapper_content.js-animation-enable {
     max-width: 100%; } }
 
 /**
-	
+
 	Responsive
 
 **/
@@ -18361,12 +18361,12 @@ body.layout-admin #wrapper_content.js-animation-enable {
     border-bottom-right-radius: 0.25rem; } }
 
 /**
-	
+
 	LAYOUT :: MISC
 
 **/
 /**
-	
+
 	Responsive
 
 **/
@@ -18432,10 +18432,10 @@ section.jarallax {
   transition: none !important; }
 
 /**
-	
+
 	LAYOUT :: ADMIN
 
-	We set here very few important & general rules to 
+	We set here very few important & general rules to
 	avoid issues on fixed sidebar/header
 
 **/
@@ -18608,7 +18608,7 @@ body.layout-admin #footer.bg-dark {
 
 		Not fully supported by old browsers!
 		But is ok for admin!
-		
+
 		https://caniuse.com/#feat=css-sticky
 
 	**/
@@ -18640,7 +18640,7 @@ aside.overlay-dark:after {
   border-radius: 0.25rem; }
 
 /**
-	
+
 	Responsive
 
 **/
@@ -18652,7 +18652,7 @@ aside.overlay-dark:after {
     margin-left: -15px !important;
     padding-left: 15px !important; }
   /**
-		
+
 		LAYOUT : PADDED
 
 	**/
@@ -18709,7 +18709,7 @@ aside.overlay-dark:after {
 
 **/
 /*
-	
+
 	Styling
 	Ajax Loading Icons
 
@@ -18739,7 +18739,7 @@ form.js-ajax #js_loading_icon {
     we need them!
 
 **/
-/** 
+/**
 
 	Stepofeb Header
 	www.stepofweb.com
@@ -18882,7 +18882,7 @@ body.header-over:not(.user-scrolled-down) #header .btn.rounded-circle:not(.text-
     we need them!
 
 **/
-/** 
+/**
 
 	Stepofeb Search Suggest
 	www.stepofweb.com
@@ -19001,7 +19001,7 @@ form.sow-search input.form-control-sow-search:not(.form-control-custom):not(.for
   form.sow-search input.form-control-sow-search.form-control-lg:not(.form-control-custom) {
     font-size: 1.3rem !important; } }
 
-/* 
+/*
 	MOBILE
 */
 @media only screen and (max-width: 991px) {
