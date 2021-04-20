@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  * This is used by Eloquent permissions provider.
  */
 trait UploadableTraits {
-   
+
     protected $dirPolicy = null;
 
     public function getDir() {
@@ -75,7 +75,7 @@ trait UploadableTraits {
         }
         return $this->prefix.'_'.$id.'_';
     }
-   
+
     public function delete($id = NULL) {
         if (file_exists($this->getStorageFilename()))
             unlink($this->getStorageFilename());
@@ -105,7 +105,7 @@ trait UploadableTraits {
 
 
         }
-        
+
     }
 
     public function setFieldsFromResource($inputArray = array()) {
@@ -121,7 +121,7 @@ trait UploadableTraits {
     public function deleteOldFiles($id = null) {
         File::delete(File::glob(storage_path('files/'.$this->getDir()).'/'.$this->getPrefixFile($id).'*'));
     }
-    
+
     public static function fullCreate($data = array(), $path = null) {
         $item = new static;
         $item->fill($data);

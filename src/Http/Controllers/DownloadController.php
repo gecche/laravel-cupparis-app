@@ -11,43 +11,48 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 
-class DownloadController extends BaseController {
+class DownloadController extends BaseController
+{
 
 
-    public function viewMediableFile($mediableModelName, $mediablePk, $template = null) {
+    public function viewMediableFile($mediableModelName, $mediablePk, $template = null)
+    {
 
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
         $mediableModel = $this->getMediableModel($mediableModelName, $mediablePk);
-        
+
         if (!$mediableModel->fileExists()) {
             return redirect('/')->withErrors('file_not_found');
         }
 
-        $template = $template ?: Config::get('imagecache.default_template','small');
+        $template = $template ?: Config::get('imagecache.default_template', 'small');
 
-        $imagecacheRoute = 'imagecache/' . $template . '/' . $mediableModel->full_filename ;
+        $imagecacheRoute = 'imagecache/' . $template . '/' . $mediableModel->full_filename;
 
         $request = Request::create($imagecacheRoute, 'GET', array());
 
         return Route::dispatch($request);
     }
 
-    public function openMediableFile($mediableModelName, $mediablePk) {
+    public function openMediableFile($mediableModelName, $mediablePk)
+    {
 
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
-        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk,'inline');
+        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk, 'inline');
     }
 
-    public function downloadMediableFile($mediableModelName, $mediablePk) {
+    public function downloadMediableFile($mediableModelName, $mediablePk)
+    {
 
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
-        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk,'attachment');
+        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk, 'attachment');
     }
 
-    protected function redirectIfNotAuthorizedFile($mediableModelName, $mediablePk) {
+    protected function redirectIfNotAuthorizedFile($mediableModelName, $mediablePk)
+    {
 
         if (!is_string($mediableModelName) || !is_numeric($mediablePk)) {
             return redirect('/')->withErrors('file_not_found');
@@ -57,22 +62,32 @@ class DownloadController extends BaseController {
         //
     }
 
-    protected function getResponseUploadableModelFile($mediableModelName, $mediablePk, $disposition) {
-        $mediableModel = $this->getMediableModel($mediableModelName,$mediablePk);
-        return $mediableModel->storageResponse(null,null,[],$disposition);
+    protected function getResponseUploadableModelFile($mediableModelName, $mediablePk, $disposition)
+    {
+        $mediableModel = $this->getMediableModel($mediableModelName, $mediablePk);
+        return $mediableModel->storageResponse(null, null, [], $disposition);
     }
 
-    public function downloadtemp($nome) {
+    public function downloadtemp($nome)
+    {
 
         $filename = storage_temp_path($nome);
         if (File::exists($filename)) {
+
+            if (Str::endsWith($filename, 'pdf')) {
+                return Response::make(file_get_contents($filename), 200, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="' . $nome . '"'
+                ]);
+            }
             return Response::download($filename, $nome);
         }
     }
 
 
-    protected function getMediableModel($mediableModelName, $mediablePk, $errorMsg = 'file_not_found') {
-        $modelsNamespace = rtrim(Config::get('breeze.namespace'),"\\");
+    protected function getMediableModel($mediableModelName, $mediablePk, $errorMsg = 'file_not_found')
+    {
+        $modelsNamespace = rtrim(Config::get('breeze.namespace'), "\\");
 
         $fullUploadableModelName = $modelsNamespace . '\\' . Str::studly($mediableModelName);
         $mediableModel = $fullUploadableModelName::find($mediablePk);

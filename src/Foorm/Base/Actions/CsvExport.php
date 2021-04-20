@@ -110,7 +110,7 @@ class CsvExport extends FoormAction
 
     protected function performActionList($csvStream, $filename = null)
     {
-        $builder = $this->foorm->getFormBuilder();
+        $builder = $this->getFoormBuilder();
         $clonedBuilder = clone($builder);
 
         $i = 1;
@@ -140,6 +140,10 @@ class CsvExport extends FoormAction
         }
 
         return $csvStream;
+    }
+
+    protected function getFoormBuilder() {
+        return $this->foorm->getFormBuilder();
     }
 
     public function validateAction()
@@ -178,9 +182,9 @@ class CsvExport extends FoormAction
 
             $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
-                $row[] = $this->$methodName($itemValue);
+                $row[] = $this->$methodName($itemValue,$item);
             } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue);
+                $row[] = $this->getCsvFieldStandard($key, $itemValue, $item);
             }
         }
         return $row;
@@ -209,7 +213,7 @@ class CsvExport extends FoormAction
     }
 
 
-    public function getCsvFieldStandard($key, $value)
+    public function getCsvFieldStandard($key, $value, $item = [])
     {
         if (is_numeric($value)) {
             if ($this->csvSettings['decimalTo']) {
