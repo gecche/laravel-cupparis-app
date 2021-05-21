@@ -561,8 +561,9 @@ crud.components.widgets.wSwap = Vue.component('w-swap', {
             var index = vs.indexOf("" + value);
             index = (index + 1) % vs.length;
             console.log('rswap', that);
+            var modelName = that.modelName?that.modelName:(that.view?that.view.modelName:'no-model');
             route.setValues({
-                modelName: that.modelName,
+                modelName: modelName,
                 //field : that.name, //that.conf.key?that.conf.key:that.cKey,
                 //value : keys[index]
             });
