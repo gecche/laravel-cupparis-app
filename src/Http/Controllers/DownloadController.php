@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
@@ -29,6 +30,18 @@ class DownloadController extends BaseController
         $template = $template ?: Config::get('imagecache.default_template', 'small');
 
         $imagecacheRoute = 'imagecache/' . $template . '/' . $mediableModel->full_filename;
+
+        $request = Request::create($imagecacheRoute, 'GET', array());
+
+        return Route::dispatch($request);
+    }
+
+    public function viewUploadableFile($filename, $template = null)
+    {
+
+        $template = $template ?: Config::get('imagecache.default_template', 'small');
+
+        $imagecacheRoute = 'imagecache/' . $template . '/uploads';
 
         $request = Request::create($imagecacheRoute, 'GET', array());
 
@@ -107,5 +120,12 @@ class DownloadController extends BaseController
 //        return Response::download(storage_path($path."/".$filename), basename($path).".".$ext);
 //    }
 
+
+    public function downloadUploadableFile($filename, $disposition = 'attachment')
+    {
+        $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
+        $filename = 'files/uploads/' . $filename;
+        return Storage::disk($diskDriver)->response($filename, $filename, [], $disposition);
+    }
 
 }
