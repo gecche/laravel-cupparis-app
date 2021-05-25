@@ -28,4 +28,7 @@ Route::group([
     Route::get('downloadmediable/{model}/{pk}', 'DownloadController@downloadMediableFile');
     Route::get('openmediable/{model}/{pk}', 'DownloadController@openMediableFile');
 
+    Route::get('viewuploadable/{filename}/{template?}', 'DownloadController@viewUploadableFile');
+    Route::get('downloaduploadable/{filename}/{disposition?}', 'DownloadController@downloadUploadableFile');
+
 });
