@@ -28,6 +28,8 @@ class FoormInsert extends BaseFoormInsert
         unset($input['mainrole']);
         unset($input['password_confirmation']);
 
+        $input['password'] = bcrypt($input['password']);
+
         parent::setFieldsToModel($model, $configFields, $input);
     }
 

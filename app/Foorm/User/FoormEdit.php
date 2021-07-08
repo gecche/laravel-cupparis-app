@@ -49,6 +49,8 @@ class FoormEdit extends BaseFoormEdit
 
         if (!$this->hasPasswordCompiled) {
             unset($input['password']);
+        } else {
+            $input['password'] = bcrypt($input['password']);
         }
 
         unset($input['password_confirmation']);
