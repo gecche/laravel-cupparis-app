@@ -98,4 +98,8 @@ class User extends Breeze implements
         return $this->roles()->first();
     }
 
+    public function getRolename() {
+        return $this->mainrole ? $this->mainrole->name : null;
+    }
+
 }
