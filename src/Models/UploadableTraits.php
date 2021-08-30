@@ -16,15 +16,16 @@ use Illuminate\Support\Str;
  */
 trait UploadableTraits {
 
-    protected $dirPolicy = null;
 
     protected $nameField = 'nome';
 
     public function getDir() {
 
-        $methodName = 'getDirPolicy'.Str::studly($this->dirPolicy);
-        if ($this->dirPolicy && method_exists($this,$methodName)) {
-            return $this->$methodName();
+        if (property_exists($this,'dirPolicy')) {
+            $methodName = 'getDirPolicy'.Str::studly($this->dirPolicy);
+            if (method_exists($this,$methodName)) {
+                return $this->$methodName();
+            }
         }
 
         return $this->dir;
@@ -35,6 +36,9 @@ trait UploadableTraits {
     }
     public function ext() {
         return '.' . $this->ext;
+    }
+    public function getResourcePathAttribute() {
+        return $this->getStorageFilename(null,null, false);
     }
 
 
