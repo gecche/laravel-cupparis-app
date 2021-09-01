@@ -17,7 +17,12 @@ use Illuminate\Support\Str;
 trait HasFileFieldsTrait
 {
 
-
+    public function getFilePath() {
+        if (property_exists($this,'filePath')) {
+            return $this->filePath;
+        }
+        return "/";
+    }
 
     protected function getStorageFilename($field, $relative = false)
     {
@@ -59,11 +64,13 @@ trait HasFileFieldsTrait
     }
 
 
-    public function filesOps($field,$inputArray = array())
+    public function filesOps($field, $inputArray = array())
     {
 
 
-            $resource = json_decode(Arr::get($inputArray, $field, ""), true);
+        $resource = json_decode(Arr::get($inputArray, $field, ""), true);
+        if (Arr::get($resource, 'filename', false)) {
+
 
             $tempfilename = Arr::get($resource, 'id', false);
             if ($tempfilename && !File::exists($tempfilename)) {
@@ -78,6 +85,7 @@ trait HasFileFieldsTrait
 
             }
 
+        }
     }
 
     public function setFieldsFromResource($field, $inputArray = array())
@@ -85,7 +93,12 @@ trait HasFileFieldsTrait
 
         $resource = json_decode(Arr::get($inputArray, $field, ""), true);
 
-        $this->$field = $this->filePath . rand() . '_' . Arr::get($resource, 'filename', false);//pathinfo($resourceId, PATHINFO_EXTENSION);
+        if (Arr::get($resource, 'filename', false)) {
+            $this->$field = $this->filePath . rand() . '_' . Arr::get($resource, 'filename',
+                    false);//pathinfo($resourceId, PATHINFO_EXTENSION);
+        } else {
+            $this->$field = Arr::get($resource, 'id');
+        }
 
     }
 
