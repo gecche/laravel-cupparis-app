@@ -29,13 +29,13 @@ trait HasFileFieldsTrait
     public function fileExists($field)
     {
         $filename = $this->getStorageFilename($field);
-        return File::exists($filename);
+        return File::exists(public_path($filename));
     }
 
     public function getMimeType($field)
     {
         $filename = $this->getStorageFilename($field);
-        return File::mimeType($filename);
+        return File::mimeType(public_path($filename));
     }
 
     public function deleteFilefields()
@@ -48,7 +48,7 @@ trait HasFileFieldsTrait
     public function deleteFilefield($field)
     {
         if ($this->fileExists($field)) {
-            File::delete($this->getStorageFilename($field));
+            File::delete(public_path($this->getStorageFilename($field)));
         }
     }
 
