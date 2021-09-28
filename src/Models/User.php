@@ -102,4 +102,18 @@ class User extends Breeze implements
         return $this->mainrole ? $this->mainrole->name : null;
     }
 
+
+    public $columnsForSelectList = ['name','email'];
+    //['id','nome_it'];
+
+    public $defaultOrderColumns = ['email'];
+    //['cognome' => 'ASC','nome' => 'ASC'];
+
+    public $columnsSearchAutoComplete = ['name', 'email'];
+    //['cognome','denominazione','codicefiscale','partitaiva'];
+
+    public $nItemsAutoComplete = 20;
+    public $nItemsForSelectList = 100;
+    public $itemNoneForSelectList = false;
+    public $fieldsSeparator = ' - ';
 }

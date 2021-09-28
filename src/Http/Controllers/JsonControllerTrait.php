@@ -8,6 +8,7 @@ trait JsonControllerTrait
     protected $json = [
         'error' => 0,
         'msg' => '',
+        'result' => null,
     ];
 
 
@@ -23,6 +24,10 @@ trait JsonControllerTrait
             $this->json['msg'] = $msg;
         }
         return Response::json($this->json);
+    }
+
+    protected function _result($result) {
+        $this->json['result'] = $result;
     }
 
 }
