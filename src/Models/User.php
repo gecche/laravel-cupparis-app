@@ -106,7 +106,7 @@ class User extends Breeze implements
     public $columnsForSelectList = ['name','email'];
     //['id','nome_it'];
 
-    public $defaultOrderColumns = ['email'];
+    public $defaultOrderColumns = ['email' => 'ASC'];
     //['cognome' => 'ASC','nome' => 'ASC'];
 
     public $columnsSearchAutoComplete = ['name', 'email'];
