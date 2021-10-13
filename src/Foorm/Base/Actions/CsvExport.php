@@ -123,10 +123,10 @@ class CsvExport extends FoormAction
             $skip = ($page - 1) * $perPage;
             $builder = $builder->take($perPage)->skip($skip)->get();
 
-            $chunkData = $builder->toArray();
+//            $chunkData = $builder->toArray();
 
-            if (count($chunkData) >= 1) {
-                $chunkStream = $this->getDataFromChunk($chunkData);
+            if ($builder->count() >= 1) {
+                $chunkStream = $this->getDataFromChunk($builder);
                 $csvStream .= $chunkStream;
 
                 $builder = $clonedBuilder;
@@ -174,23 +174,24 @@ class CsvExport extends FoormAction
     public function getCsvRow($item)
     {
         $row = [];
-        $itemDotted = Arr::dot($item);
+        $itemArray = $item->toArray();
+        $itemDotted = Arr::dot($itemArray);
         foreach ($this->fields as $key) {
             $methodKey = str_replace('|', '', $key);
 
-            $itemValue = $this->guessItemValue($key,$itemDotted,$item);
+            $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
 
             $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
-                $row[] = $this->$methodName($itemValue,$item);
+                $row[] = $this->$methodName($itemValue,$itemArray,$item);
             } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue, $item);
+                $row[] = $this->getCsvFieldStandard($key, $itemValue, $itemArray,$item);
             }
         }
         return $row;
     }
 
-    protected function guessItemValue($key,$itemDotted,$item) {
+    protected function guessItemValue($key,$itemDotted,$item,$itemObject) {
 
         if (array_key_exists('item',Arr::get($this->csvFieldsParams,$key,[]))) {
             $itemKey = $this->csvFieldsParams[$key]['item'];
@@ -213,7 +214,7 @@ class CsvExport extends FoormAction
     }
 
 
-    public function getCsvFieldStandard($key, $value, $item = [])
+    public function getCsvFieldStandard($key, $value, $item = [],$itemObject = null)
     {
         if (is_numeric($value)) {
             if ($this->csvSettings['decimalTo']) {
