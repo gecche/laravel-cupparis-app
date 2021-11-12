@@ -102,6 +102,14 @@ trait HasFileFieldsTrait
 
     }
 
+    public function isSameFile($field, $inputArray = array()) {
+        $resource = json_decode(Arr::get($inputArray, $field, ""), true);
+
+        if ($this->$field == Arr::get($resource, 'id')) {
+            return true;
+        }
+    }
+
 //
 //    public static function fullCreate($data = array(), $path = null)
 //    {
