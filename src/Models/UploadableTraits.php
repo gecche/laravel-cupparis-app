@@ -109,6 +109,7 @@ trait UploadableTraits {
             $filename = $this->getStorageFilename(null,$diskDriver);
 
             if ($diskDriver == 'local') {
+                File::ensureDirectoryExists(File::dirname(storage_path($filename)),0755,true);
                 File::move($fulltempfilename,storage_path($filename));
                 return;
             }
