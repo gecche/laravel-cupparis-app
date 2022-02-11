@@ -1,0 +1,344 @@
+<template id="v-mattonelle-istituto-template">
+    <div class="row">
+        <!-- start:col: -->
+        <div class="col-12 mb-1 p-0">
+
+            <!-- start:portlet -->
+
+            <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+            <div v-else class="portlet">
+
+                <div class="portlet-header border-bottom" :class="headerClass">
+                    <span v-show="viewTitle">{{viewTitle}}</span>
+                    <!-- options and pagination -->
+                    <div class="row justify-content-end">
+
+                        <div class="col-12 col-xl-1 col-md-2 text-center mt-3">
+                            <label
+                                class="referenti-switch form-switch form-switch-pill form-switch-success d-block"
+                                v-on:click="toggleReferenti"
+                                title="Lista con visualizzazione dei referenti">
+                                <input type="checkbox" v-model="hasReferenti">
+                                <i data-on="referenti" data-off="referenti" style="width:80px;"></i>
+                            </label>
+
+                        </div>
+                        <div class="col-12 col-md-5 mt-1 mb-2">
+
+                            <!-- v-bind:c-route-conf="routeConf" -->
+                            <c-paginator v-if="widgets.length > 0" v-show="pagination"
+                                         v-bind:c-pagination="pagination" v-bind:c-route="route"></c-paginator>
+
+                        </div>
+                        <div class="col-12 col-xl-6 col-md-5 mt-1 mb-2 row" v-show="collectionActionsName.length">
+
+
+
+                            <!--<span class="col-4">-->
+                            <!--<input  type="checkbox" v-on:change="toggleReferenti" v-model="hasReferenti"> con referenti-->
+                            <!--</span>-->
+
+                            <div class="">
+                                <template v-for="name in collectionActionsName" v-if="['action-insert'].indexOf(name) >= 0">
+                                        <component v-bind:is="name" v-bind:c-conf="collectionActions[name]"></component>
+                                </template>
+                                <span class="dropdown">
+                                    <button class="btn btn-sm btn-pill px-2 py-1 fs--15 btn btn-outline-secondary btn-sm btn-group mr-1 dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+
+                                        <span><i class="fa fa-download"></i></span>
+
+                                        <span class="group-icon">
+															<i class="fi fi-arrow-down"></i>
+															<i class="fi fi-arrow-up"></i>
+														</span>
+
+                                    </button>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <h6 class="dropdown-header">Esportazioni</h6>
+
+                                        <template v-for="name in collectionActionsName"
+                                                  v-if="['action-insert','action-delete-selected'].indexOf(name) < 0">
+                                            <div>
+                                                <component v-bind:is="name"
+                                                           v-bind:c-conf="collectionActions[name]"></component>
+                                            </div>
+                                        </template>
+
+                                        <!--<a class="dropdown-item active" href="#">-->
+                                        <!--<i class="fi fi-check"></i>-->
+                                        <!--Active-->
+                                        <!--</a>-->
+                                        <!--<a class="dropdown-item disabled" href="#">-->
+                                        <!--<i class="fi fi-close"></i>-->
+                                        <!--Disabled-->
+                                        <!--</a>-->
+                                        <!--<div class="dropdown-divider"></div>-->
+                                        <!--<a class="dropdown-item max-w-250 text-truncate" href="#">-->
+                                        <!--<i class="fi fi fi-arrow-end-slim"></i>-->
+                                        <!--A long text, very very very long text-->
+                                        <!--</a>-->
+                                    </div>
+                                </span>
+                            </div>
+                            <!--<hr>-->
+                            <span class="col-4">
+
+                            </span>
+
+
+                            <!--Esportazioni-->
+                            <!--<template v-for="name in collectionActionsName" v-if="['action-insert','action-delete-selected'].indexOf(name) < 0">-->
+                            <!--<span class="col-3">-->
+                            <!--<component v-bind:is="name" v-bind:c-conf="collectionActions[name]"></component>-->
+                            <!--</span>-->
+                            <!--</template>-->
+                        </div>
+
+                    </div>
+                    <!-- /options and pagination -->
+
+                    <!-- header -->
+                    <!-- portlet : header -->
+                    <!-- /portlet : header -->
+
+                    <!-- /header -->
+                </div>
+                <div class="portlet-body pb-0">
+                    <div class="clearfix">
+                        <div v-for="key in keys" v-if="!isHiddenField(key)" class="pull-left text-gray-500 font-weight-normal fs--14">
+                            <action-order v-if="conf.orderFields[key]"
+                            :c-conf="getOrderConf(key)"></action-order>
+                        </div>
+                    </div>
+                    <div class="container-fluid py-1 row">
+                        <div class="col-6" v-for="(row,index) in widgets">
+                            <div class="card p-1 m-0
+                     shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
+                                <div class="card-header bg-white">
+                                    <div class="clearfix pull-left"><!-- using .dropdown, autowidth not working -->
+
+                                        <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"
+                                           data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+																		<span class="group-icon">
+																			<i class="fi fi-dots-vertical-full"></i>
+																			<i class="fi fi-close"></i>
+																		</span>
+                                        </a>
+
+                                        <div
+                                                class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">
+
+                                            <div class="scrollable-vertical max-h-50vh">
+                                                <template v-for="(action,name) in recordActions[index]">
+                                                    <action-base :c-conf="action" inline-template>
+                                                        <a class="dropdown-item text-truncate"
+                                                           :class="name + ' ' +css" href="#" v-on:click="_execute">
+                                                            <i :class="icon"></i>{{text}}
+                                                        </a>
+                                                    </action-base>
+                                                </template>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <span class="pull-left font-weight-bold pt-2 ml-2">
+                                        <v-widget :c-widget="row['T_ANAGIST_DESCBREVE']"></v-widget>
+                                    </span>
+                                </div>
+                                <div v-for="(widget, key) in row" v-if="!isHiddenField(key)">
+                                    <v-widget :c-widget="widget" :key="key"></v-widget>
+                                </div>
+                                <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                                    <v-widget :c-widget="widget" :key="key"></v-widget>
+                                </template>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <!--<div class="table-responsive" style="white-space:nowrap;">-->
+                            <!--<table class="table table-framed table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr v-if="widgets.length > 0">-->
+                                    <!--<th v-if="needSelection" class="text-gray-500 w&#45;&#45;50">-->
+                                        <!--<label class="form-checkbox form-checkbox-primary float-start">-->
+                                            <!--<input c-row-check-all v-on:change="selectAllRows"-->
+                                                   <!--class="checkall" type="checkbox">-->
+                                            <!--<i></i>-->
+                                        <!--</label>-->
+                                    <!--</th>-->
+                                    <!--<th v-show="recordActionsName.length">-->
+                                        <!--<v-action :c-action="collectionActions['action-delete-selected']"></v-action>-->
+                                    <!--</th>-->
+                                    <!--<th v-for="key in keys" v-if="!isHiddenField(key)"-->
+                                        <!--class="text-gray-500 font-weight-normal fs&#45;&#45;14">-->
+                                        <!--<action-order v-if="conf.orderFields[key]"-->
+                                                      <!--v-bind:c-conf="getOrderConf(key)"></action-order>-->
+                                        <!--<span style="cursor:default"-->
+                                              <!--class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs&#45;&#45;14"-->
+                                              <!--v-else>{{key+'.label' | translate(langContext) }}</span>-->
+                                    <!--</th>-->
+                                <!--</tr>-->
+                                <!--<tr v-if="widgets.length == 0">-->
+                                    <!--<th v-show="recordActionsName.length" class="text-gray-500 w&#45;&#45;50">-->
+                                        <!--{{"app.nessun-elemento" | translate }}-->
+                                    <!--</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody>-->
+                                <!--&lt;!&ndash; product &ndash;&gt;-->
+                                <!--<tr v-for="(row,index) in widgets" :key="index">-->
+                                    <!--<th v-if="needSelection">-->
+
+                                        <!--<label-->
+                                            <!--class="form-checkbox form-checkbox-primary float-start">-->
+                                            <!--<input c-row-check type="checkbox">-->
+                                            <!--<i></i>-->
+                                        <!--</label>-->
+
+
+                                    <!--</th>-->
+                                    <!--<th v-show="recordActionsName.length">-->
+                                        <!--&lt;!&ndash;<div class="btn-group" role="group">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<template v-for="(action,name) in recordActions[index]">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<v-action  :c-action="action" :key="name"></v-action>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</template>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--<div class="clearfix">&lt;!&ndash; using .dropdown, autowidth not working &ndash;&gt;-->
+
+                                            <!--<a href="#" class="btn btn-sm btn-outline-primary rounded-circle"-->
+                                               <!--data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">-->
+																		<!--<span class="group-icon">-->
+																			<!--<i class="fi fi-dots-vertical-full"></i>-->
+																			<!--<i class="fi fi-close"></i>-->
+																		<!--</span>-->
+                                            <!--</a>-->
+
+                                            <!--<div-->
+                                                <!--class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">-->
+
+                                                <!--<div class="scrollable-vertical max-h-50vh">-->
+                                                    <!--<template v-for="(action,name) in recordActions[index]">-->
+                                                        <!--<action-base :c-conf="action" inline-template>-->
+                                                            <!--<a class="dropdown-item text-truncate"-->
+                                                               <!--:class="name + ' ' +css" href="#" v-on:click="_execute">-->
+                                                                <!--<i :class="icon"></i>{{text}}-->
+                                                            <!--</a>-->
+                                                        <!--</action-base>-->
+                                                        <!--&lt;!&ndash;<v-action  :c-action="action" :key="name" inlineTemplate>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;<span>{{text}}</span>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;</v-action>&ndash;&gt;-->
+                                                    <!--</template>-->
+
+                                                    <!--&lt;!&ndash;<a class="dropdown-item text-truncate" href="#">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<i class="fi fi-pencil"></i>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;Edit&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<a 	href="#"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;class="dropdown-item text-truncate js-ajax-confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-href="components-tables.html"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-method="GET"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-mode="ajax"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-size="modal-md"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-centered="false"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-callback-function=""&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-title="Please Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-body="Set this product to active?"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-text="Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-class="btn-sm btn-success"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-icon="fi fi-check"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-text="Cancel"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-class="btn-sm btn-light"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-icon="fi fi-close">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<i class="fi fi-check"></i>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;Set : Active&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<a 	href="#"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;class="dropdown-item text-truncate js-ajax-confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-href="components-tables.html"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-method="GET"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-mode="ajax"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-size="modal-md"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-centered="false"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-callback-function=""&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-title="Please Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-body="Are you sure? Set this product to inactive?"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-text="Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-class="btn-sm btn-warning"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-icon="fi fi-check"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-text="Cancel"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-class="btn-sm btn-light"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-icon="fi fi-close">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<i class="fi fi-close"></i>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;Set : Inactive&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;&lt;!&ndash;&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;The request is sent by ajax to data-href="..."&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;To change to regular submit, change:&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-mode="regular" 	(or simply remove this param)&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;&ndash;&gt;&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<a 	href="#"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;class="dropdown-item text-truncate js-ajax-confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-href="components-tables.html"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-method="GET"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-mode="ajax"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-size="modal-md"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-centered="false"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-callback-function=""&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-title="Please Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-body="Are you sure? Delete this product? <span class='d-block fs&#45;&#45;12 mt&#45;&#45;3'>Please note: this is a permanent action!</span>"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-text="Confirm"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-class="btn-sm btn-danger"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-yes-icon="fi fi-check"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-text="Cancel"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-class="btn-sm btn-light"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;data-ajax-confirm-btn-no-icon="fi fi-close">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<i class="fi fi-thrash text-danger"></i>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;Set : Delete&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+
+
+                                                <!--</div>-->
+
+                                            <!--</div>-->
+
+                                        <!--</div>-->
+                                    <!--</th>-->
+
+                                    <!--<td v-for="(widget, key) in row" v-if="!isHiddenField(key)">-->
+                                        <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                                    <!--</td>-->
+                                    <!--<template v-for="(widget, key) in row" v-if="isHiddenField(key)">-->
+                                        <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                                    <!--</template>-->
+                                <!--</tr>-->
+                                <!--</tbody>-->
+
+                                <!--<tfoot>-->
+                                <!--</tfoot>-->
+
+                            <!--</table>-->
+                        <!--</div>-->
+
+
+                    </div>
+                    <!-- end:portlet -->
+                </div>
+            </div>
+
+        </div>
+        <!-- end:col: -->
+
+    </div>
+</template>

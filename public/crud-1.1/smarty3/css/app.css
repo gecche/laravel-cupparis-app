@@ -1,0 +1,72 @@
+.search-buttons {
+    border-top : 1px dotted lightgray;
+    margin-top : 10px;
+    border-bottom : 1px dotted lightgray;
+
+    /*color: #377;*/
+}
+
+
+.scrollable-horizontal::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+
+.scrollable-horizontal::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(104, 140, 240, 0.3);
+}
+
+.scrollable-horizontal::-webkit-scrollbar-thumb {
+    background-color: lightblue;
+    outline: 1px solid slategrey;
+}
+
+
+.form-switch.banned>i {
+    background: #6dbb30;
+}
+
+.nav-tabs-border-bottom, .nav-tabs-border-top, table.table-striped td, table.table-striped th {
+    border: 1px solid #eaf0f5;
+}
+
+a.form-checkbox.active > i,
+.form-checkbox > input[type="checkbox"]:checked + i {
+    background: #e77148; }
+
+.form-checkbox-bordered > i {
+    border: 2px solid #e77148; }
+
+.form-radio > i {
+    margin-right: 5px;
+}
+
+/*
+    SEPARATOR HR
+ */
+.separatorHr {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.separatorHr::before, .separatorHr::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #245580;
+}
+.separatorHr::before {
+    margin-right: .25em;
+}
+.separatorHr::after {
+    margin-left: .25em;
+}
+
+
+/*
+    IN LABEL GROUP (RADIO E CHECKBOX)
+ */
+.in-label-group {
+    padding-top:19px;
+    padding-bottom:6px;
+}

@@ -1,0 +1,36 @@
+<template id="c-wizard-template">
+    <div >
+        <h3>{{title}}</h3>
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <div v-else >
+            <form enctype="multipart/form-data">
+                <!-- campi nascosti -->
+                <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">
+                    <v-widget :c-widget="widget" :key="key"></v-widget>
+                </template>
+                <div  v-for="(widget, key) in widgets" v-if="!isHiddenField(key)">
+                    <v-widget :c-widget="widget"></v-widget>
+                </div>
+            </form>
+            <div class="p-3 clearfix" v-if="actions.length">
+                <div class="pull-left">
+                    <v-action v-if="actionsClass['action-previous']" :c-action="actionsClass['action-previous']"></v-action>
+                </div>
+                <div class="pull-left">
+                    <template v-for="(action,name) in actionsClass">
+                        <v-action v-if="['action-next','action-previous'].indexOf(name) === -1" :c-action="action"></v-action>
+                    </template>
+                </div>
+                <div class="pull-right">
+                    <v-action v-if="actionsClass['action-next']" :c-action="actionsClass['action-next']"></v-action>
+                </div>
+            </div>
+<!--            <div class="p-3" v-if="actions.length">-->
+<!--                <template v-for="(action,name) in actionsClass">-->
+<!--                    <v-action  :c-action="action"></v-action>-->
+<!--                </template>-->
+<!--            </div>-->
+        </div>
+    </div>
+
+</template>

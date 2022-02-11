@@ -1,0 +1,1349 @@
+<script type="text/x-template" id="action-square-template">
+    <button
+        class="btn"
+        v-if="controlType=='button'" type="button" v-show="_visible"
+        :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
+        <i class="m-1" v-show="icon" :class="icon"></i>
+        <span>{{ text | translate }}</span>
+    </button>
+    <a v-else
+       class="btn" :target="target" :href="href" v-show="_visible"
+       :title="title | translate" :class="css" :disabled="_disabled">
+        <i class="m-1" v-show="icon" :class="icon"></i>
+        <span>{{ text | translate }}</span>
+    </a>
+</script>
+
+<script type="text/x-template" id="action-template">
+    <button class="btn btn-sm btn-pill px-2 py-1 fs--15" v-if="controlType=='button'" type="button" v-show="_visible"
+            :title="title | translate" :class="css" v-on:click="_execute" v-bind:disabled="_disabled">
+        <i class="m-1" v-show="icon" :class="icon"></i>
+        <span>{{ text | translate }}</span>
+    </button>
+    <a v-else class="btn btn-sm btn-pill px-2 py-1 fs--15" :target="target" :href="href" v-show="_visible"
+       :title="title | translate" :class="css" :disabled="_disabled">
+        <i class="m-1" v-show="icon" :class="icon"></i>
+        <span>{{ text | translate }}</span>
+    </a>
+</script>
+
+<script type="text/x-template" id="action-order-template">
+    <button class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14" type="button" v-show="_visible"
+            :title="title | translate" v-on:click="_execute" v-bind:disabled="_disabled">
+        <i v-show="icon" :class="icon"></i>
+        <span>{{ text | translate }}</span>
+    </button>
+</script>
+
+<template id="tpl-view-template">
+    <component v-if="cWidget.type=='w-hidden'" :is="cWidget.type" :c-conf="cWidget"></component>
+    <div class="col-lg-6 col-md-12 mb-2 form-label-group" v-else>
+        <component :is="cWidget.type" :c-conf="cWidget"></component>
+        <label :for="cWidget.name">
+            {{ cWidget.label }}
+        </label>
+    </div>
+</template>
+
+<template id="tpl-record-template">
+    <component v-if="cWidget.type=='w-hidden'" :is="cWidget.type" :c-conf="cWidget"></component>
+    <div class="col-lg-6 col-md-12 mb-2 form-label-group" :class="cWidget.name" v-else>
+        <component :is="cWidget.type" :c-conf="cWidget"></component>
+        <label :for="cWidget.name">
+            {{ cWidget.label }}
+        </label>
+    </div>
+</template>
+
+<template id="tpl-record2-template">
+    <component v-if="cWidget.type=='w-hidden'" :is="cWidget.type" :c-conf="cWidget"></component>
+    <div class="col-lg-12 col-md-12 mb-2 form-label-group" v-else>
+        <component :is="cWidget.type" :c-conf="cWidget"></component>
+        <label :for="cWidget.name">
+            {{ cWidget.label }}
+        </label>
+    </div>
+</template>
+
+<template id="tpl-record-in-template">
+    <component v-if="cWidget.type=='w-hidden'" :is="cWidget.type" :c-conf="cWidget"></component>
+    <div v-else class="row">
+
+        <div class="col-12 mb-1">
+            <div class="form-label-group">
+                <component :is="cWidget.type" :c-conf="cWidget"></component>
+                <label :for="cWidget.name">
+                    {{ cWidget.label }}
+                </label>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="tpl-list-template">
+    <!--    <v-widget :c-widget="cWidget"></v-widget>-->
+    <component :is="cWidget.type" :c-conf="cWidget"></component>
+</template>
+
+<template id="tpl-no-template">
+    <!--    <v-widget :c-widget="cWidget"></v-widget>-->
+    <component :is="cWidget.type" :c-conf="cWidget"></component>
+</template>
+
+<template id="tpl-full-no-template">
+    <div class="col col-12">
+        <!--    <v-widget :c-widget="cWidget"></v-widget>-->
+        <component :is="cWidget.type" :c-conf="cWidget"></component>
+    </div>
+</template>
+
+
+<template id="c-paginator-template">
+    <div v-if="last_page">
+        <nav aria-label="pagination">
+            <ul class="pagination pagination-pill justify-content-start mb-0">
+                <li v-if="(parseInt(current_page) > 1)" class="page-item"> <!-- disabled -->
+                    <a class="page-link" href="javascript:void(0)" tabindex="-1" v-on:click="firstPage()">&laquo;</a>
+                </li>
+                <li v-if="(current_page - 2) > 0 " class="page-item">
+                    <a v-on:click="setPage(current_page - 2)" class="page-link" href="javascript:void(0)">
+                        {{ current_page - 2 }}
+                    </a>
+                </li>
+                <li v-if="(current_page - 1) > 0 " class="page-item">
+                    <a v-on:click="setPage(current_page - 1)" class="page-link" href="javascript:void(0)">
+                        {{ current_page - 1 }}
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link">
+                    pag. {{ current_page }} / {{ last_page }}
+                </a></li>
+                <li v-if="(current_page + 1) <=  last_page " class="page-item">
+                    <a v-on:click="setPage(current_page + 1)" class="page-link" href="javascript:void(0)">
+                        {{ current_page + 1 }}
+                    </a>
+                </li>
+                <li v-if="(current_page + 2) <=  last_page " class="page-item">
+                    <a v-on:click="setPage(current_page + 2)" class="page-link" href="javascript:void(0)">
+                        {{ current_page + 2 }}
+                    </a>
+                </li>
+                <li v-if="(parseInt(current_page) < last_page)" class="page-item">
+                    <a class="page-link" href="javascript:void(0)" v-on:click="lastPage()">&raquo;</a>
+                </li>
+            </ul>
+            <div class="justify-content-start text-left pl-3">
+                <small class="">({{ from + '-' + to + " di " + total }} elementi)</small>
+            </div>
+        </nav>
+    </div>
+</template>
+
+<template id="d-confirm-template">
+    <div c-confirm-dialog class="modal" tabindex="-1" role="dialog"
+         aria-labelledby="" aria-hidden="true"
+    >
+        <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title | translate }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-default">
+                        <div v-for="(msg,index) in message" v-html="msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{ 'app.ok' |
+                        translate}}
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="cancel">
+                        {{ 'app.annulla' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="d-message-template">
+    <div c-message-dialog class="modal" tabindex="-1" role="dialog"
+         aria-labelledby="" aria-hidden="true"
+    >
+        <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title | translate }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <div v-for="(msg,index) in message" v-html="msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="d-error-template">
+    <div c-error-dialog class="modal" tabindex="-1" role="dialog"
+         aria-labelledby="" aria-hidden="true"
+    >
+        <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title | translate }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <div v-for="msg in message" v-html="msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template id="d-warning-template">
+    <div c-warning-dialog class="modal" tabindex="-1" role="dialog"
+         aria-labelledby="" aria-hidden="true"
+    >
+        <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title | translate }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <div v-for="msg in message" v-html="msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="ok">{{'app.ok' |
+                        translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="d-custom-template">
+    <div c-custom-dialog class="modal" tabindex="-1" role="dialog"
+         aria-labelledby="" aria-hidden="true"
+    >
+        <div class="modal-dialog" :class="{'modal-lg':cBig}" role="document">
+            <div class="modal-content">
+                <div v-if="title" class="modal-header">
+                    <h5 class="modal-title">{{ title | translate }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body" v-html="content">
+
+                </div>
+                <div v-if="Object.keys(cCallbacks).length > 0" class="modal-footer">
+                    <template v-for="(cb,key) in cCallbacks">
+                        <button type="button" class="btn btn-primary" v-on:click="callCb(key)">{{ key | translate }}
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="c-loading-template">
+    <div v-if="!errorMsg" class="spinner-border text-primary" role="status">
+        <span class="sr-only">{{ 'app.carico'|translate }}</span>
+    </div>
+    <div v-else>
+        <span class="text-danger text-2xl">{{ errorMsg }}</span>
+    </div>
+</template>
+
+<template id="c-wait-template">
+    <div c-wait :class="{'crud-overlay-body': global, 'crud-overlay' : !global}">
+        <span class="crud-wait-msg">
+            {{ msg | translate }}
+        </span>
+    </div>
+</template>
+
+<template id="w-custom-template">
+    <div v-html="value">
+
+    </div>
+</template>
+
+<script type="text/x-template" id="w-input-template">
+    <input :placeholder="label" class="form-control" :type="inputType" v-model="value" v-bind:name="getFieldName()"
+           v-bind:c-marker="cMarker" v-on:change="change">
+</script>
+<script type="text/x-template" id="w-input-view-template">
+    <input :placeholder="label" class="form-control" :type="inputType" v-model="value" v-bind:name="getFieldName()"
+           v-bind:c-marker="cMarker" disabled="disabled">
+</script>
+
+<script type="text/x-template" id="w-input-helped-template">
+    <div>
+        <input v-bind:readonly="!customValue"
+               class="form-control" type="text" name="getFieldName()" v-model="value"
+               v-bind:c-marker="cMarker" v-on:change="change">
+        <div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                <button v-for="dVal in domainValuesOrder" type="button" class="btn btn-outline-secondary"
+                        v-on:click="setValue(dVal)">{{ domainValues[dVal] }}
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="w-hidden-template">
+    <input v-model="value" :name="getFieldName()" type="hidden" :c-marker="cMarker">
+</script>
+
+<script type="text/x-template" id="w-text-template">
+    <span>{{ value }}</span>
+</script>
+
+<script type="text/x-template" id="w-image-template">
+    <img :src="value">
+</script>
+
+<script type="text/x-template" id="w-download-template">
+    <a :href="value" target="_blank"><i :class="icon"></i></a>
+</script>
+
+<script type="text/x-template" id="w-textarea-template">
+    <textarea :maxlength="maxlength"
+              class="form-control" :class="{'js-form-advanced-char-count-down' : charleft}"
+              data-output-target=".js-form-advanced-char-left"
+              v-model="value" v-bind:name="getFieldName()"
+              v-bind:c-marker="cMarker" v-on:change="change"></textarea>
+    <!--<div v-if="charleft" class="fs&#45;&#45;12 text-muted text-align-end mt&#45;&#45;3">-->
+    <!--car. rimanenti: <span class="js-form-advanced-char-left">{{maxlength || 255}}</span>-->
+    <!--</div>-->
+
+</script>
+
+<script type="text/x-template" id="w-textarea-view-template">
+    <textarea :maxlength="maxlength"
+              class="form-control" :class="{'js-form-advanced-char-count-down' : charleft}"
+              data-output-target=".js-form-advanced-char-left"
+              v-model="value" v-bind:name="getFieldName()"
+              v-bind:c-marker="cMarker" v-on:change="change"
+              disabled="disabled"
+    ></textarea>
+    <!--<div v-if="charleft" class="fs&#45;&#45;12 text-muted text-align-end mt&#45;&#45;3">-->
+    <!--car. rimanenti: <span class="js-form-advanced-char-left">{{maxlength || 255}}</span>-->
+    <!--</div>-->
+
+</script>
+
+<script type="text/x-template" id="w-select-template">
+    <select class="form-control" v-bind:name="getFieldName()" v-model="value" v-bind:c-marker="cMarker"
+            v-on:change="change">
+        <option v-for="key in domainValuesOrder" :value="key"
+        >{{ domainValues[key] }}
+        </option>
+    </select>
+</script>
+
+<template id="w-radio-template">
+    <div class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded">
+        <div class="in-label-group">
+            <label v-for="key in domainValuesOrder" class="form-radio">
+                <input v-bind:name="getFieldName()" type="radio" :value="key"
+                       v-model="value"
+                       v-bind:c-marker="cMarker" v-on:change="change">
+                <i></i><span v-html="domainValues[key]"></span>
+            </label>
+        </div>
+    </div>
+</template>
+
+<template id="w-checkbox-template">
+    <div
+        class="col-12 mb-2 form-label-group form-control bw--1 border-solid border-gray-400 p--6 rounded form-check-inline">
+        <div class="in-label-group" v-for="key in domainValuesOrder">
+            <input class="form-check-input" v-bind:name="getFieldName()" type="checkbox" :value="key"
+                   v-model="value"
+                   v-bind:c-marker="cMarker" v-on:change="change">
+            <label class="form-check-label"><span v-html="domainValues[key]"></span></label>
+        </div>
+    </div>
+</template>
+
+<template id="w-autocomplete-template">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">{{ label }}</span>
+        </div>
+        <input type="text" c-autocomplete class="form-control">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary" v-on:click="clear">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <input v-model="value" :name="getFieldName()" type="hidden" :c-marker="cMarker">
+    </div>
+</template>
+
+<template id="w-belongsto-template">
+    <div>
+        <span v-for="(field, index) in labelFields">
+            {{ value[field] }}&nbsp;
+            <span v-if="index < labelFields.length - 1"> - </span>
+        </span>
+    </div>
+</template>
+
+<template id="w-belongsto-view-template">
+
+    <input :placeholder="label" class="form-control"
+           type="text" v-model="getViewValue()" v-bind:name="getFieldName()"
+           v-bind:c-marker="cMarker" disabled="disabled">
+
+</template>
+
+<script type="text/x-template" id="w-date-select-template">
+    <div v-if="resourcesLoaded" class="input-group">
+        <input type="hidden" v-model="value" v-bind:name="getFieldName()" v-bind:c-marker="cMarker"
+               v-on:change="change">
+        <w-select ref="day" v-bind:c-conf="cDay" c-marker="day"></w-select>
+        <w-select ref="month" v-bind:c-conf="cMonth" c-marker="month"></w-select>
+        <w-select ref="year" v-bind:c-conf="cYear" c-marker="year"></w-select>
+    </div>
+</script>
+
+<template id="w-date-picker-template">
+    <div class="input-group">
+        <input type="hidden" v-model="value" v-bind:name="getFieldName()" v-bind:c-marker="cMarker"
+               v-on:change="change">
+        <input c-picker>
+    </div>
+</template>
+
+<template id="w-texthtml-template">
+    <!--    <textarea v-bind:c-key="getFieldName" c-summernote v-model="value" class="summernote form-control" c-lang="it-IT"></textarea>-->
+    <div>
+        <input c-summernote type="hidden" v-model="value" :name="getFieldName()" :c-marker="cMarker"
+               v-on:change="change">
+        <div class="summernote" v-html="value">
+        </div>
+    </div>
+</template>
+
+<template id="w-hasmany-template">
+    <div class="portlet">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <span class="d-block text-danger text-truncate font-weight-medium" v-if="outOfLimit()">
+                    <!-- Limite massimo raggiunto -->
+                    {{ 'app.limite-raggiunto' | translate }}
+                </span>
+                <button v-else v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <input type="hidden" value="1">
+            <div class="row">
+                <div class="col-12 col-lg-6 col-xl-6 mt-2" v-for="(item,index) in confViews" v-show="showItem(item.cRef)"
+                     :key="index">
+                    <div class="card p-1 m-0
+                     shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
+                        <!--<div class="card-header" crud-hasmany_title>-->
+                        <!--{{cConf.metadata.modelName}}-->
+                        <!--</div>-->
+                        <div class="card-header bg-white">
+                            <button v-on:click="deleteItem(item.cRef)" class="btn-danger btn-pill btn-xs pull-right"
+                                    type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-1">
+                            <v-hasmany v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasmany-listed-template">
+    <div class="portlet">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <span class="d-block text-danger text-truncate font-weight-medium" v-if="outOfLimit()">
+                    <!-- Limite massimo raggiunto -->
+                    {{ 'app.limite-raggiunto' | translate }}
+                </span>
+                <button v-else v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <input type="hidden" value="1">
+
+            <div class="container-fluid py-1">
+                <v-list :c-conf="hasManyListConf">
+
+                </v-list>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasmany-listed-constraint-template">
+    <div class="portlet">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <span class="d-block text-danger text-truncate font-weight-medium" v-if="outOfLimit()">
+                    <!-- Limite massimo raggiunto -->
+                    {{ 'app.limite-raggiunto' | translate }}
+                </span>
+                <button v-else v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <input type="hidden" value="1">
+
+            <div class="container-fluid py-1">
+                <v-list-constraint :c-conf="hasManyListConf">
+
+                </v-list-constraint>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasmany-listed-squared-constraint-template">
+    <div class="">
+
+        <input type="hidden" value="1">
+
+        <v-list-constraint :c-conf="hasManyListConf" inline-template>
+
+            <!-- start:portlet -->
+
+            <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+            <div v-else class="portlet">
+                <div class="portlet-body pb-0">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6 mt-1 mb-2 text-center" v-show="collectionActionsName.length">
+                            <template v-for="name in collectionActionsName">
+                                <component v-bind:is="name" v-bind:c-conf="collectionActions[name]"></component>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                                <span v-for="(row,index) in widgets" :key="index">
+                                    <div class="card">
+                                        <div class="card-header" v-if="row.header">
+                                                <v-widget :c-widget="row.header"></v-widget>
+                                        </div>
+                                        <div class="card-body">
+                                            <v-widget :c-widget="widget" v-for="(widget, key) in row"
+                                                v-if="(!isHiddenField(key) && key !== 'header')" :class="key"></v-widget>
+                                            <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                                                <v-widget :c-widget="widget" :key="key"></v-widget>
+                                            </template>
+                                        </div>
+                                        <div class="card-footer btn-group" role="group" v-show="recordActionsName.length">
+                                                <template v-for="(action,name) in recordActions[index]">
+                                                    <v-action :c-action="action" :key="name"></v-action>
+                                                </template>
+                                            </div>
+                                    </div>
+                                </span>
+                        <!--<div class="container-fluid py-1">-->
+                    </div>
+
+
+                    <!--<div class="table-responsive" style="white-space:nowrap;" :class="modelName">-->
+                    <!--<table class="table table-framed table-striped table-bordered">-->
+                    <!--<tbody>-->
+                    <!--&lt;!&ndash; product &ndash;&gt;-->
+                    <!--<tr v-for="(row,index) in widgets" :key="index">-->
+                    <!--<th v-show="recordActionsName.length">-->
+                    <!--<div class="btn-group" role="group">-->
+                    <!--<template v-for="(action,name) in recordActions[index]">-->
+                    <!--<v-action :c-action="action" :key="name"></v-action>-->
+                    <!--</template>-->
+                    <!--</div>-->
+
+                    <!--</th>-->
+
+                    <!--<td v-for="(widget, key) in row" v-if="!isHiddenField(key)" :class="key">-->
+                    <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                    <!--</td>-->
+                    <!--<template v-for="(widget, key) in row" v-if="isHiddenField(key)">-->
+                    <!--<v-widget :c-widget="widget" :key="key"></v-widget>-->
+                    <!--</template>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+
+
+                    <!--</table>-->
+                    <!--</div>-->
+
+
+                    <!--</div>-->
+                    <!-- end:portlet -->
+                </div>
+            </div>
+
+        </v-list-constraint>
+    </div>
+</template>
+
+
+<template id="w-hasmany-view-template">
+    <div class="portlet">
+        <div class="portlet-body pl-1 pr-1 pb-1">
+            <h5 class="">
+                <span class="pull-left font-weight-medium" :class="titleClass">{{ label | translate }}</span>&nbsp;
+            </h5>
+
+            <input type="hidden" value="1">
+            <div class="row">
+                <div class="col-12 col-lg-12 col-xl-6 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)">
+                    <div class="card p-1 m-0
+                     shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
+                        <div class="card-body p-1">
+                            <v-hasmany v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template id="w-hasmany-list-template">
+    <div>
+        <div class="list-unstyled">
+
+            <!--  -- contenitore lista hasmany data dal template  default_hasmany_view_items_tpl-- -->
+            <!--            <ul class="list-unstyled" v-for="(item,index) in value">-->
+            <!--                <li>-->
+            <!--                    <v-hasmany-view v-bind:c-model="cConf.modelName"-->
+            <!--                                    v-bind:c-conf="getHasmanyConf(index,item)"></v-hasmany-view>-->
+
+            <!--                </li>-->
+            <!--            </ul>-->
+            <ul class="list-unstyled">
+                <li v-for="(item,index) in confViews">
+                    <v-hasmany-view v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany-view>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+
+<template id="w-hasone-template">
+    <div class="portlet mb-1">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <button v-if="!outOfLimit()" v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <input type="hidden" value="1">
+            <div class="row">
+                <div class="col-12 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)">
+                    <div class="card p-1 m-0
+                     shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
+                        <!--<div class="card-header" crud-hasmany_title>-->
+                        <!--{{cConf.metadata.modelName}}-->
+                        <!--</div>-->
+                        <div class="card-header bg-white">
+                            <button v-if="nullable" v-on:click="deleteItem(index)"
+                                    class="btn-danger btn-pill btn-xs pull-right"
+                                    type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-1">
+                            <v-hasmany v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasone-view-template">
+    <div class="portlet">
+        <div class="portlet-body pl-1 pr-1 pb-1">
+            <h5 class="">
+                <span class="pull-left text-truncate font-weight-medium "
+                      :class="titleClass">{{ label | translate }}</span>&nbsp;
+            </h5>
+
+            <input type="hidden" value="1">
+            <div class="row">
+                <div class="col-12 mt-2" v-for="(item,index) in confViews" v-show="showItem(index)">
+                    <div class="card p-1 m-0
+                     shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-60 border-danger bl-0 br-0 bb-0 bw--2">
+                        <div class="card-body p-1">
+                            <v-hasmany v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template id="w-hasone-list-template">
+    <div>
+        <div class="list-unstyled">
+
+            <!--  -- contenitore lista hasmany data dal template  default_hasmany_view_items_tpl-- -->
+            <!--            <ul class="list-unstyled" v-for="(item,index) in value">-->
+            <!--                <li>-->
+            <!--                    <v-hasmany-view v-bind:c-model="cConf.modelName"-->
+            <!--                                    v-bind:c-conf="getHasmanyConf(index,item)"></v-hasmany-view>-->
+
+            <!--                </li>-->
+            <!--            </ul>-->
+            <ul class="list-unstyled">
+                <li v-for="(item,index) in confViews">
+                    <v-hasmany-view v-bind:c-model="name" v-bind:c-conf="item"></v-hasmany-view>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template id="w-hasone-real-template">
+    <div class="portlet mb-1">
+        <div class="portlet-header border-bottom mb-1 " :class="bgClass">
+            <span class="pull-left text-dark text-truncate font-weight-medium">{{ label | translate }}</span>&nbsp;
+            <div class="pull-right">
+                <button v-if="nullable && (value != null)" v-on:click="addItem" type="button"
+                        class="btn-sm btn-pill px-2 py-1 fs--15 btn-warning">
+                    <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <v-hasone v-if="loaded" :c-conf="viewConf"></v-hasone>
+        </div>
+    </div>
+</template>
+
+<template id="w-swap-template">
+    <button type="button" class="btn btn-sm btn-pill px-2 py-1 fs--15 btn btn-outline-secondary btn-sm rounded-circle"
+            v-bind:title="title" v-on:click="swap">
+        <span v-show="swapType=='text'">{{ slot }}</span>
+        <i class="" v-show="swapType=='icon'" v-bind:class="slot"></i>
+    </button>
+</template>
+
+<template id="w-swap-smarty-template">
+        <label class="form-switch form-switch-pill  d-block" :class="switchClass" v-on:click="swap" :title="title">
+            <input type="checkbox" v-model="value">
+            <i v-if="dataSwitched" data-on="&#10005;" data-off="&#10004;"
+               style="font-family:Zapf Dingbats,font-regular,sans-serif !important"></i>
+            <i v-else data-on="&#10004;" data-off="&#10005;"></i>
+        </label>
+</template>
+
+<template id="w-status-template">
+    <span>
+        <span v-if="statusType=='text'">{{ slot }}</span>
+        <i v-if="statusType=='icon'" v-bind:class="slot"></i>
+    </span>
+</template>
+
+<template id="w-hasmany-through-template">
+    <div class="card">
+        <div class="card-body">
+            <div class="panel panel-warning">
+                <div class="panel-heading" crud-hasmany_title>
+                </div>
+                <div class="panel-body">
+                    <p crud-hasmany_title_msg></p>
+                    <ul class="list-group list-group-horizontal">
+                        <!--  -- contenitore hasmany -- -->
+                        <li v-for="item in value" class="list-group-item">
+                            <v-hasmany v-bind:c-model="cConf.metadata.modelName"
+                                       v-bind:c-conf="getHasmanyConf(item)"></v-hasmany>
+                            <hr/>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="panel-footer">
+                    <div>
+                        <div crud-render_limit class="hide">
+                            <!-- Limite massimo raggiunto -->
+                            {{ 'app.limite-raggiunto' | translate }}
+                        </div>
+                        <button v-on:click="addItem" type="button" class="btn btn-primary btn-sm">
+                            <span>{{ 'app.aggiungi' | translate }}</span>&nbsp;
+                            <!--                            <span crud-label="modelMetadata.singular"></span>&nbsp;-->
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script type="text/x-template" id="w-bootstrap-select-template">
+    <select c-bootstrap-select class="form-control bs-select mb-3" data-live-search="true"
+            v-bind:name="getFieldName()" v-model="value" v-bind:c-marker="cMarker" v-on:change="change">
+    </select>
+</script>
+
+<template id="w-b2-select2-template">
+    <select c-select2 class="form-control m-select2"
+            v-bind:name="getFieldName()" v-model="value" v-bind:c-marker="cMarker" v-on:change="change">
+    </select>
+</template>
+
+<template id="w-b2m-select2-template">
+    <div>
+        <select c-select2 class="form-control m-select2" name="" multiple="true"
+                v-model="value" v-bind:c-marker="cMarker" v-on:change="change">
+
+        </select>
+        <div c-selected-items>
+            <!-- hidden input for selected items -->
+        </div>
+    </div>
+</template>
+
+<template id="w-upload-template">
+    <div>
+        <div v-show="extensions">
+            <span crud-label="app.accepted-extensions">{{ 'app.estensioni-accettate' | translate }} </span>
+            <span v-show="extensions">{{ extensions.join(',') }}</span>
+        </div>
+        <div v-show="maxFileSize">
+            Dimensione massima: <span crud-label="app.upload-max-filesize">{{ maxFileSize }}</span>
+        </div>
+        <div>
+            <input :name="getFieldName()" c-file class="btn btn-outline-secondary" type="file" v-on:change="validate()"
+                   v-bind:c-marker="cMarker">
+        </div>
+    </div>
+</template>
+
+<template id="w-upload-ajax-template">
+    <div>
+        <div class="row">
+            <div class="col-8">
+                <div v-show="error" class="alert alert-danger">{{ errorMessage }}</div>
+                <input type="hidden" v-model="value" :name="getFieldName()">
+                <div>
+                    <div v-show="extensions">
+                        <span crud-label="app.accepted-extensions">Estensioni accettate: </span>
+                        <span v-show="extensions">{{ extensions.join(',') }}</span>
+                    </div>
+                    <div v-show="maxFileSize">
+                        Dimensione massima: <span crud-label="app.upload-max-filesize">{{ maxFileSize }}</span>
+                    </div>
+                    <div>
+                        <input c-file class="" type="file" v-on:change="validate()"
+                               v-bind:c-marker="cMarker">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <w-preview :c-conf="previewConf"></w-preview>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="w-preview-template">
+    <div>
+        <img v-if="getType()=='image'" :src="value.url">
+        <a v-else-if="getType()=='doc'" :href="value.url">
+            <i :class="iconClass"></i>
+        </a>
+        <small v-else class="text-danger">
+            <span v-if="value.url">{{ getType() }} mimetype non riconosciuto</span>
+        </small>
+    </div>
+</template>
+
+<template id="w-map-template">
+    <div>
+        <!-- input hidden for form compatibiliy --->
+        <input type="hidden" :name="lngName">
+        <input type="hidden" :name="latName">
+        <div v-if="activateSearch" class="mb-2 form-label-group">
+            <input :placeholder="label" class="form-control" v-on:change="searchAddress">
+            <label>
+                {{ label }}
+            </label>
+        </div>
+
+
+        <!--        <div class="input-group mb-3">-->
+        <!--            <div class="input-group-prepend">-->
+        <!--                <span class="input-group-text" id="basic-addon1">{{'app.trova-indirizzo' | translate}}</span>-->
+        <!--            </div>-->
+        <!--            <input class="form-control" type="text" v-on:change="searchAddress"/>-->
+        <!--        </div>-->
+        <div c-map></div>
+    </div>
+</template>
+
+<template id="w-map-view-template">
+    <div c-map></div>
+</template>
+
+<template id="w-date-text-template">
+    <span>{{ formattedValue }}</span>
+</template>
+
+<!-- views --->
+<script type="text/x-template" id="v-list-template">
+    <!-- start:row -->
+    <div class="row">
+        <!-- start:col: -->
+        <div class="col-12 mb-1 p-0">
+
+            <!-- start:portlet -->
+
+            <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+            <div v-else class="portlet">
+                <div class="portlet-header border-bottom" :class="headerClass">
+                    <span v-show="viewTitle">{{ viewTitle }}</span>
+                    <!-- options and pagination -->
+                    <div class="row justify-content-end">
+
+                        <div v-if="paginator" class="col-12 col-md-6 mt-1 mb-2">
+                            <!-- v-bind:c-route-conf="routeConf" -->
+                            <c-paginator v-if="widgets.length > 0" v-show="pagination"
+                                         v-bind:c-pagination="pagination" v-bind:c-route="route"></c-paginator>
+                        </div>
+                        <div class="col-12 col-md-6 mt-1 mb-2" v-show="collectionActionsName.length">
+                            <template v-for="name in collectionActionsName">
+                                <component v-bind:is="name" v-bind:c-conf="collectionActions[name]"></component>
+                            </template>
+                        </div>
+
+                    </div>
+                    <!-- /options and pagination -->
+
+                    <!-- header -->
+                    <!-- portlet : header -->
+                    <!-- /portlet : header -->
+
+                    <!-- /header -->
+                </div>
+                <div class="portlet-body pb-0">
+                    <div class="container-fluid py-1">
+
+
+                        <div class="table-responsive" style="white-space:nowrap;" :class="modelName">
+                            <table class="table table-framed table-striped table-bordered">
+                                <thead>
+                                <tr v-if="widgets.length > 0">
+                                    <th v-if="needSelection" class="text-gray-500 w--50">
+                                        <label class="form-checkbox form-checkbox-primary float-start">
+                                            <input c-row-check-all v-on:change="selectAllRows"
+                                                   class="checkall" type="checkbox">
+                                            <i></i>
+                                        </label>
+                                    </th>
+                                    <th v-show="recordActionsName.length"></th>
+                                    <th v-for="key in keys" v-if="!isHiddenField(key)"
+                                        class="text-gray-500 font-weight-normal fs--14" :class="key">
+                                        <action-order v-if="orderFields[key]"
+                                                      v-bind:c-conf="getOrderConf(key)"></action-order>
+                                        <span style="cursor:default"
+                                              class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
+                                              v-else>{{ key + '.label' | translate(langContext) }}</span>
+                                        <button v-if="hasHelp(key)"
+                                                type="button"
+                                                class="btn-xs btn-squared btn-light"
+                                                data-trigger="focus"
+                                                data-container="body"
+                                                data-toggle="popover"
+                                                data-placement="top"
+                                                :data-content="hasHelp(key)">
+                                            <i class="fi fi-round-question-full text-red-700"></i>
+                                        </button>
+
+                                    </th>
+                                </tr>
+                                <tr v-if="widgets.length == 0">
+                                    <th v-show="recordActionsName.length" class="text-gray-500 w--50">
+                                        {{ "app.nessun-elemento" | translate }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- product -->
+                                <tr v-for="(row,index) in widgets" :key="index">
+                                    <th v-if="needSelection">
+
+                                        <label
+                                            class="form-checkbox form-checkbox-primary float-start">
+                                            <input c-row-check type="checkbox">
+                                            <i></i>
+                                        </label>
+
+
+                                    </th>
+                                    <th v-show="recordActionsName.length">
+                                        <div class="btn-group" role="group">
+                                            <template v-for="(action,name) in recordActions[index]">
+                                                <v-action :c-action="action" :key="name"></v-action>
+                                            </template>
+                                        </div>
+
+                                    </th>
+
+                                    <td v-for="(widget, key) in row" v-if="!isHiddenField(key)" :class="key">
+                                        <v-widget :c-widget="widget" :key="key"></v-widget>
+                                    </td>
+                                    <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                                        <v-widget :c-widget="widget" :key="key"></v-widget>
+                                    </template>
+                                </tr>
+                                </tbody>
+
+                                <tfoot v-if="hasFooter">
+                                <tr v-if="widgets.length > 0">
+                                    <th v-if="needSelection" class="text-gray-500 w--50">
+
+                                    </th>
+                                    <th v-show="recordActionsName.length"></th>
+                                    <th v-for="key in keys" v-if="!isHiddenField(key)"
+                                        class="text-gray-500 font-weight-normal fs--14">
+                                        <action-order v-if="orderFields[key]"
+                                                      v-bind:c-conf="getOrderConf(key)"></action-order>
+                                        <span style="cursor:default"
+                                              class="btn btn-default btn-xs mr-1 text-gray-500 font-weight-normal fs--14"
+                                              v-else>{{ key + '.label' | translate(langContext) }}</span>
+                                        <button v-if="hasHelp(key)"
+                                                type="button"
+                                                class="btn-xs btn-squared btn-light"
+                                                data-trigger="focus"
+                                                data-container="body"
+                                                data-toggle="popover"
+                                                data-placement="top"
+                                                :data-content="hasHelp(key)">
+                                            <i class="fi fi-round-question-full text-red-700"></i>
+                                        </button>
+
+                                    </th>
+                                </tr>
+                                </tfoot>
+
+
+                            </table>
+                        </div>
+
+
+                    </div>
+                    <!-- end:portlet -->
+                </div>
+            </div>
+
+        </div>
+        <!-- end:col: -->
+
+    </div>
+
+</script>
+
+<script type="text/x-template" id="v-list-edit-template">
+    <div>
+        <h4 v-show="viewTitle">{{ viewTitle }}</h4>
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <div v-else>
+            <div class="float-none">
+                <div class="float-left" v-if="collectionActionsName.length">
+                    <template v-for="name in collectionActionsName">
+                        <v-action :c-action="collectionActions[name]"></v-action>
+                    </template>
+                </div>
+                <div v-if="paginator" class="float-right">
+                    <!-- v-bind:c-route-conf="routeConf" -->
+                    <c-paginator v-if="widgets.length > 0" v-show="pagination" v-bind:c-pagination="pagination"
+                                 v-bind:c-route="route"></c-paginator>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr v-if="widgets.length > 0">
+                        <th v-show="recordActionsName.length">
+                            <input c-row-check-all v-on:change="selectAllRows" v-if="needSelection"
+                                   class="btn btn-sm btn-outline-secondary" type="checkbox">
+                            <span>{{ "app.azioni" | translate }}</span>
+                        </th>
+                        <th v-for="key in keys" v-if="!isHiddenField(key)">
+                            <action-order v-if="orderFields[key]" v-bind:c-conf="getOrderConf(key)"></action-order>
+                            <span v-else>{{ key + '.label' | translate(langContext) }}</span>
+                        </th>
+                    </tr>
+                    <tr v-if="widgets.length == 0">
+                        <th v-show="recordActionsName.length">
+                            {{ "app.nessun-elemento" | translate }}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(row,index) in widgets">
+                        <td v-show="recordActionsName.length">
+
+                            <div class="btn-group btn-group-sm" role="group">
+                                <div v-if="needSelection" class="input-group-text bg-transparent">
+                                    <input c-row-check type="checkbox">
+                                </div>
+
+                                <template v-for="(action,name) in recordActions[index]">
+                                    <v-action :c-action="action"></v-action>
+                                </template>
+                            </div>
+
+                        </td>
+                        <td v-for="(widget, key) in row" v-if="!isHiddenField(key)">
+                            <v-widget v-show="!editMode[index]" :c-widget="widget"></v-widget>
+                            <v-widget v-show="editMode[index]" :c-widget="widgetsEdit[index][key]"></v-widget>
+                        </td>
+                        <template v-for="(widget, key) in row" v-if="isHiddenField(key)">
+                            <v-widget :c-widget="widget" :key="key"></v-widget>
+                        </template>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix">
+                <div class="float-left" v-show="collectionActionsName.length">
+                    <template v-for="name in collectionActionsName">
+                        <v-action :c-action="collectionActions[name]"></v-action>
+                    </template>
+                </div>
+                <div v-if="paginator" class="float-right">
+                    <c-paginator v-if="widgets.length > 0" v-show="pagination" v-bind:c-pagination="pagination"
+                                 v-bind:c-route="route"></c-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="v-edit-template">
+    <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+    <div v-else>
+        <div v-html="beforeForm"></div>
+        <form enctype="multipart/form-data">
+            <!-- campi nascosti -->
+            <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">
+                <v-widget :c-widget="widget" :key="key"></v-widget>
+            </template>
+            <div class="row">
+                <v-widget v-for="(widget, key) in widgets" :c-widget="widget" v-if="!isHiddenField(key)"></v-widget>
+            </div>
+        </form>
+        <div v-html="beforeActions"></div>
+        <div class="p-3" v-show="actions.length">
+            <template v-for="(action,name) in actionsConf">
+                <v-action :c-action="action"></v-action>
+            </template>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="v-view-template">
+    <div class="container-fluid">
+        <slot card-title><h4 v-show="viewTitle">{{ viewTitle }}</h4></slot>
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <div class="row" v-else>
+            <v-widget v-for="(widget, key) in widgets" :c-widget="widget" v-if="!isHiddenField(key)"></v-widget>
+        </div>
+        <!-- campi nascosti -->
+        <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">
+            <v-widget :c-widget="widget" :key="key"></v-widget>
+        </template>
+        <div v-if="actions.length">
+            <template v-for="(action,name) in actionsConf">
+                <v-action :c-action="action"></v-action>
+            </template>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="v-insert-template">
+    <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+    <div v-else>
+        <div v-html="beforeForm"></div>
+        <form enctype="multipart/form-data">
+            <!-- campi nascosti -->
+            <template v-for="(widget, key) in widgets" v-if="isHiddenField(key)">
+                <v-widget :c-widget="widget" :key="key"></v-widget>
+            </template>
+            <div class="row">
+                <v-widget v-for="(widget, key) in widgets" v-if="!isHiddenField(key)" :c-widget="widget"></v-widget>
+            </div>
+        </form>
+        <div v-html="beforeActions"></div>
+        <div class="p-3" v-show="actions.length">
+            <template v-for="(action,name) in actionsConf">
+                <v-action :c-action="action"></v-action>
+            </template>
+        </div>
+    </div>
+</script>
+
+<template id="v-search-template">
+    <div class="" v-if="(widgets && Object.keys(widgets).length > 0)">
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <form class="form-search " :class="'form-'+modelName" v-else>
+            <!-- campi nascosti -->
+            <v-widget v-for="(widget, key) in widgets" v-if="isHiddenField(key)" :c-widget="widget"></v-widget>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col col-6" :class="key.replace('|','-')" v-for="(widget, key) in widgets">
+                            <v-widget :c-widget="widget" v-if="!isHiddenField(key)"></v-widget>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 search-buttons" :class="buttonsClass">
+                    <div class="p-3" v-show="actions.length">
+                        <template v-for="(action,name) in actionsConf">
+                            <v-action :c-action="action"></v-action>
+                            <!--                            <component  v-bind:is="name" v-bind:c-conf="action"></component>-->
+                        </template>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </div>
+</template>
+
+<template id="v-hasmany-template">
+    <c-loading v-if="loading"></c-loading>
+    <div v-else>
+        <div class="row">
+            <v-widget v-for="(widget, key) in widgets" :c-widget="widget"></v-widget>
+        </div>
+    </div>
+</template>
+
+<template id="v-hasmany-listed-template">
+    <tr v-if="!loading">
+        <th>
+            <button class="btn-danger btn-pill btn-xs "
+                    type="button" title="Cancella elemento"><i class="fa fa-trash"></i>
+            </button>
+
+        </th>
+
+        <td v-for="(widget, key) in widgets">
+            <v-widget :c-widget="widget" :key="key"></v-widget>
+        </td>
+    </tr>
+</template>
+
+<!--<template id="v-hasone-template">-->
+<!--    <c-loading v-if="loading"></c-loading>-->
+<!--    <div v-else>-->
+<!--        <div class="row" v-for="(widget, key) in widgets">-->
+<!--            <v-widget :c-widget="widget"></v-widget>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<template id="v-hasmany-view-template">
+    <c-loading v-if="loading"></c-loading>
+    <div v-else>
+        <div class="row" v-for="(widget, key) in widgets">
+            <v-widget :c-widget="widget"></v-widget>
+        </div>
+    </div>
+</template>
+
+<template id="v-hasmany-list-template">
+    <div>
+        <div v-if="loading">
+            loading
+        </div>
+        <div v-else>
+            <div>pippo</div>
+            <div v-for="(widget, key) in widgets">
+                <v-widget :c-widget="widget"></v-widget>
+            </div>
+        </div>
+        <div v-show="actions.length">
+            <template v-for="(action,name) in actionsConf">
+                <component v-bind:is="name" v-bind:c-conf="action"></component>
+            </template>
+        </div>
+    </div>
+</template>
+
+<template id="v-hasone-template">
+    <div>
+        <div v-for="(widget, key) in widgets" :key="key">
+            <v-widget :c-widget="widget"></v-widget>
+        </div>
+    </div>
+</template>

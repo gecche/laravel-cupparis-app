@@ -1,0 +1,65 @@
+<div class="row" style="height:3000px">
+    <div class="card col-6" >
+        <div class="card-body">
+            <h5 class="card-title">Lista Utenti</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <v-list c-conf="userListConf" inline-template>
+                <div>
+                    <div v-for="(row,index) in widgets" class="float-left">
+                        <v-widget :c-widget="row.name" inline-template>
+                            <i class="fa fa-user" :title="cWidget.value"></i>
+                        </v-widget>
+                        <span :class="{'badge-primary': value[index].id != selected,'badge-success': value[index].id == selected}" class="badge badge-primary m-1" >&nbsp;&nbsp;<v-widget  :c-widget="row.email"></v-widget>&nbsp;&nbsp;</span>
+
+                    </div>
+                </div>
+            </v-list>
+
+            <!--            <a href="#" class="card-link">Card link</a>-->
+            <!--            <a href="#" class="card-link">Another link</a>-->
+        </div>
+    </div>
+    <div class="card col-6">
+        <div class="card-body">
+            <h5 class="card-title">Utente Selezionato</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <v-view c-conf="userViewConf"></v-view>
+            <!--            <a href="#" class="card-link">Card link</a>-->
+            <!--            <a href="#" class="card-link">Another link</a>-->
+        </div>
+    </div>
+</div>
+<script>
+    userListConf = {
+        modelName : 'user',
+        fields : ['email','name'],
+        actions : [],
+        paginator : false,
+        cRef : 'ul',
+        selected : 0,
+        fieldsConfig : {
+            email : {
+                type : 'w-text',
+                mounted : function () {
+                    var that = this;
+                    jQuery(this.$el).css('cursor','pointer')
+                    jQuery(this.$el).click(function () {
+                        that.getComponent('uv').pk = that.modelData.id;
+                        that.getComponent('uv').reload();
+                        that.getComponent('ul').selected = that.modelData.id;
+                    });
+
+                },
+            }
+        }
+    };
+    userViewConf = {
+        modelName : 'user',
+        pk : 0,
+        cRef : 'uv'
+    }
+</script>
+
+

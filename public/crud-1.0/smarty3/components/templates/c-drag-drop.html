@@ -1,0 +1,37 @@
+<template id="c-drag-drop-template">
+    <div>
+        <h3>{{title}}</h3>
+        <c-loading v-if="loading" :error-msg="errorMsg"></c-loading>
+        <div v-else>
+            <div class="buckets row">
+                <div v-for="bucket in value" :data-bucket-id="bucket.id"
+                     class=" mb--8 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+                     @dragover="onDragOver" @drop="onDrop">
+                    <div class="dropzone mr--4  border-danger bw--1">
+                        {{bucket.label}}
+                        <div class="row">
+                            <div v-for="item in bucket.items"
+                                 class="col-6"
+                            >
+                                <div :data-item-id="item.id"
+                                     class="draggable"
+                                     draggable="true"
+                                     @dragstart="onDragStart"
+                                     >
+                                    <small>{{item.label}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="collectionActionsName.length">
+                <template v-for="(name,index) in collectionActionsName">
+                    <v-action :c-action="collectionActions[name]"></v-action>
+                </template>
+            </div>
+        </div>
+    </div>
+
+</template>

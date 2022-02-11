@@ -1,0 +1,192 @@
+<div class="row">
+    <div class="col-3">
+        <gestore-links c-conf="GestoreLinks" inline-template>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfDefault&targetId=componentArea')">VlistDefault</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConf&targetId=componentArea')">Vlist con campo custom</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=listConfCustomActions&targetId=componentArea')">Vlist con custom actions</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list-edit?cModel=user&targetId=componentArea')">VlistEdit solo con cModel</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-list?cConf=staticList&targetId=componentArea')">Lista statica</a>
+            </li>
+            <li class="list-group-item">
+                <a :href="getHref()" v-on:click="doCmd('v-insert?cConf=staticInsert&targetId=componentArea')">Insert valori statici</a>
+            </li>
+
+
+
+
+        </ul>
+        </gestore-links>
+    </div>
+    <div class="col-9">
+        <div id="componentArea"></div>
+    </div>
+</div>
+<script>
+    Vue.component('gestore-links',{
+        extend : crud.components.cComponent,
+        methods : {
+            doCmd : function (command) {
+                var that = this;
+                console.log('cCiccio',that.cCiccio);
+                that.$crud.EventBus.$emit('router::doCmd',command);
+            },
+            // per evitare di che il comando modifichi l'href la metto uguale a quella con cui atterro alla pagina.
+            getHref : function () {
+                var that = this;
+                return window.location.hash;
+            }
+        }
+    });
+
+    var listConfDefault = {
+        cRef : 'cTest',
+        modelName : 'user',
+    }
+
+    var listConf = {
+        cRef : 'cTest',
+        modelName : 'user',
+        fields : ['email','mio'],
+        orderFields : {'email':'email'},
+        fieldsConfig : {
+            mio : {
+                type : 'w-text',
+                label : 'mio',
+                value : 'valore random'
+            },
+            email : {
+                type : 'w-text',
+                label : 'emailcod',
+            }
+        }
+    }
+
+    var listConfCustomActions = {
+        cRef : 'cTest',
+        modelName : 'user',
+        actions : ['action-insert','action-view','action-edit','action-delete','action-delete-selected','action-globale','action-record'],
+        customActions :  {
+            'action-edit' : {
+                icon : 'fa fa-wrench',
+                beforeExecute : function () {
+                    alert(' blocco l\'azione ritornando false');
+                    return false;
+                }
+            },
+            'action-globale' : {
+                type : 'collection',
+                icon : 'fa fa-globe',
+                execute : function () {
+                    alert('execute action globale');
+                }
+            },
+            'action-record' : {
+                type : 'record',
+                icon : 'fa fa-globe',
+                execute : function () {
+                    alert('execute action record');
+                }
+            }
+        }
+    }
+
+    var staticList = {
+        modelName : 'pippo',
+        cRef : 'cTest',
+        routeName : null,
+        orderFields: {'nome':'nome'},
+        metadata : {
+            order : {
+                direction : 'ASC',
+                field : 'nome'
+            }
+        },
+        value : [
+            {
+                id : 1,
+                nome : 'aa',
+                cognome : 'aa'
+            },
+            {
+                id : 2,
+                nome : 'bb',
+                cognome : 'bb'
+            },
+            {
+                id : 3,
+                nome : 'dd',
+                cognome : 'dd'
+            },
+            {
+                id : 4,
+                nome : 'ff',
+                cognome : 'ff'
+            },
+            {
+                id : 5,
+                nome : 'mm',
+                cognome : 'mm'
+            },
+            {
+                id : 6,
+                nome : 'nn',
+                cognome : 'nn'
+            }
+        ]
+    }
+    var staticInsert = {
+        routeName : null,
+        fields : ['name','relazione'],
+        fieldsConfig:  {
+            relazione : {
+                type : 'w-b2m-select2',
+                routeName : null,
+                primaryKey : 'nome',
+                //value : [3],
+                //labelFields : ['nome'],
+                data : [
+                    {
+                        id : 1,
+                        nome : 'aa',
+                        cognome : 'aa'
+                    },
+                    {
+                        id : 2,
+                        nome : 'bb',
+                        cognome : 'bb'
+                    },
+                    {
+                        id : 3,
+                        nome : 'dd',
+                        cognome : 'dd'
+                    },
+                    {
+                        id : 4,
+                        nome : 'ff',
+                        cognome : 'ff'
+                    },
+                    {
+                        id : 5,
+                        nome : 'mm',
+                        cognome : 'mm'
+                    },
+                    {
+                        id : 6,
+                        nome : 'nn',
+                        cognome : 'nn'
+                    }
+                ]
+            }
+        }
+    }
+</script>
