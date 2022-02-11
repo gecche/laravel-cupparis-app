@@ -1,39 +1,40 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Gecche\Breeze\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateDatafilesTable extends Migration {
+return new class extends Migration {
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('datafiles', function(Blueprint $table)
-		{
-            			$table->increments('id');
-			$table->integer('datafile_id')->unsigned();
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('datafiles', function (Blueprint $table) {
+
+            $table->id();
+            $table->unsignedBigInteger('datafile_id');
             $table->text('datafile_sheet')->nullable();
             $table->string('datafile_type')->nullable();
-			$table->text('data')->nullable();
-			$table->nullableTimestamps();
-			$table->nullableOwnerships();
+            $table->text('data')->nullable();
+            $table->nullableTimestamps();
+            $table->nullableOwnerships();
             $table->unique(['datafile_id', 'datafile_type']);
 
-		});
-	}
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('datafiles');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('datafiles');
+    }
 
-}
+};

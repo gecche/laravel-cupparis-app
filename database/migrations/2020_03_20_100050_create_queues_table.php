@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Gecche\Breeze\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateQueuesTable extends Migration
+return new class extends Migration
 {
 
     /**
@@ -14,7 +15,7 @@ class CreateQueuesTable extends Migration
     public function up()
     {
         Schema::create('queues', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->timestamp('start');
             $table->timestamp('end')->nullable();
             $table->integer('error')->unsigned()->default(0);
@@ -23,8 +24,8 @@ class CreateQueuesTable extends Migration
             $table->text('input_data')->nullable();
             $table->text('output_data')->nullable();
             $table->integer('progress')->unsigned()->nullable()->default(0);
-            $table->integer('user_id')->unsigned();
-            $table->integer('job_id')->unsigned()->nullable()->index();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('job_id')->nullable()->index();
             $table->timestamps();
         });
     }
@@ -40,4 +41,4 @@ class CreateQueuesTable extends Migration
         Schema::drop('queues');
     }
 
-}
+};

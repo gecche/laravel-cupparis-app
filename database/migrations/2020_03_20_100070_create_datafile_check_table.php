@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Gecche\Breeze\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateDatafileCheckTable extends Migration
+return new class extends Migration
 {
 
     /**
@@ -14,10 +15,10 @@ class CreateDatafileCheckTable extends Migration
     public function up()
     {
         Schema::create('datafile_check', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('datafile_table_id')->unsigned()->nullable();
+            $table->id();
+            $table->unsignedBigInteger('datafile_table_id')->nullable();
             $table->string('datafile_sheet')->nullable();
-            $table->integer('datafile_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('datafile_id')->nullable();
             $table->string('field_name');
             $table->string('function_name');
             $table->integer('row')->unsigned()->nullable();
@@ -40,4 +41,4 @@ class CreateDatafileCheckTable extends Migration
         Schema::drop('datafile_check');
     }
 
-}
+};
