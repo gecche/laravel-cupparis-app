@@ -118,7 +118,7 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
+        $this->loadRoutesFrom($rootDir . 'routes/web.php');
 
         $this->bootBlade();
 
