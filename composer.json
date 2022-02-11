@@ -71,7 +71,7 @@
         "gecche/laravel-cupparis-menus": "^9.0",
         "gecche/laravel-cupparis-localization": "^9.0",
 
-        "gecche/laravel-foorm": "v9.x-dev",
+        "gecche/laravel-foorm": "^9.0",
 
         "gecche/laravel-policy-builder": "^5.0",
         "gecche/laravel-multidomain": "^5.0",
