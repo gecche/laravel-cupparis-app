@@ -12,10 +12,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "http://github.com/gecche/minify"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/gecche/imagecache"
         },
         {
@@ -39,15 +35,7 @@
 
         {
             "type": "vcs",
-            "url": "http://github.com/marley71/laravel-crud-vue"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/marley71/crud-vue"
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/gecche/laravel-cupparis-translation"
         },
         {
             "type": "vcs",
@@ -55,23 +43,7 @@
         },
         {
             "type": "vcs",
-            "url": "http://github.com/gecche/laravel-cupparis-model-skeleton"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/gecche/laravel-cupparis-menus"
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/gecche/laravel-cupparis-localization"
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/gecche/laravel-cupparis-filesystem"
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/gecche/laravel-cupparis-assettime"
         },
         {
             "type": "vcs",
@@ -79,44 +51,35 @@
         }
     ],
     "require": {
-        "laravel/framework": "^6.0",
+        "laravel/framework": "^9.0",
 
-        "barryvdh/laravel-snappy": "^0.4.7",
-        "devfactory/minify": "0.1.2",
+        "barryvdh/laravel-snappy": "^1.0",
 
-        "igaster/laravel-theme": "2.*",
+        "igaster/laravel-theme": "^2.0",
         "intervention/image": "2.*",
         "intervention/imagecache": "10.*",
 
-        "spatie/laravel-activitylog": "3.*",
-        "spatie/laravel-permission": "3.*",
+        "spatie/laravel-activitylog": "^4.4.0",
+        "spatie/laravel-permission": "^5.0",
 
-        "mews/captcha" : "^3.0",
+        "gecche/laravel-cupparis-helpers": "^9.0",
+        "gecche/laravel-cupparis-datafile": "^9.0",
+        "gecche/laravel-cupparis-menus": "^9.0",
 
-        "gecche/laravel-cupparis-helpers": "2.0.*",
-        "gecche/laravel-cupparis-assettime": "2.0.*",
-        "gecche/laravel-cupparis-datafile": "v2.x-dev",
-        "gecche/laravel-cupparis-filesystem": "2.0.*",
-        "gecche/laravel-cupparis-localization": "2.0.*",
-        "gecche/laravel-cupparis-menus": "2.0.*",
+        "gecche/laravel-foorm": "v9.x-dev",
 
-        "gecche/laravel-cupparis-model-skeleton": "v2.x-dev",
-        "gecche/laravel-cupparis-translation": "v2.x-dev",
-
-        "gecche/laravel-foorm": "v2.x-dev",
-
-        "gecche/laravel-policy-builder": "2.*",
-        "gecche/laravel-multidomain": "2.*",
-        "gecche/laravel-bannable": "2.*",
+        "gecche/laravel-policy-builder": "^5.0",
+        "gecche/laravel-multidomain": "^5.0",
+        "gecche/laravel-bannable": "^5.0",
 
 
         "marley71/crud-vue" : "v3.0.x-dev"
     },
     "require-dev": {
-        "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^8.0",
-        "limedeck/phpunit-detailed-printer": "^5.0",
-        "orchestra/testbench": "^4.0"
+        "mockery/mockery": "^1.4.4",
+        "phpunit/phpunit": "^9.5.8",
+        "limedeck/phpunit-detailed-printer": "^6.0",
+        "orchestra/testbench": "^7.0"
     },
     "autoload": {
         "classmap": [
