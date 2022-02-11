@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Gecche\Breeze\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateDatafileErrorTable extends Migration
+return new class extends Migration
 {
 
     /**
@@ -14,11 +15,11 @@ class CreateDatafileErrorTable extends Migration
     public function up()
     {
         Schema::create('datafile_error', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('datafile_table_id')->unsigned()->nullable();
+            $table->id();
+            $table->unsignedBigInteger('datafile_table_id')->nullable();
             $table->string('datafile_sheet')->nullable();
             $table->string('datafile_table_type')->nullable();
-            $table->integer('datafile_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('datafile_id')->nullable();
             $table->string('field_name');
             $table->string('error_name');
             $table->integer('row')->unsigned()->nullable();
@@ -41,4 +42,4 @@ class CreateDatafileErrorTable extends Migration
         Schema::drop('datafile_error');
     }
 
-}
+};

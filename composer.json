@@ -48,6 +48,10 @@
         {
             "type": "vcs",
             "url": "http://github.com/gecche/laravel-cupparis-datafile"
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/gecche/laravel-cupparis-localization"
         }
     ],
     "require": {
@@ -57,7 +61,7 @@
 
         "igaster/laravel-theme": "^2.0",
         "intervention/image": "2.*",
-        "intervention/imagecache": "10.*",
+        "intervention/imagecache": "^11.0",
 
         "spatie/laravel-activitylog": "^4.4.0",
         "spatie/laravel-permission": "^5.0",
@@ -65,6 +69,7 @@
         "gecche/laravel-cupparis-helpers": "^9.0",
         "gecche/laravel-cupparis-datafile": "^9.0",
         "gecche/laravel-cupparis-menus": "^9.0",
+        "gecche/laravel-cupparis-localization": "^9.0",
 
         "gecche/laravel-foorm": "v9.x-dev",
 
@@ -103,7 +108,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Gecche\\Cupparis\\App\\AppServiceProvider"
+                "Gecche\\Cupparis\\App\\Providers\\AppServiceProvider",
+                "Gecche\\Cupparis\\App\\Providers\\TranslationServiceProvider"
             ],
             "aliases": {
                 "Cupparis": "Gecche\\Cupparis\\App\\Facades\\Cupparis"

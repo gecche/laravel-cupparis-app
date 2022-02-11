@@ -1,10 +1,14 @@
-<?php namespace Gecche\Cupparis\App;
+<?php namespace Gecche\Cupparis\App\Providers;
 
 use Gecche\Cupparis\App\Foorm\FoormManager;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -121,6 +125,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->bootValidationRules();
 
+        $this->bootFilesystemMacros();
+
     }
 
     /**
@@ -168,5 +174,37 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('partita_iva', 'Gecche\Cupparis\App\Validation\Rules@partitaIva');
         Validator::extend('codice_fiscale', 'Gecche\Cupparis\App\Validation\Rules@codiceFiscale');
         Validator::extend('codice_fiscale_professional', 'Gecche\Cupparis\App\Validation\Rules@codiceFiscaleProfessional');
+    }
+
+    protected function bootFilesystemMacros() {
+        Filesystem::macro('deleteFiles', function ($pattern,$flags = 0) {
+            File::delete(File::glob($pattern,$flags));
+        });
+
+        Filesystem::macro('mimeFromGuesser', function ($path) {
+            $guesser = MimeTypeGuesser::getInstance();
+
+            try {
+                $mimetype = $guesser->guess($path);
+            } catch (\Exception $e) {
+                return false;
+            }
+
+            return $mimetype;
+        });
+
+        Filesystem::macro('getIconaMime', function ($path, $iconeMimesArray = [], $default = 'default.png') {
+
+            $mimetype = static::mimeFromGuesser($path);
+            if ($mimetype === false) {
+                return $default;
+            }
+            if (is_array($mimetype)) {
+                $mimetype = current($mimetype);
+            }
+
+            return Arr::get($iconeMimesArray, $mimetype, $default);
+
+        });
     }
 }

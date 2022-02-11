@@ -1,11 +1,11 @@
 <?php
 
-use Gecche\Breeze\Facades\Schema;
-use Gecche\Breeze\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateFotosTable extends Migration {
-
+return new class extends Migration
+{
 	/**
 	 * Run the migrations.
 	 *
@@ -15,13 +15,13 @@ class CreateFotosTable extends Migration {
 	{
 		Schema::create('fotos', function(Blueprint $table)
 		{
-			$table->increments('id');
+			$table->id();
 			$table->string('ext', 6);
 			$table->string('nome')->nullable();
 			$table->text('descrizione')->nullable();
             $table->integer('ordine')->nullable()->default(0);
             $table->string('mediable_type')->nullable();
-            $table->integer('mediable_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('mediable_id');
 			$table->timestamps();
 			$table->nullableOwnerships();
 //			$table->unique(['mediable_type','mediable_id','ordine']);
@@ -40,4 +40,4 @@ class CreateFotosTable extends Migration {
 		Schema::drop('fotos');
 	}
 
-}
+};
