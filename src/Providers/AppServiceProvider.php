@@ -95,10 +95,10 @@ class AppServiceProvider extends ServiceProvider
             $rootDir. 'public/bootstrap4-app' => public_path('bootstrap4-app'),
             $rootDir. 'public/smarty3-app' => public_path('smarty3-app'),
             $rootDir. 'public/admin' => public_path('admin'),
-            $//$rootDir. 'public/js/edit_area' => public_path('js/edit_area'),
-            $//$rootDir. 'public/crud-vue/components' => public_path('crud-vue/components'),
-            $//$rootDir. 'public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
-            $//$rootDir. 'public/crud-vue/plugins' => public_path('crud-vue/plugins'),
+            //$rootDir. 'public/js/edit_area' => public_path('js/edit_area'),
+            //$rootDir. 'public/crud-vue/components' => public_path('crud-vue/components'),
+            //$rootDir. 'public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
+            //$rootDir. 'public/crud-vue/plugins' => public_path('crud-vue/plugins'),
         ], 'public');
 
 
