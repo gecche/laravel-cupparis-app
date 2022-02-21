@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -57,7 +58,7 @@ class UsersTableSeeder extends Seeder
 
 
         \Illuminate\Support\Facades\Auth::loginUsingId(3);
-        factory(App\Models\User::class, 10)->create()->each(function($u) {
+        \App\Models\User::factory(10)->create()->each(function($u) {
 
             //$role = $localizedFaker->boolean(85) ? 'Operatore' : 'Admin'; //15% Admin, 85% Operatore
             $role = rand(0,100) > 80 ? 'Operatore' : 'Cliente';
