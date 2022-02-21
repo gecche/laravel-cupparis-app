@@ -1,5 +1,6 @@
 <?php namespace Gecche\Cupparis\App\Providers;
 
+use Gecche\Cupparis\App\CupparisAppManager;
 use Gecche\Cupparis\App\Foorm\FoormManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
