@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             $rootDir . 'database/factories' => database_path('factories'),
             $rootDir . 'database/migrations' => database_path('migrations'),
-            $rootDir . 'database/seeds' => database_path('seeds'),
+            $rootDir . 'database/seeders' => database_path('seeders'),
         ], 'public');
 
         //Publishing and overwriting resources folders
