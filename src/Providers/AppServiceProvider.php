@@ -139,7 +139,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('cupparis', function ($app) {
             return new CupparisAppManager($app['config']->get('cupparis-app'));
         });
-        $this->app->bind('foorm', function ($app) {
+        $this->app->extend('foorm', function ($service,$app) {
             return new FoormManager($app['config']->get('foorm'));
         });
 
