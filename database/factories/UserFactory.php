@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
 
+    use LocalizeFakerFactoryTrait;
     /**
      * Define the model's default state.
      *
