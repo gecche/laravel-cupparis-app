@@ -6,6 +6,7 @@ use App\Models\User;
 use Gecche\Foorm\Facades\Foorm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends AppController {
 
@@ -23,12 +24,17 @@ class UserController extends AppController {
 
         try {
             $userFoorm->save();
-        } catch (\Exception $e) {
-            $errors = json_decode($e->getMessage());
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
             return redirect()
                 ->back()
                 ->withInput()
                 ->withErrors($errors);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($e->getMessage());
         }
 
         return view("user.profile",['user' => $userFoorm->getModel()]);
