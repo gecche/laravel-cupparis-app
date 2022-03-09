@@ -43,7 +43,9 @@ class MiscController extends BaseController {
         try {
             $realPage = 'pages/' . str_replace('.','/',$page) . '.html';
             $file = Theme::url($realPage);
-            return Response::file(public_path($file));
+            $fileString = File::get(public_path($file));
+            return response()->make($fileString);
+//            return Response::file(public_path($file));
         } catch(\Exception $e) {
             abort(404);
         }
