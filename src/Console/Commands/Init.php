@@ -201,19 +201,6 @@ class Init extends Command
             $confirmMessage2 = "Il comando inizializzerà il database e la cartella di storage indicate, continuo?";
             if ($this->confirm($confirmMessage2)) {
                 $this->handleAfterConfirmation();
-                $crudVersion = env('CRUD_VERSION', '1.0');
-                $this->comment("----- crud version $crudVersion crud env " .  env('CRUD_ENV', ''));
-                if (env('CRUD_ENV', '') == 'develop') {
-                    @unlink(public_path('bootstrap4'));
-                    @unlink(public_path('smarty3'));
-                    @unlink(resource_path('views/bootstrap4'));
-                    @unlink(resource_path('views/smarty3'));
-                    $this->laravel->make('files')->link("../packages/gecche/laravel-cupparis-app/public/crud-$crudVersion/bootstrap4",public_path('bootstrap4'));
-                    $this->laravel->make('files')->link("../packages/gecche/laravel-cupparis-app/public/crud-$crudVersion/smarty3",public_path('smarty3'));
-                    $this->laravel->make('files')->link("../../packages/gecche/laravel-cupparis-app/resources/views/crud-$crudVersion/bootstrap4",resource_path('views/bootstrap4'));
-                    $this->laravel->make('files')->link("../../packages/gecche/laravel-cupparis-app/resources/views/crud-$crudVersion/smarty3",resource_path('views/smarty3'));
-                }
-                return ;
             }
         }
 

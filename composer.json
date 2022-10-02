@@ -78,7 +78,9 @@
         "gecche/laravel-bannable": "^5.0",
 
 
-        "marley71/crud-vue" : "v3.0.x-dev"
+        "marley71/crud-vue" : "v3.0.x-dev",
+
+        "guzzlehttp/psr7": ">=2.1.1"
     },
     "require-dev": {
         "mockery/mockery": "^1.4.4",

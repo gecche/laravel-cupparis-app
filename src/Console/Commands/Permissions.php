@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,6 +47,8 @@ class Permissions extends Command
      */
     public function handle()
     {
+
+        Cache::forget(config('permission.cache.key','spatie.permission.cache'));
 
         $this->config = Config::get('permission.cupparis',[]);
 

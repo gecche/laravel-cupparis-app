@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('queues', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('start');
+            $table->timestamp('start')->default(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('end')->nullable();
             $table->integer('error')->unsigned()->default(0);
             $table->text('msg')->nullable();

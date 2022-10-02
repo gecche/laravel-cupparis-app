@@ -20,7 +20,7 @@ class Permission extends Breeze implements PermissionContract
     use HasRoles;
     use RefreshesPermissionCache;
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
     public $columnsForSelectList = ['name'];
 
@@ -36,7 +36,12 @@ class Permission extends Breeze implements PermissionContract
 
         parent::__construct($attributes);
 
-        $this->setTable(config('permission.table_names.permissions'));
+        $this->guarded[] = $this->primaryKey;
+    }
+
+    public function getTable()
+    {
+        return config('permission.table_names.permissions', parent::getTable());
     }
 
     public static function create(array $attributes = [])
@@ -60,8 +65,8 @@ class Permission extends Breeze implements PermissionContract
         return $this->belongsToMany(
             config('permission.models.role'),
             config('permission.table_names.role_has_permissions'),
-            'permission_id',
-            'role_id'
+            PermissionRegistrar::$pivotPermission,
+            PermissionRegistrar::$pivotRole
         );
     }
 
@@ -74,7 +79,7 @@ class Permission extends Breeze implements PermissionContract
             getModelForGuard($this->attributes['guard_name']),
             'model',
             config('permission.table_names.model_has_permissions'),
-            'permission_id',
+            PermissionRegistrar::$pivotPermission,
             config('permission.column_names.model_morph_key')
         );
     }
@@ -92,7 +97,7 @@ class Permission extends Breeze implements PermissionContract
     public static function findByName(string $name, $guardName = null): PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $permission = static::getPermissions(['name' => $name, 'guard_name' => $guardName])->first();
+        $permission = static::getPermission(['name' => $name, 'guard_name' => $guardName]);
         if (! $permission) {
             throw PermissionDoesNotExist::create($name, $guardName);
         }
@@ -113,7 +118,7 @@ class Permission extends Breeze implements PermissionContract
     public static function findById(int $id, $guardName = null): PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $permission = static::getPermissions(['id' => $id, 'guard_name' => $guardName])->first();
+        $permission = static::getPermission(['id' => $id, 'guard_name' => $guardName]);
 
         if (! $permission) {
             throw PermissionDoesNotExist::withId($id, $guardName);
@@ -133,7 +138,7 @@ class Permission extends Breeze implements PermissionContract
     public static function findOrCreate(string $name, $guardName = null): PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $permission = static::getPermissions(['name' => $name, 'guard_name' => $guardName])->first();
+        $permission = static::getPermission(['name' => $name, 'guard_name' => $guardName]);
 
         if (! $permission) {
             return static::query()->create(['name' => $name, 'guard_name' => $guardName]);
@@ -144,11 +149,28 @@ class Permission extends Breeze implements PermissionContract
 
     /**
      * Get the current cached permissions.
+     *
+     * @param array $params
+     * @param bool $onlyOne
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected static function getPermissions(array $params = []): Collection
+    protected static function getPermissions(array $params = [], bool $onlyOne = false): \Illuminate\Database\Eloquent\Collection
     {
         return app(PermissionRegistrar::class)
             ->setPermissionClass(static::class)
-            ->getPermissions($params);
+            ->getPermissions($params, $onlyOne);
+    }
+
+    /**
+     * Get the current cached first permission.
+     *
+     * @param array $params
+     *
+     * @return \Spatie\Permission\Contracts\Permission
+     */
+    protected static function getPermission(array $params = []): ?PermissionContract
+    {
+        return static::getPermissions($params, true)->first();
     }
 }
