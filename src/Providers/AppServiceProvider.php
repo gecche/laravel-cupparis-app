@@ -91,10 +91,10 @@ class AppServiceProvider extends ServiceProvider
 
         //Publishing and overwriting public folders
         $this->publishes([
-            $rootDir . 'public/bootstrap4' => public_path('bootstrap4'),
+            //$rootDir . 'public/bootstrap4' => public_path('bootstrap4'),
             $rootDir . 'public/images' => public_path('images'),
-            $rootDir . 'public/bootstrap4-app' => public_path('bootstrap4-app'),
-            $rootDir . 'public/smarty3-app' => public_path('smarty3-app'),
+            //$rootDir . 'public/bootstrap4-app' => public_path('bootstrap4-app'),
+            //$rootDir . 'public/smarty3-app' => public_path('smarty3-app'),
             $rootDir . 'public/admin' => public_path('admin'),
             //$rootDir. 'public/js/edit_area' => public_path('js/edit_area'),
             //$rootDir. 'public/crud-vue/components' => public_path('crud-vue/components'),
@@ -105,12 +105,12 @@ class AppServiceProvider extends ServiceProvider
 
         if (env('CRUD_ENV', '') != 'develop') {
             $this->publishes([
-                $rootDir . "public/crud-$crudVersion/bootstrap4" => public_path('bootstrap4'),
-                $rootDir . "public/crud-$crudVersion/smarty3" => public_path('smarty3'),
-                $rootDir . "resources/views/crud-$crudVersion/bootstrap4" => resource_path('views/bootstrap4'),
-                $rootDir . "resources/views/crud-$crudVersion/smarty3" => resource_path('views/smarty3'),
-                $rootDir . 'resources/views/bootstrap4-app' => resource_path('views/bootstrap4-app'),
-                $rootDir . 'resources/views/smarty3-app' => resource_path('views/smarty3-app'),
+//                $rootDir . "public/crud-$crudVersion/bootstrap4" => public_path('bootstrap4'),
+//                $rootDir . "public/crud-$crudVersion/smarty3" => public_path('smarty3'),
+//                $rootDir . "resources/views/crud-$crudVersion/bootstrap4" => resource_path('views/bootstrap4'),
+//                $rootDir . "resources/views/crud-$crudVersion/smarty3" => resource_path('views/smarty3'),
+//                $rootDir . 'resources/views/bootstrap4-app' => resource_path('views/bootstrap4-app'),
+//                $rootDir . 'resources/views/smarty3-app' => resource_path('views/smarty3-app'),
                 $rootDir . 'resources/views/admin' => resource_path('views/admin'),
             ], 'templates');
         }
