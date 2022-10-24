@@ -73,7 +73,7 @@
 
         "gecche/laravel-foorm": "^9.0",
 
-        "gecche/laravel-policy-builder": "^5.0",
+        "gecche/laravel-policy-builder": "^5",
         "gecche/laravel-multidomain": "^5.0",
         "gecche/laravel-bannable": "^5.0",
 

@@ -3,6 +3,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -21,13 +22,13 @@ class UsersTableSeeder extends Seeder
 
         $usersData = [
             [
-                'password' => 'roarroar2',
+                'password' => Str::random(10),
                 'email' => 'giacomo.terreni@gmail.com',
                 'name' => 'Giacomo Terreni',
                 'role' => 'Superutente',
             ],
             [
-                'password' => 'Master78',
+                'password' => Str::random(10),
                 'email' => 'ciullo@gmail.com',
                 'name' => 'Piero Paolo Ciullo',
                 'role' => 'Superutente',

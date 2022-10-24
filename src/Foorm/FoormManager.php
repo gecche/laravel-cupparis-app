@@ -24,8 +24,8 @@ class FoormManager extends BaseFoormManager
         switch ($this->config['form_type']) {
 
             case 'list':
+            case 'report':
                 $input = $this->setInputForFormList($input);
-
                 return $input;
             default:
                 return $input;
