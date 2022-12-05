@@ -94,7 +94,7 @@ trait HasFileFieldsTrait
         $resource = json_decode(Arr::get($inputArray, $field, ""), true);
 
         if (Arr::get($resource, 'filename', false)) {
-            $this->$field = $this->filePath . rand() . '_' . Arr::get($resource, 'filename',
+            $this->$field = $this->getFilePath() . rand() . '_' . Arr::get($resource, 'filename',
                     false);//pathinfo($resourceId, PATHINFO_EXTENSION);
         } else {
             $this->$field = Arr::get($resource, 'id');
