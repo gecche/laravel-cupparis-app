@@ -70,14 +70,22 @@ trait UploadableTraits {
 
     }
 
-    public function fileExists() {
-        $filename = $this->getStorageFilename();
+    public function fileExists($id = null,$diskDriver = null) {
+        $filename = $this->getStorageFilename($id,$diskDriver);
         return Storage::exists($filename);
     }
 
-    public function getMimeType() {
-        $filename = $this->getStorageFilename();
-        return Storage::mimeType($filename);
+    public function getMimeType($id = null,$diskDriver = null) {
+        $filename = $this->getStorageFilename($id,$diskDriver);
+        if (is_null($diskDriver)) {
+            $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
+        }
+        switch ($diskDriver) {
+            case 'local':
+                return File::mimeType(storage_path($filename));
+            default:
+                return Storage::mimeType($filename);
+        }
     }
 
     public function getPrefixFile($id) {
