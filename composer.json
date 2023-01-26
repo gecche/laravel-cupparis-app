@@ -35,10 +35,6 @@
 
         {
             "type": "vcs",
-            "url": "http://github.com/marley71/crud-vue"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/gecche/laravel-cupparis-queue"
         },
         {
@@ -76,9 +72,6 @@
         "gecche/laravel-policy-builder": "^5",
         "gecche/laravel-multidomain": "^5.0",
         "gecche/laravel-bannable": "^5.0",
-
-
-        "marley71/crud-vue" : "v3.0.x-dev",
 
         "guzzlehttp/psr7": ">=2.1.1"
     },
