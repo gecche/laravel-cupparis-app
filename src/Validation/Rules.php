@@ -1,5 +1,6 @@
 <?php namespace Gecche\Cupparis\App\Validation;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
@@ -219,6 +220,32 @@ class Rules
         if (chr($s % 26 + ord('A')) != $value[15])
             return false;
         return true;
+    }
+
+    public function usernameEmail($attribute, $value, $parameters, $validator)
+    {
+
+        if ($attribute !== 'name') {
+            return true;
+        }
+        $value = trim($value);
+
+        $regex = '/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/';
+        preg_match_all($regex, $value, $emailsArray);
+
+        $emails = Arr::get($emailsArray, 0, []);
+
+        if (count($emails) < 1) {
+            return true;
+        }
+
+        if (count($emails) === 1 && filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
+            $email = Arr::get($validator->getData(), 'email');
+            return $email === $value;
+        }
+
+        return false;
+
     }
 
 
