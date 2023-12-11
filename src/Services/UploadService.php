@@ -53,9 +53,9 @@ class UploadService {
         $maxFileSize = $this->getMaxSize($type,$maxSize);
 
 
-        $methodName = 'setUploadValidationRules'.Str::studly($type,$exts);
+        $methodName = 'setUploadValidationRules'.Str::studly($type);
 
-        return $this->$methodName($maxFileSize);
+        return $this->$methodName($maxFileSize,$exts);
     }
     public function getUploadValidationRules($type,$maxSize = null,$exts = null) {
 
@@ -109,12 +109,15 @@ class UploadService {
             'mimes:'.$allowedExts,
         ];
         $this->validationRules['foto'] = [
-                'file' => implode('|',$rules),
+            'file' => implode('|',$rules),
         ];
     }
 
     protected function setUploadValidationRulesAttachment($maxFileSize,$exts = null) {
         $allowedExts = $exts ?: Arr::get($this->getConfig('attachment'),'exts','pdf,zip,rar,doc,docx,xls,xlsx,ppt,pptx,odf,ods,txt,csv');
+        if (is_array($allowedExts)) {
+            $allowedExts = implode(",",$allowedExts);
+        }
         $rules = [
             'max:'.$maxFileSize,
             'mimes:'.$allowedExts,
