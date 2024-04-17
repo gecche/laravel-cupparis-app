@@ -21,15 +21,17 @@ class FoormManager extends BaseFoormManager
         }
 
 
-        switch ($this->config['form_type']) {
+        if (Arr::get($this->config, 'submit_protocol', 'form') == 'form') {
+            switch ($this->config['form_type']) {
 
-            case 'list':
-            case 'report':
-                $input = $this->setInputForFormList($input);
-                return $input;
-            default:
-                return $input;
+                case 'list':
+                case 'report':
+                    $input = $this->setInputForFormList($input);
+                    return $input;
+                default:
+                    return $input;
 
+            }
         }
 
 
