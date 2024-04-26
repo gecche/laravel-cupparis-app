@@ -53,7 +53,7 @@ trait UploadableTraits {
         return Storage::disk($diskDriver)->response($filename,$name,$headers,$disposition);
     }
 
-    protected function getStorageFilename($id = null,$diskDriver = null,$relative = false) {
+    public function getStorageFilename($id = null,$diskDriver = null,$relative = false) {
 
         $dt = new Carbon($this->created_at);
         $time = $dt->timestamp;
@@ -177,8 +177,8 @@ trait UploadableTraits {
     public function getResourceAttribute() {
         $defaultInfo = [
             'id' => null,
-            'url' => 'imagecache/small/0',
-            'mimetype' => null,
+            'url' => '/imagecache/small/0',
+            'mimetype' => null
         ];
 
         if (!$this->getKey()) {
@@ -193,7 +193,7 @@ trait UploadableTraits {
 
             ];
         } catch (\Exception $e) {
-              $info = $defaultInfo;
+            $info = $defaultInfo;
         }
         return $info;
     }

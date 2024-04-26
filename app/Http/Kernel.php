@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
 
         'superuser' => \Gecche\Cupparis\App\Http\Middleware\IsSuperuser::class,
+        'bt_route' => \Gecche\Cupparis\App\Http\Middleware\BTRoute::class,
     ];
 
 //    /**
