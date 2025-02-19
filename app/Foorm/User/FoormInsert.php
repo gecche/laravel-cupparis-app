@@ -35,7 +35,11 @@ class FoormInsert extends BaseFoormInsert
 
     protected function saveModel($input) {
         parent::saveModel($input);
-        $this->model->syncRoles(Arr::wrap(Arr::get($input,'mainrole',[])));
+        $roles = Arr::wrap(Arr::get($input,'mainrole',[]));
+        $roles = array_map(function ($item) {
+            return (int) $item;
+        },$roles);
+        $this->model->syncRoles($roles);
     }
 
     public function setFormMetadata() {
