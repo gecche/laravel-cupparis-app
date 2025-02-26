@@ -16,10 +16,6 @@
         },
         {
             "type": "vcs",
-            "url": "http://github.com/gecche/laravel-theme"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/gecche/laravel-dbhelper"
         },
         {
@@ -55,35 +51,35 @@
         }
     ],
     "require": {
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^11.0",
 
         "barryvdh/laravel-snappy": "^1.0",
 
-        "igaster/laravel-theme": "^10.0",
+        "igaster/laravel-theme": "^2.0.20",
         "intervention/image": "2.*",
-        "intervention/imagecache": "^12.0",
+        "intervention/imagecache": "^13.0",
 
-        "spatie/laravel-activitylog": "^4.7",
-        "spatie/laravel-permission": "^5.0",
+        "spatie/laravel-activitylog": "^4.10",
+        "spatie/laravel-permission": "^6.0",
 
-        "gecche/laravel-cupparis-helpers": "^10.0",
-        "gecche/laravel-cupparis-datafile": "^10.0",
-        "gecche/laravel-cupparis-menus": "^10.0",
-        "gecche/laravel-cupparis-localization": "^10.0",
+        "gecche/laravel-cupparis-helpers": "^11.0",
+        "gecche/laravel-cupparis-datafile": "^11.0",
+        "gecche/laravel-cupparis-menus": "^11.0",
+        "gecche/laravel-cupparis-localization": "^11.0",
 
-        "gecche/laravel-foorm": "^10.0",
+        "gecche/laravel-foorm": "^11.0",
 
-        "gecche/laravel-policy-builder": "^10",
-        "gecche/laravel-multidomain": "^10.0",
-        "gecche/laravel-bannable": "^10.0"
+        "gecche/laravel-policy-builder": "^11",
+        "gecche/laravel-multidomain": "^11.0",
+        "gecche/laravel-bannable": "^11.0"
 
     },
     "require-dev": {
-        "mockery/mockery": "^1.5.1",
-        "phpunit/phpunit": "^9.6.0 || ^10.0.7",
-        "orchestra/testbench": "^8.0",
-        "orchestra/testbench-browser-kit": "^8.0",
-        "diablomedia/phpunit-pretty-printer": "^5.0"
+        "mockery/mockery": "^1.6",
+        "phpunit/phpunit": "^10.5",
+        "orchestra/testbench": "^9.0",
+        "orchestra/testbench-browser-kit": "^9.0",
+        "codedungeon/phpunit-result-printer": "^0.1.0"
     },
     "autoload": {
         "classmap": [

@@ -62,7 +62,11 @@ class FoormEdit extends BaseFoormEdit
     protected function saveModel($input) {
         parent::saveModel($input);
         if (!$this->isAuth) {
-            $this->model->syncRoles(Arr::wrap(Arr::get($input,'mainrole',[])));
+            $roles = Arr::wrap(Arr::get($input,'mainrole',[]));
+            $roles = array_map(function ($item) {
+                return (int) $item;
+            },$roles);
+            $this->model->syncRoles($roles);
         }
     }
 
