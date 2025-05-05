@@ -16,10 +16,6 @@
         },
         {
             "type": "vcs",
-            "url": "http://github.com/gecche/laravel-theme"
-        },
-        {
-            "type": "vcs",
             "url": "http://github.com/gecche/laravel-dbhelper"
         },
         {
@@ -57,7 +53,7 @@
 
         "barryvdh/laravel-snappy": "^1.0",
 
-        "igaster/laravel-theme": "^12.0",
+        "igaster/laravel-theme": "^2",
         "intervention/image": "2.*",
         "intervention/imagecache": "^14.0",
 
