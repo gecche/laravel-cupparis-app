@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Profilo;
-use App\Models\Sponsor;
 use Gecche\Cupparis\App\Foorm\FoormManager;
 use Gecche\Cupparis\Menus\Facades\Menus;
 use Illuminate\Support\Facades\Auth;

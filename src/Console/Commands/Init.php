@@ -173,6 +173,7 @@ class Init extends Command
                     ['mig' => [env('PHP_PATH','php'),'artisan','migrate']],
                     ['seed' => [env('PHP_PATH','php'),'artisan','db:seed']],
                     ['seed' => [env('PHP_PATH','php'),'artisan','permissions']],
+                    ['seed' => [env('PHP_PATH','php'),'artisan','cache:clear']],
                 ];
 
                 $cmdArray = array_merge($cmdArray,$postStorageCmdArray);
