@@ -73,6 +73,8 @@ class Kernel extends HttpKernel
 
         'superuser' => \Gecche\Cupparis\App\Http\Middleware\IsSuperuser::class,
         'bt_route' => \Gecche\Cupparis\App\Http\Middleware\BTRoute::class,
+        'set_guest_user' => \Gecche\Cupparis\App\Http\Middleware\SetGuestUser::class,
+
     ];
 
 //    /**
