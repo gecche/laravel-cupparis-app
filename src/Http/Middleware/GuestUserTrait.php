@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
-class SetGuestUser
+trait GuestUserTrait
 {
-
-    use GuestUserTrait;
     /**
      * The URIs that should be excluded from CSRF verification.
      *
@@ -25,15 +23,13 @@ class SetGuestUser
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, \Closure $next, ...$attributes)
+    public function setGuestUser()
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            $this->setGuestUser();
-        }
-
-        return $next($request);
+            $user = new User();
+            $roles = new Collection();
+            $roles->add(Role::where('name',Config::get('cupparis-app.guest-role','Guest'))->first());
+            $user->setRelation('roles',$roles);
+            Auth::setUser($user);
 
     }
 }
