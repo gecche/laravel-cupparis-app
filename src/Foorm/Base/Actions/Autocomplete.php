@@ -12,9 +12,9 @@ class Autocomplete extends BaseAutocomplete
 
     protected function init()
     {
+        parent::init();
         $field = Arr::get($this->input, 'field');
         $this->fieldToAutocomplete = Str::startsWith($field,'s_') ? substr($field,2) : $field;
-        $this->value = Arr::get($this->input, 'value');
     }
 
 }

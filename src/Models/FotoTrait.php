@@ -14,7 +14,10 @@ trait FotoTrait {
 
     public function getUrl()
     {
-        return '/viewmediable/foto/'.$this->getKey();
+        if ($this->fileExists()) {
+            return '/viewmediable/foto/'.$this->getKey();
+        }
+        return '/imagecache/small/0';
     }
 
     public function getIconaFotoUrl($random = false, $template = null, $default = true) {

@@ -52,6 +52,8 @@ return [
 
     'form-manager' => 'Gecche\\Cupparis\\App\\Foorm\\FoormManager',
 
+    'submit_protocol' => 'form', //json|form
+
     'models_namespace' => "App\\Models\\",
     'foorms_namespace' => "App\\Foorm\\",
     'foorms_defaults_namespace' => "Gecche\\Cupparis\\App\\Foorm\\Base\\",

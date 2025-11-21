@@ -61,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
             $rootDir . 'app/Models' => app_path('Models'),
             $rootDir . 'app/Policies' => app_path('Policies'),
             $rootDir . 'app/Services' => app_path('Services'),
+            $rootDir . 'app/Validation' => app_path('Validation'),
             $rootDir . 'app/Providers/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
             $rootDir . 'app/Providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
             $rootDir . 'app/Providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
