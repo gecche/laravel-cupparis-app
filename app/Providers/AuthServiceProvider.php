@@ -62,7 +62,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function policies()
     {
-        $policies = Cupparis::get('policies.models',null);
+        $policies = config('permission.policies.models',null);
 
         return is_array($policies) ? $policies : $this->policies;
 
