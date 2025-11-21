@@ -277,7 +277,7 @@ class CupparisModuleInstall extends Command
     protected function getArguments(): array
     {
         return [
-            ['example', InputArgument::REQUIRED, 'An example argument.'],
+            ['type', InputArgument::OPTIONAL, 'Installation type: i = install (default), u = uninstall).'],
         ];
     }
 
@@ -287,7 +287,7 @@ class CupparisModuleInstall extends Command
     protected function getOptions(): array
     {
         return [
-            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
+//            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
         ];
     }
 }
