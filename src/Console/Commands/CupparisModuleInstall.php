@@ -62,7 +62,7 @@ class CupparisModuleInstall extends Command
 
         $this->modulePath = module_path($this->moduleName);
 
-        $this->dirsToManage = $this->setDirsToManage();
+        $this->setDirsToManage();
 
         if (!$this->checkCommandType()) {
             return;
@@ -80,7 +80,7 @@ class CupparisModuleInstall extends Command
     }
 
     protected function manageDir($dirToManage,$destDir) {
-        $this->fileService->ensureDirectoryExists($dirToManage,$destDir);
+        $this->fileService->ensureDirectoryExists($destDir);
 
         $this->comment("\n" . $dirToManage . ' ---> ' . $destDir . "\n");
         $fileNames = $this->fileService->files($this->modulePath . $dirToManage);
@@ -115,10 +115,11 @@ class CupparisModuleInstall extends Command
                 $this->comment("Tipo di operazione '$this->type' non prevista, solo 'i' o 'u'");
                 return false;
         }
+        return true;
     }
 
     protected function setDirsToManage() {
-        return [
+        $this->dirsToManage = [
             //CLASSES
             $this->modelsPath => app_path('Models'),
             '/main/app/Models/Relations' => app_path('Models/Relations'),
