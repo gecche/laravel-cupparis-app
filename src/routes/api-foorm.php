@@ -20,6 +20,12 @@ Route::group(['prefix' => 'foormaction','middleware' => 'auth:sanctum'], functio
 
 });
 
+Route::group(['prefix' => 'foormcaction','middleware' => 'auth:sanctum'], function () use ($whereFoorm) {
+
+    require __DIR__ . '/foormcaction-routes.php';
+
+});
+
 Route::group(['prefix' => 'foorm','middleware' => 'auth:sanctum'], function () use ($whereFoorm) {
 
     require __DIR__ . '/foorm-routes.php';
@@ -28,6 +34,6 @@ Route::group(['prefix' => 'foorm','middleware' => 'auth:sanctum'], function () u
 
 Route::group(['prefix' => 'foormc', 'as' => 'foormc','middleware' => 'auth:sanctum'], function () use ($whereFoorm) {
 
-    require __DIR__ . '/foorm-routes.php';
+    require __DIR__ . '/foormc-routes.php';
 
 });

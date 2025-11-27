@@ -44,7 +44,3 @@ use App\Http\Controllers\FoormActionController;
         'foorm' => $whereFoorm
     ]);
 
-    Route::post('flush-datafile/{foorm}/{foormtype}/{constraintField}/{constraintValue}', [FoormActionController::class,'flushDatafileConstrained'])->where([
-        'foorm' => $whereFoorm
-    ]);
-
