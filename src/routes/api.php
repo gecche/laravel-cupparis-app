@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\FoormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\DownloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +33,7 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     $user['fotos'] = $request->user()->fotos()->get()->toArray();
     return $user;
 });
-Route::middleware('auth:sanctum')->get('/app-menu',[FoormController::class,'getAppMenu']);
+Route::middleware('auth:sanctum')->get('/app-menu',[\App\Http\Controllers\Api\Controller::class,'getAppMenu']);
 
 Route::any('/logout', [LoginController::class, 'logout'])
                 ->middleware('auth:sanctum')
