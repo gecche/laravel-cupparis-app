@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
@@ -21,8 +22,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $rootDir = __DIR__ . '/../../';
-
-        $crudVersion = env('CRUD_VERSION', '1.0');
 
         //Publishing configs
         $this->publishes([
@@ -49,7 +48,14 @@ class AppServiceProvider extends ServiceProvider
             $rootDir . 'config-packages/permission.php' => config_path('permission.php'),
             $rootDir . 'config-packages/themes.php' => config_path('themes.php'),
             $rootDir . 'config-packages/foorms/user.php' => config_path('foorms/user.php'),
+            $rootDir . 'config-packages/foorms/cupparis_entity.php' => config_path('foorms/cupparis_entity.php'),
         ], 'public');
+
+        $this->publishes([
+            __DIR__ . '/../resources/stubs/migration' => base_path('stubs/migration'),
+        ], 'public');
+
+
 
 
         //Publishing and overwriting app folders
@@ -66,15 +72,7 @@ class AppServiceProvider extends ServiceProvider
             $rootDir . 'app/Providers/AuthServiceProvider.php' => app_path('Providers/AuthServiceProvider.php'),
             $rootDir . 'app/Providers/EventServiceProvider.php' => app_path('Providers/EventServiceProvider.php'),
             $rootDir . 'app/Http/Kernel.php' => app_path('Http/Kernel.php'),
-            $rootDir . 'app/Http/Controllers/Controller.php' => app_path('Http/Controllers/Controller.php'),
-            $rootDir . 'app/Http/Controllers/DownloadController.php' => app_path('Http/Controllers/DownloadController.php'),
-            $rootDir . 'app/Http/Controllers/FoormActionController.php' => app_path('Http/Controllers/FoormActionController.php'),
-            $rootDir . 'app/Http/Controllers/FoormController.php' => app_path('Http/Controllers/FoormController.php'),
-            $rootDir . 'app/Http/Controllers/HomeController.php' => app_path('Http/Controllers/HomeController.php'),
-            $rootDir . 'app/Http/Controllers/MiscController.php' => app_path('Http/Controllers/MiscController.php'),
-            $rootDir . 'app/Http/Controllers/ModelSkeletonController.php' => app_path('Http/Controllers/ModelSkeletonController.php'),
-            $rootDir . 'app/Http/Controllers/TestController.php' => app_path('Http/Controllers/TestController.php'),
-            $rootDir . 'app/Http/Kernel.php' => app_path('Http/Kernel.php'),
+            $rootDir . 'app/Http/Controllers' => app_path('Http/Controllers'),
         ], 'public');
 
         //Publishing and overwriting databases folders
@@ -88,36 +86,21 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             $rootDir . 'resources/documenti' => base_path('resources/documenti'),
             $rootDir . 'resources/lang' => base_path('resources/lang'),
+            $rootDir . 'resources/stubs/migration' => base_path('stubs/migration'),
         ], 'public');
 
         //Publishing and overwriting public folders
         $this->publishes([
-            //$rootDir . 'public/bootstrap4' => public_path('bootstrap4'),
             $rootDir . 'public/images' => public_path('images'),
-            //$rootDir . 'public/bootstrap4-app' => public_path('bootstrap4-app'),
-            //$rootDir . 'public/smarty3-app' => public_path('smarty3-app'),
-            $rootDir . 'public/admin' => public_path('admin'),
-            //$rootDir. 'public/js/edit_area' => public_path('js/edit_area'),
-            //$rootDir. 'public/crud-vue/components' => public_path('crud-vue/components'),
-            //$rootDir. 'public/crud-vue/ModelConfs' => public_path('crud-vue/ModelConfs'),
-            //$rootDir. 'public/crud-vue/plugins' => public_path('crud-vue/plugins'),
         ], 'public');
 
 
-        if (env('CRUD_ENV', '') != 'develop') {
-            $this->publishes([
-//                $rootDir . "public/crud-$crudVersion/bootstrap4" => public_path('bootstrap4'),
-//                $rootDir . "public/crud-$crudVersion/smarty3" => public_path('smarty3'),
-//                $rootDir . "resources/views/crud-$crudVersion/bootstrap4" => resource_path('views/bootstrap4'),
-//                $rootDir . "resources/views/crud-$crudVersion/smarty3" => resource_path('views/smarty3'),
-//                $rootDir . 'resources/views/bootstrap4-app' => resource_path('views/bootstrap4-app'),
-//                $rootDir . 'resources/views/smarty3-app' => resource_path('views/smarty3-app'),
-                $rootDir . 'resources/views/admin' => resource_path('views/admin'),
-            ], 'templates');
-        }
-
-
         $this->loadRoutesFrom($rootDir . 'src/routes/web.php');
+        $this->loadRoutesFrom($rootDir . 'src/routes/foorm.php');
+        Route::middleware('api')->prefix('api')->group(function () use ($rootDir) {
+            $this->loadRoutesFrom($rootDir . 'src/routes/api.php');
+            $this->loadRoutesFrom($rootDir . 'src/routes/api-foorm.php');
+        });
 
         $this->bootBlade();
 
@@ -140,7 +123,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('cupparis', function ($app) {
             return new CupparisAppManager($app['config']->get('cupparis-app'));
         });
-        $this->app->extend('foorm', function ($service,$app) {
+        $this->app->extend('foorm', function ($service, $app) {
             return new FoormManager($app['config']->get('foorm'));
         });
 

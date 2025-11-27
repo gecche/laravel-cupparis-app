@@ -11,6 +11,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function dashboard() {
+        return view('dashboard');
+    }
+
     /**
      * Get the map of resource methods to ability names.
      *

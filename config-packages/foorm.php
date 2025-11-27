@@ -59,7 +59,8 @@ return [
     'foorms_defaults_namespace' => "Gecche\\Cupparis\\App\\Foorm\\Base\\",
 
     'foorms' => [
-        'user',
+        0 => 'user',
+        1 => 'cupparis_entity',
     ],
 
     'types_fallbacks' => [

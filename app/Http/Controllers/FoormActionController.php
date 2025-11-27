@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use Gecche\Foorm\Facades\Foorm;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class FoormActionController extends Controller
@@ -36,6 +37,22 @@ class FoormActionController extends Controller
     {
         $params = $pk ? ['id' => $pk] : [];
         $this->buildAndGetFoormActionResult('delete', $foormName, $foormType, $params);
+        return $this->_json();
+    }
+
+    public function migrate($pk = null)
+    {
+
+        $params = $pk ? ['id' => $pk] : [];
+        $this->buildAndGetFoormActionResult('migrate', 'cupparis_entity', 'list', $params);
+        return $this->_json();
+    }
+
+    public function rollback($pk = null)
+    {
+
+        $params = $pk ? ['id' => $pk] : [];
+        $this->buildAndGetFoormActionResult('rollback', 'cupparis_entity', 'list', $params);
         return $this->_json();
     }
 
@@ -74,6 +91,7 @@ class FoormActionController extends Controller
             $this->buildFoormAction($action, $foormName, $foormType, $params);
             $this->getFoormActionResult();
         } catch (\Exception $e) {
+            Log::info($e->getTraceAsString());
             $this->_error($e->getMessage());
         }
     }

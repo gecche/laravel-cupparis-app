@@ -143,20 +143,17 @@ class CupparisModuleInstall extends Command
             [
                 'configFile' => 'foorm',
                 'filesPath' => $this->foormsPath,
-                'key' => 'foorms',
-                'method' => 'snakeArraySubstitution'
+                'keys' => [
+                    'foorms' => 'snakeArraySubstitution',
+                ]
             ],
             [
                 'configFile' => 'permission',
                 'filesPath' => $this->modelsPath,
-                'key' => 'cupparis.models',
-                'method' => 'snakeArraySubstitution'
-            ],
-            [
-                'configFile' => 'permission',
-                'filesPath' => $this->modelsPath,
-                'key' => 'policies.models',
-                'method' => 'policyModelsSubstitution'
+                'keys' => [
+                    'cupparis.models' => 'snakeArraySubstitution',
+                    'policies.models' => 'policyModelsSubstitution',
+                ],
             ],
         ];
 
@@ -164,21 +161,23 @@ class CupparisModuleInstall extends Command
 
             $configFile = Arr::get($configData, 'configFile');
             $filesPath = Arr::get($configData, 'filesPath');
-            $configKey = Arr::get($configData, 'key');
-            $method = Arr::get($configData, 'method');
+            $configKeys = Arr::get($configData, 'keys');
             $configValue = config($configFile, []);
 
             $configFileString = "<?php\n\nreturn ";
 
-            $values = Arr::get($configValue, $configKey, []);
 
             $fileNames = $this->fileService->files($this->modulePath . $filesPath);
 
             foreach ($fileNames as $fileName) {
-                $values = $this->$method($values,$fileName);
-            }
+                foreach ($configKeys as $configKey => $method) {
+                    $values = Arr::get($configValue, $configKey, []);
 
-            $configValue[$configKey] = $values;
+                    $values = $this->$method($values, $fileName);
+
+                    Arr::set($configValue,$configKey,$values);
+                }
+            }
 
             $configFileString .= varexport($configValue) . ';';
 
