@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 class Rollback extends FoormAction
 {
     use MigrateRollbackTrait;
+
     protected function init()
     {
         $this->initOps();
@@ -25,12 +26,13 @@ class Rollback extends FoormAction
 
     public function performAction()
     {
+        $this->rollbackLangs();
         $this->rollbackModelconf();
         $this->rollbackFoorm();
         $this->rollbackPolicy();
         $this->rollbackModel();
         $this->rollbackMigration();
-        $this->manageConfigs('u');
+        $this->manageConfigs($this->getConfigsData(), 'u');
         $this->actionResult = [
 
         ];
@@ -44,6 +46,22 @@ class Rollback extends FoormAction
         // TODO: Implement validateAction() method.
     }
 
+    public function rollbackLangs()
+    {
+//
+//        foreach ($this->langs['model'] as $modelLangFile) {
+//            $langsModelData = [
+//                [
+//                    'configFile' => resource_path($modelLangFile),
+//                    'keys' => [
+//                        $this->snakeModel => [],
+//                    ]
+//                ],
+//            ];
+//            $this->manageConfigs($langsModelData,'u');
+//        }
+
+    }
 
     public function rollbackMigration()
     {
@@ -54,7 +72,7 @@ class Rollback extends FoormAction
 
         foreach ($migrationFiles as $migrationFile) {
 
-            if (Str::endsWith($migrationFile,'_create_' . $migrationTable . '_table.php')) {
+            if (Str::endsWith($migrationFile, '_create_' . $migrationTable . '_table.php')) {
                 $this->files->delete($migrationFile);
             }
 
@@ -65,7 +83,7 @@ class Rollback extends FoormAction
     public function rollbackModelconf()
     {
 
-        $jsModelName = "Model".$this->model->model_class;
+        $jsModelName = "Model" . $this->model->model_class;
 
         $modelsConfsFileName = $this->modelConfsPath . $jsModelName . '.js';
 
@@ -82,8 +100,9 @@ class Rollback extends FoormAction
         $importString = "\nimport " . $jsModelName . " from './" . $jsModelName . ".js';";
         $installString = "\n\t\tcs.CrudVars.modelConfs." . $jsModelName . " = " . $jsModelName . ";";
         $indexJsFile = Str::replace([$importString, $installString], ["", ""], $indexJsFile);
-        $this->files->put($indexFileJsName,$indexJsFile);
+        $this->files->put($indexFileJsName, $indexJsFile);
     }
+
     public function rollbackModel()
     {
 

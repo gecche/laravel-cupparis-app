@@ -36,7 +36,7 @@ class Migrate extends FoormAction
         $this->savePolicy();
         $this->saveFoorm();
         $this->saveModelConf();
-        $this->manageConfigs('i');
+        $this->manageConfigs($this->getConfigsData(),'i');
         $this->saveLangs();
         $this->actionResult = [
 
@@ -315,11 +315,10 @@ class Migrate extends FoormAction
 
         switch ($type) {
             case 'model':
-                $modelName = Str::snake($this->model->model_class);
 
                 $singolare = $this->model->lang_singolare;
                 $plurale = $this->model->lang_plurale;
-                $langs[$modelName] = "$singolare|$plurale";
+                $langs[$this->snakeModel] = "$singolare|$plurale";
 
                 break;
             case 'fields':
@@ -354,7 +353,7 @@ class Migrate extends FoormAction
         $stub = $this->files->get($this->getStub('policy'));
         $variables = [];
 
-        $modelNameForPermission = Str::snake($modelName);
+        $modelNameForPermission = $this->snakeModel;
 
         $permissions = [
             'viewPermission' => 'view ' . $modelNameForPermission,
@@ -391,7 +390,7 @@ class Migrate extends FoormAction
     {
 
 
-        $filename = base_path("config/foorms/" . Str::snake($this->model->model_class) . '.php');
+        $filename = base_path("config/foorms/" . $this->snakeModel . '.php');
 
         $stub = $this->files->get($this->getStub('foorm'));
 
@@ -628,7 +627,7 @@ class Migrate extends FoormAction
         $variables['editFieldsType'] = $this->implodeArrayJsFieldsType($editValues);
 
         $stub = str_replace(
-            '{{$snakeModelName}}', Str::snake($this->model->model_class), $stub
+            '{{$snakeModelName}}', $this->snakeModel, $stub
         );
 
         foreach ($variables as $variableKey => $variableValue) {

@@ -25,6 +25,9 @@ trait MigrateRollbackTrait
     protected $modelsNamespaces;
     protected $policiesNamespaces;
 
+    protected $snakeModel;
+    protected $studlyModel;
+
 
     protected function initOps()
     {
@@ -35,97 +38,106 @@ trait MigrateRollbackTrait
         $this->stubs = Arr::get($this->msConfig, 'stubs', []);
 
         $this->migrationPath = 'database/migrations/';
-        $this->modelConfsPath = Arr::get($this->msConfig,'modelConfsPath');
-        $this->modelsNamespaces =  Arr::get($this->msConfig,'models_namespace');
-        $this->policiesNamespaces =  Arr::get($this->msConfig,'policies_namespace');
+        $this->modelConfsPath = Arr::get($this->msConfig, 'modelConfsPath');
+        $this->modelsNamespaces = Arr::get($this->msConfig, 'models_namespace');
+        $this->policiesNamespaces = Arr::get($this->msConfig, 'policies_namespace');
+
+        $this->snakeModel = Str::snake($this->model->model_class);
+        $this->studlyModel = Str::studly($this->snakeModel);
 
         $this->files = new Filesystem();
 
     }
 
-
-
-    protected function manageConfigs($type)
+    protected function getConfigsData()
     {
-
-
-        $configsData = [
+        return [
             [
-                'entry' => Str::snake($this->model->model_class),
-                'configFile' => 'foorm',
+                'configFile' => config_path('foorm.php'),
                 'keys' => [
-                    'foorms' => 'snakeArraySubstitution',
+                    'foorms' => [
+                        'entry' => $this->snakeModel,
+                    ],
                 ]
             ],
             [
-                'entry' => Str::snake($this->model->model_class),
-                'configFile' => 'permission',
+                'configFile' => config_path('permission.php'),
                 'keys' => [
-                    'cupparis.models' => 'snakeArraySubstitution',
-                    'policies.models' => 'policyModelsSubstitution',
+                    'cupparis.models' => [
+                        'entry' => $this->snakeModel
+                    ],
+                    'policies.models' => [
+                        'key' => '\\' . $this->modelsNamespaces . $this->studlyModel,
+                        'entry' => '\\' . $this->policiesNamespaces . $this->studlyModel . 'Policy',
+                    ],
                 ],
             ],
         ];
+    }
+
+    protected function manageConfigs($configsData, $type)
+    {
+
 
         foreach ($configsData as $configData) {
 
             $configFile = Arr::get($configData, 'configFile');
-            $entry = Arr::get($configData, 'entry');
             $configKeys = Arr::get($configData, 'keys');
-            $configValue = config($configFile, []);
+
+            if ($this->files->exists($configFile)) {
+                $configValue = require $configFile;
+            } else {
+                $configValue = [];
+            }
+
 
             $configFileString = "<?php\n\nreturn ";
 
 //            Log::info("CONFIG FILE::: " . $configFile);
 //            Log::info($configValue);
-            foreach ($configKeys as $configKey => $method) {
+            foreach ($configKeys as $configKey => $configKeyValue) {
+                $entry = Arr::get($configKeyValue, 'entry');
+                $key = Arr::get($configKeyValue, 'key');
+
                 $values = Arr::get($configValue, $configKey, []);
 
-                $values = $this->$method($values, $entry, $type);
+                $values = $this->configSubstitution($values, $entry, $type, $key);
 
-                Arr::set($configValue,$configKey,$values);
+                Arr::set($configValue, $configKey, $values);
             }
 
             $configFileString .= varexport($configValue) . ';';
 
 
-
-            $this->files->put(config_path($configFile . '.php'), $configFileString);
+            $this->files->put($configFile, $configFileString);
 
         }
 
     }
 
-    protected function snakeArraySubstitution($values, $entry, $type)
+
+    protected function configSubstitution($values, $entry, $type, $key = null)
     {
 
         if ($type == 'u') {
-            $values = Arr::reject($values, function ($item) use ($entry) {
-                return $item == $entry;
-            });
+            if ($key) {
+                unset($values[$key]);
+            } else {
+                $values = Arr::reject($values, function ($item) use ($entry) {
+                    return $item == $entry;
+                });
+            }
         } else {
-            $values[] = $entry;
+            if ($key) {
+                $values[$key] = $entry;
+            } else {
+                $values[] = $entry;
+            }
         }
+
 
         return $values;
     }
-
-    protected function policyModelsSubstitution($values, $entry, $type)
-    {
-
-
-        $modelObjectName = '\\' . $this->modelsNamespaces . Str::studly($entry);
-        $policyObjectName = '\\' . $this->policiesNamespaces . Str::studly($entry) . 'Policy';
-
-        if ($type == 'u') {
-            unset($values[$modelObjectName]);
-        } else {
-            $values[$modelObjectName] = $policyObjectName;
-        }
-
-        return $values;
-    }
-
 
 
     protected function getStub($type = 'migration')
