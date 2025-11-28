@@ -84,6 +84,19 @@ return [
             ],
             "id" => [
 
+            ],
+            "cosa_migrare" => [
+                'options' => [
+                    'tutto' => 'Tutto',
+                    'migration' => 'Migrazione',
+                    'modello' => 'Modello',
+                    'policy' => 'Policy',
+                    'foorm' => 'Foorm',
+                    'modelconf' => 'Modelconf',
+                    'lang' => 'Lang',
+                ],
+//                'default' => ['tutto'],
+                'nulloption' => false,
             ]
         ],
         'relations' => [

@@ -48,6 +48,9 @@ class Rollback extends FoormAction
 
     public function rollbackLangs()
     {
+        if (!$this->checkDaFare('lang')) {
+            return;
+        };
 //
 //        foreach ($this->langs['model'] as $modelLangFile) {
 //            $langsModelData = [
@@ -66,6 +69,10 @@ class Rollback extends FoormAction
     public function rollbackMigration()
     {
 
+        if (!$this->checkDaFare('migration')) {
+            return;
+        };
+
         $migrationTable = $this->model->nome;
 
         $migrationFiles = $this->files->files(base_path($this->migrationPath));
@@ -82,6 +89,9 @@ class Rollback extends FoormAction
 
     public function rollbackModelconf()
     {
+        if (!$this->checkDaFare('modelconf')) {
+            return;
+        };
 
         $jsModelName = "Model" . $this->model->model_class;
 
@@ -111,6 +121,9 @@ class Rollback extends FoormAction
 
     public function rollbackModel()
     {
+        if (!$this->checkDaFare('modello')) {
+            return;
+        };
 
         $filename = base_path("app/Models/" . $this->model->model_class . '.php');
 
@@ -179,6 +192,9 @@ class Rollback extends FoormAction
 
     public function rollbackPolicy()
     {
+        if (!$this->checkDaFare('policy')) {
+            return;
+        };
 
 
         $filename = base_path("app/Policies/" . $this->model->model_class . 'Policy.php');
@@ -192,6 +208,9 @@ class Rollback extends FoormAction
 
     public function rollbackFoorm()
     {
+        if (!$this->checkDaFare('foorm')) {
+            return;
+        };
 
 
         $filename = base_path("config/foorms/" . Str::snake($this->model->model_class) . '.php');

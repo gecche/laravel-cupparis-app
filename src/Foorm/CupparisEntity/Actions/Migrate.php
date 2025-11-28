@@ -55,6 +55,10 @@ class Migrate extends FoormAction
     public function saveMigration()
     {
 
+        if (!$this->checkDaFare('migration')) {
+            return;
+        };
+
         $stub = $this->files->get($this->getStub());
 
         $migrationTable = $this->model->nome;
@@ -212,6 +216,9 @@ class Migrate extends FoormAction
 
     public function saveModel()
     {
+        if (!$this->checkDaFare('modello')) {
+            return;
+        };
 
 
         $filename = base_path(Arr::get($this->msConfig, 'modelsPath') . $this->model->model_class . '.php');
@@ -281,6 +288,11 @@ class Migrate extends FoormAction
 
 
     protected function saveLangs() {
+
+        if (!$this->checkDaFare('lang')) {
+            return;
+        };
+
         /*
          * SALVO I FIELDS NEL LANG
          */
@@ -346,6 +358,10 @@ class Migrate extends FoormAction
     public function savePolicy()
     {
 
+        if (!$this->checkDaFare('policy')) {
+            return;
+        };
+
         $modelName = $this->model->model_class;
 
         $filename = base_path(Arr::get($this->msConfig, 'policiesPath') . $modelName . 'Policy.php');
@@ -388,6 +404,9 @@ class Migrate extends FoormAction
 
     public function saveFoorm()
     {
+        if (!$this->checkDaFare('foorm')) {
+            return;
+        };
 
 
         $filename = base_path("config/foorms/" . $this->snakeModel . '.php');
@@ -580,6 +599,9 @@ class Migrate extends FoormAction
 
     public function saveModelConf()
     {
+        if (!$this->checkDaFare('modelconf')) {
+            return;
+        };
 
 
         $jsModelName = "Model" . $this->model->model_class;

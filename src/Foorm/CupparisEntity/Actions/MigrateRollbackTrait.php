@@ -30,10 +30,14 @@ trait MigrateRollbackTrait
     protected $snakeModel;
     protected $studlyModel;
 
+    protected $cosaFare;
 
     protected function initOps()
     {
         $this->model = $this->model->find(Arr::get($this->input, 'id'));
+        $this->cosaFare = Arr::wrap(Arr::get($this->input, 'cosa',[]));
+        Log::info("ACTION INPUT");
+        Log::info($this->input);
         $this->msConfig = Config::get('cupparis-app.cupparis_entity', []);
 
         $this->langs = Arr::get($this->msConfig, 'langs', []);
@@ -51,6 +55,10 @@ trait MigrateRollbackTrait
 
         $this->files = new Filesystem();
 
+    }
+
+    protected function checkDaFare($type) {
+        return in_array("tutto",$this->cosaFare) || in_array($type,$this->cosaFare);
     }
 
     protected function getConfigsData()
