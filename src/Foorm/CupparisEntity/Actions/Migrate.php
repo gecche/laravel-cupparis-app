@@ -584,7 +584,7 @@ class Migrate extends FoormAction
 
         $jsModelName = "Model" . $this->model->model_class;
 
-        $modelsConfsFileName = $this->modelConfsPath . $jsModelName . '.js';
+        $modelsConfsFileName = $this->vueApplicationModelConfsPath . $jsModelName . '.js';
 
         $filename = base_path($modelsConfsFileName);
 
@@ -643,7 +643,7 @@ class Migrate extends FoormAction
 
 
         //AGGIORNO INDEX.JS
-        $indexFileJsName = base_path($this->modelConfsPath . 'index.js');
+        $indexFileJsName = base_path($this->vueApplicationModelConfsPath . 'index.js');
         $indexJsFile = $this->files->get($indexFileJsName);
 
         $importString = "\nimport " . $jsModelName . " from './" . $jsModelName . ".js';";
@@ -656,6 +656,15 @@ class Migrate extends FoormAction
             $indexJsFile = str_replace("//INSTALL START", "//INSTALL START" . $installString, $indexJsFile);
         }
         $this->files->put($indexFileJsName, $indexJsFile);
+
+        //AGGIORNO MODELS.JSON
+        $modelsJsonFilename = base_path($this->vueApplicationConfigPath . 'models.json');
+        $modelsJsonFile = $this->getJsonFile($modelsJsonFilename);
+        $modelsJsonFile[$jsModelName] = $jsModelName . '.js';
+        $this->files->put($modelsJsonFilename,cupparis_pretty_json_encode($modelsJsonFile));
+
+
+
 
     }
 

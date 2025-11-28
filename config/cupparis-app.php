@@ -54,7 +54,9 @@ return [
         'models_namespace' => 'App\\Models\\',
         'policies_namespace' => 'App\\Policies\\',
 
-        'modelConfsPath' => 'resources/vue-application-v4/src/application/ModelConfs/',
+        'vueApplicationPath' => 'resources/vue-application-v4/src/application/',
+        'vueApplicationModelsConfPath' => 'ModelConfs/',
+        'vueApplicationConfigPath' => 'config/',
 
         'langs' => [
             'model' => [

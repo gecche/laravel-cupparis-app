@@ -85,7 +85,7 @@ class Rollback extends FoormAction
 
         $jsModelName = "Model" . $this->model->model_class;
 
-        $modelsConfsFileName = $this->modelConfsPath . $jsModelName . '.js';
+        $modelsConfsFileName = $this->vueApplicationModelConfsPath . $jsModelName . '.js';
 
         $filename = base_path($modelsConfsFileName);
 
@@ -93,8 +93,14 @@ class Rollback extends FoormAction
             $this->files->delete($filename);
         }
 
+        //AGGIORNO MODELS.JSON
+        $modelsJsonFilename = base_path($this->vueApplicationConfigPath . 'models.json');
+        $modelsJsonFile = $this->getJsonFile($modelsJsonFilename);
+        Arr::pull($modelsJsonFile,$jsModelName);
+        $this->files->put($modelsJsonFilename,cupparis_pretty_json_encode($modelsJsonFile));
+
         //AGGIORNO INDEX.JS
-        $indexFileJsName = base_path($this->modelConfsPath . 'index.js');
+        $indexFileJsName = base_path($this->vueApplicationModelConfsPath . 'index.js');
         $indexJsFile = $this->files->get($indexFileJsName);
 
         $importString = "\nimport " . $jsModelName . " from './" . $jsModelName . ".js';";

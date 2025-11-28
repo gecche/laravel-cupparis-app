@@ -20,7 +20,9 @@ trait MigrateRollbackTrait
     protected $files;
 
     protected $migrationPath;
-    protected $modelConfsPath;
+    protected $vueApplicationModelConfsPath;
+    protected $vueApplicationPath;
+    protected $vueApplicationConfigPath;
 
     protected $modelsNamespaces;
     protected $policiesNamespaces;
@@ -38,7 +40,9 @@ trait MigrateRollbackTrait
         $this->stubs = Arr::get($this->msConfig, 'stubs', []);
 
         $this->migrationPath = 'database/migrations/';
-        $this->modelConfsPath = Arr::get($this->msConfig, 'modelConfsPath');
+        $this->vueApplicationPath = Arr::get($this->msConfig, 'vueApplicationPath', 'resources/vue-application-v4/src/application/');
+        $this->vueApplicationModelConfsPath = $this->vueApplicationPath . Arr::get($this->msConfig, 'vueApplicationModelConfsPath', 'ModelConfs/');
+        $this->vueApplicationConfigPath = $this->vueApplicationPath . Arr::get($this->msConfig, 'vueApplicationConfigPath', 'config/');
         $this->modelsNamespaces = Arr::get($this->msConfig, 'models_namespace');
         $this->policiesNamespaces = Arr::get($this->msConfig, 'policies_namespace');
 
@@ -220,6 +224,14 @@ trait MigrateRollbackTrait
         return $string;
     }
 
+    protected function getJsonFile($filename) {
+
+        if (!$this->files->exists($filename)) {
+            $this->files->put($filename,cupparis_pretty_json_encode(new \stdClass()));
+        }
+        return json_decode($this->files->get($filename),true);
+
+    }
 
 }
 

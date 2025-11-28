@@ -91,6 +91,8 @@ class FoormActionController extends Controller
             $this->buildFoormAction($action, $foormName, $foormType, $params);
             $this->getFoormActionResult();
         } catch (\Exception $e) {
+            Log::info("FOORM ACTION CONTROLLER EXCEPTION");
+            Log::info($e->getMessage());
             Log::info($e->getTraceAsString());
             $this->_error($e->getMessage());
         }
