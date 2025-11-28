@@ -6,25 +6,7 @@ use Illuminate\Support\Str;
 
 trait CupparisEntityTrait {
 
-    protected $modelsList = [];
-
-    protected function getModelsList() {
-        $filesModels = $this->files->files(app_path('Models'));
-        $models = [];
-        foreach ($filesModels as $file) {
-            if (Str::endsWith($file, '.php')) {
-                $name = $file->getRelativePathName();
-                $model = substr($name, 0, -4);
-
-                if (class_exists('App\\Models\\') . $model) {
-                    $models[] = $model;
-                }
-            }
-        }
-
-        return $models;
-    }
-
+    use CupparisEntityCommonTrait;
 
 
     public function createOptionsRelazioneTabella($fieldValue, $defaultOptionsValues, $relationName = null, $relationMetadata = [])

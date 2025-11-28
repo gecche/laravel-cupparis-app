@@ -56,6 +56,14 @@ class FoormActionController extends Controller
         return $this->_json();
     }
 
+    public function import($pk = null)
+    {
+
+        $params = $pk ? ['id' => $pk] : [];
+        $this->buildAndGetFoormActionResult('import', 'cupparis_entity', 'list', $params);
+        return $this->_json();
+    }
+
     public function postMultiDelete($foormName, $foormType, $pk = null)
     {
         $params = $pk ? ['id' => $pk] : [];

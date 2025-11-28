@@ -691,4 +691,58 @@ class Migrate extends FoormAction
     }
 
 
+
+    protected function implodeArrayJsFieldsType($fields)
+    {
+
+        $string = '';
+
+        foreach ($fields as $field) {
+
+            $type = Arr::get($field, 'type');
+            $stub = $this->files->get($this->getStubInPath($type));
+
+            $stub = str_replace(
+                '{{$modelName}}', Str::snake($this->model->model_class), $stub
+            );
+
+            $string .= $this->getIndent(3) . "'" . Arr::get($field, 'nome') . "'";
+            $string .= ' : { ' . "\n";
+            $string .= $stub;
+            $string .= $this->getIndent(3) . '}, ' . "\n";
+        }
+
+        $string = trim($string, " ,\n");
+
+        return $string;
+    }
+
+    protected function implodeArrayJsOrderFields($fields)
+    {
+
+        $string = '';
+
+        foreach ($fields as $field) {
+            $string .= $this->getIndent(3) . "'" . Arr::get($field, 'nome') . "' : '" . Arr::get($field, 'nome') . "',\n";
+        }
+
+        $string = trim($string, " ,\n");
+
+        return $string;
+    }
+
+    protected function implodeArrayJsFields($fields)
+    {
+
+        $string = '';
+
+        foreach ($fields as $field) {
+            $string .= $this->getIndent(3) . "'" . Arr::get($field, 'nome') . "',\n";
+        }
+
+        $string = trim($string, " ,\n");
+
+        return $string;
+    }
+
 }

@@ -67,12 +67,15 @@ return [
         'allowed_actions' => [
             'migrate' => true,
             'rollback' => true,
+            'import' => true,
         ],
 
         'actions' => [
             'migrate' => [
             ],
             'rollback' => [
+            ],
+            'import' => [
             ],
         ],
         'fields' => [
@@ -115,6 +118,12 @@ return [
 
             ],
             "id" => [
+
+            ],
+            'lang_singolare' => [
+
+            ],
+            'lang_plurale' => [
 
             ],
             'columns_list' => [
