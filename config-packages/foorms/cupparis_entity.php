@@ -160,7 +160,7 @@ return [
                     'id' => [],
                     'nome' => [],
                     'tipo' => [
-                        'options' => 'enum:App\\Enums\\CupparisTipiCampi',
+                        'options' => 'enum:' . \Gecche\Cupparis\App\Enums\CupparisTipiCampi::class,
                     ],
                     'informazioni' => [],
                     'nullable' => [
@@ -195,13 +195,13 @@ return [
                         ],
                     ],
                     'model_conf_search' => [
-                        'options' => 'enum:App\\Enums\\CupparisTipiWidgets',
+                        'options' => 'enum:' . \Gecche\Cupparis\App\Enums\CupparisTipiWidgets::class,
                     ],
                     'model_conf_list' => [
-                        'options' => 'enum:App\\Enums\\CupparisTipiWidgets',
+                        'options' => 'enum:' . \Gecche\Cupparis\App\Enums\CupparisTipiWidgets::class,
                     ],
                     'model_conf_edit' => [
-                        'options' => 'enum:App\\Enums\\CupparisTipiWidgets',
+                        'options' => 'enum:' . \Gecche\Cupparis\App\Enums\CupparisTipiWidgets::class,
                     ],
                 ]
             ]

@@ -3,13 +3,7 @@
 namespace Gecche\Cupparis\App\Foorm\CupparisEntity;
 
 
-use Gecche\Cupparis\App\Enums\CupparisTipiCampi;
-use App\Models\CupparisEntityField;
 use Gecche\Cupparis\App\Foorm\Base\FoormInsert as BaseFoormInsert;
-use Gecche\DBHelper\Facades\DBHelper;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class FoormEdit extends BaseFoormInsert
 {

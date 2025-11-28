@@ -7,7 +7,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
-trait CupparisEntityCommonTrait {
+trait CupparisEntityCommonTrait
+{
 
     protected $modelsList = [];
 
@@ -35,8 +36,6 @@ trait CupparisEntityCommonTrait {
 
     protected function initOps()
     {
-        $this->model = $this->model->find(Arr::get($this->input, 'id'));
-        $this->cosaFare = Arr::wrap(Arr::get($this->input, 'cosa',[]));
 //        Log::info("ACTION INPUT");
 //        Log::info($this->input);
         $this->msConfig = Config::get('cupparis-app.cupparis_entity', []);
@@ -48,8 +47,13 @@ trait CupparisEntityCommonTrait {
         $this->vueApplicationPath = Arr::get($this->msConfig, 'vueApplicationPath', 'resources/vue-application-v4/src/application/');
         $this->vueApplicationModelConfsPath = $this->vueApplicationPath . Arr::get($this->msConfig, 'vueApplicationModelConfsPath', 'ModelConfs/');
         $this->vueApplicationConfigPath = $this->vueApplicationPath . Arr::get($this->msConfig, 'vueApplicationConfigPath', 'config/');
-        $this->modelsNamespaces = Arr::get($this->msConfig, 'models_namespace','App\\Models\\');
-        $this->policiesNamespaces = Arr::get($this->msConfig, 'policies_namespace','App\\Policies\\');
+        $this->modelsNamespaces = Arr::get($this->msConfig, 'models_namespace', 'App\\Models\\');
+        $this->policiesNamespaces = Arr::get($this->msConfig, 'policies_namespace', 'App\\Policies\\');
+
+        if (Arr::get($this->input, 'id')) {
+            $this->model = $this->model->find(Arr::get($this->input, 'id'));
+        }
+        $this->cosaFare = Arr::wrap(Arr::get($this->input, 'cosa', []));
 
         $this->snakeModel = Str::snake($this->model->model_class);
         $this->studlyModel = Str::studly($this->snakeModel);
@@ -57,7 +61,9 @@ trait CupparisEntityCommonTrait {
         $this->files = new Filesystem();
 
     }
-    protected function getModelsList() {
+
+    protected function getModelsList()
+    {
         $filesModels = $this->files->files(app_path('Models'));
         $models = [];
         foreach ($filesModels as $file) {
@@ -73,8 +79,6 @@ trait CupparisEntityCommonTrait {
 
         return $models;
     }
-
-
 
 
 }

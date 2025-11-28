@@ -48,40 +48,7 @@ class FoormInsert extends BaseFoormInsert
         $saved = parent::saveModel($input);
         switch ($originalFormType) {
             case 'insert_express':
-                $nonIdFields = 0;
-                foreach ($this->fieldsText as $fieldName) {
-                    $isId = Str::endsWith($fieldName, '_id');
-                    if (!$isId) {
-                        $nonIdFields++;
-                    }
-                    $fieldName = trim($fieldName);
-                    list($tipoCampo, $informazioni) = $this->guessCampo($fieldName, $isId);
-                    $defaultValue = in_array($tipoCampo, [CupparisTipiCampi::BOOLEAN->value, CupparisTipiCampi::INTEGER->value])
-                        ? 0 : null;
-                    $indexValue = in_array($fieldName, ['codice', 'code']) ? 'UNIQUE' :
-                        ($tipoCampo == CupparisTipiCampi::ID_INTEGER->value ? 'INDEX' : null);
-                    $relazioneModello = $this->guessRelationModel($fieldName);
-                    $widgetSearch = $this->guessWidgetSearch($fieldName, $tipoCampo, $relazioneModello);
-                    $widgetList = $this->guessWidgetList($fieldName, $tipoCampo, $relazioneModello);
-                    $widgetEdit = $this->guessWidgetEdit($fieldName, $tipoCampo, $relazioneModello);
-                    $cupparisEntityField = new CupparisEntityField([
-                        'entity_id' => $this->model->getKey(),
-                        'nome' => $fieldName,
-                        'tipo' => $tipoCampo,
-                        'nullable' => (!$isId && $nonIdFields < 1) ? 0 : 1,
-                        'informazioni' => $informazioni,
-                        'default' => $defaultValue,
-                        'index' => $indexValue,
-                        'relazione_tabella' => $relazioneModello,
-                        'relazione_campo' => $isId ? 'id' : null,
-                        'on_delete' => $isId ? 'RESTRICT' : null,
-                        'on_update' => $isId ? 'CASCADE' : null,
-                        'model_conf_search' => $widgetSearch,
-                        'model_conf_list' => $widgetList,
-                        'model_conf_edit' => $widgetEdit,
-                    ]);
-                    $cupparisEntityField->save();
-                }
+                $this->guessCupparisEntityFields($this->model,$this->fieldsText);
                 $this->model->load(['fields']);
                 break;
             default:
