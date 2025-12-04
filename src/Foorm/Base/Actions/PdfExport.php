@@ -135,11 +135,26 @@ class PdfExport extends FoormAction
 
         File::append($filename, $pdf);
 
+        if ($this->isApi) {
+            $name = $this->getApiFilename();
+            $this->actionResult = [
+                'content' => base64_encode(File::get($filename)),
+                'mime' => 'application/pdf',
+                'name' => $name,
+            ];
+            return $this->actionResult;
+        }
+
         $this->actionResult = ['link' => '/downloadtemp/' . $relativeFilename];
         return $this->actionResult;
 
     }
 
+    public function getApiFilename() {
+        $apiFilename = Arr::get($this->config, 'apiFilename', Str::snake($this->foorm->getModelRelativeName()));
+
+        return $apiFilename . '_' . date("Ymd_His") . ".csv";
+    }
 
     public function validateAction()
     {

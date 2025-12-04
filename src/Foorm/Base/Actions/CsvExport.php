@@ -32,6 +32,7 @@ class CsvExport extends FoormAction
 
     protected $relations = [];
 
+
     protected function init()
     {
         parent::init();
@@ -102,10 +103,28 @@ class CsvExport extends FoormAction
                 break;
         }
 
+        if ($this->isApi) {
+            $name = $this->getApiFilename();
+            $this->actionResult = [
+                'content' => base64_encode(File::get($filename)),
+                'mime' => 'text/csv',
+                'name' => $name,
+            ];
+            return $this->actionResult;
+        }
+
         $this->actionResult = ['link' => '/downloadtemp/' . $relativeFilename];
         return $this->actionResult;
 
     }
+
+
+    public function getApiFilename() {
+        $apiFilename = Arr::get($this->config, 'apiFilename', Str::snake($this->foorm->getModelRelativeName()));
+
+        return $apiFilename . '_' . date("Ymd_His") . ".csv";
+    }
+
 
 
     protected function performActionList($csvStream, $filename = null)

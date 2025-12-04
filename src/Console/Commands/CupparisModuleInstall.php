@@ -80,6 +80,10 @@ class CupparisModuleInstall extends Command
     }
 
     protected function manageDir($dirToManage,$destDir) {
+        if (!$this->fileService->exists($this->modulePath . $dirToManage)) {
+            $this->comment("\n" . $this->modulePath . $dirToManage . ' not found.' . "\n");
+            return;
+        }
         $this->fileService->ensureDirectoryExists($destDir);
 
         $this->comment("\n" . $dirToManage . ' ---> ' . $destDir . "\n");
