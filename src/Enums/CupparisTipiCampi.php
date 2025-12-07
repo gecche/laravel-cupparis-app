@@ -21,6 +21,7 @@ enum CupparisTipiCampi: string
     case DECIMAL = 'decimal';
     case FLOAT = 'float';
 
+    case UUID = 'uuid';
 
 }
 

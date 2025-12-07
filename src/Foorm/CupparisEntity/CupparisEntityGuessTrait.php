@@ -98,6 +98,13 @@ trait CupparisEntityGuessTrait
             $fieldName = substr($fieldName, 0, -3);
         }
 
+        $uuidFieldNames = [
+            'uuid',
+        ];
+        if (in_array($fieldName, $uuidFieldNames)) {
+            return [CupparisTipiCampi::UUID->value, null];
+        }
+
         $booleanFieldNames = [
             'attivo',
             'attiva',
@@ -154,6 +161,18 @@ trait CupparisEntityGuessTrait
         ];
         if (in_array($fieldName, $decimalFieldName)) {
             return [CupparisTipiCampi::DECIMAL->value, "10,2"];
+        }
+
+        $coordFieldName = [
+            'lat',
+            'lng',
+            'latitude',
+            'longitude',
+            'latitudine',
+            'longitudine',
+        ];
+        if (in_array($fieldName, $coordFieldName)) {
+            return [CupparisTipiCampi::DECIMAL->value, "10,7"];
         }
 
         $dateFieldName = [

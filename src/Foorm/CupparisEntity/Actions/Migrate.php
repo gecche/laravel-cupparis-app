@@ -259,8 +259,8 @@ class Migrate extends FoormAction
 
         }
 
-        $variables['relationFoto'] = $this->model->hasFoto ? "'fotos' => [self::MORPH_MANY, 'related' => Foto::class, 'name' => 'mediable']," : '';
-        $variables['relationAttachments'] = $this->model->hasAttachments ? "'attachments' => [self::MORPH_MANY, 'related' => Attachment::class, 'name' => 'mediable']," : '';
+        $variables['relationFoto'] = $this->model->has_foto ? "'fotos' => [self::MORPH_MANY, 'related' => Foto::class, 'name' => 'mediable']," : '';
+        $variables['relationAttachments'] = $this->model->has_attachments ? "'attachments' => [self::MORPH_MANY, 'related' => Attachment::class, 'name' => 'mediable']," : '';
 
 
         $variables['timestamps'] = !$this->model->timestamps ? 'false' : 'true';
@@ -502,7 +502,7 @@ class Migrate extends FoormAction
             ];
         }
 
-        if ($this->model->hasFoto) {
+        if ($this->model->has_foto) {
             $relazioniFinaliList['fotos'] = [
                 'fields' => [
                     'id' => [],
@@ -527,7 +527,7 @@ class Migrate extends FoormAction
                 'afterUpdateCallbackMethods' => ['filesOps'],
             ];
         }
-        if ($this->model->hasAttachments) {
+        if ($this->model->has_attachments) {
             $relazioniFinaliList['attachments'] = [
                 'fields' => [
                     'id' => [],
@@ -626,14 +626,14 @@ class Migrate extends FoormAction
         }
 
 
-        if ($this->model->hasFoto) {
+        if ($this->model->has_foto) {
             $editValues['nome'][] = 'fotos';
             $editValues['type'][] = 'fotosEdit';
             $listValues['nome'][] = 'fotos';
             $listValues['type'][] = 'images';
             $listValues['order'][] = 'no';
         }
-        if ($this->model->hasAttachments) {
+        if ($this->model->has_attachments) {
             $editValues['nome'][] = 'attachments';
             $editValues['type'][] = 'attachmentsEdit';
         }

@@ -125,7 +125,13 @@ class Rollback extends FoormAction
             return;
         };
 
-        $filename = base_path("app/Models/" . $this->model->model_class . '.php');
+        $filename = base_path(Arr::get($this->msConfig, 'modelsPath') . $this->model->model_class . '.php');
+
+        if ($this->files->exists($filename)) {
+            $this->files->delete($filename);
+        }
+
+        $filename = base_path( Arr::get($this->msConfig, 'modelsPath') . "Relations/" . $this->model->model_class . 'Relations.php');
 
         if ($this->files->exists($filename)) {
             $this->files->delete($filename);
@@ -197,7 +203,7 @@ class Rollback extends FoormAction
         };
 
 
-        $filename = base_path("app/Policies/" . $this->model->model_class . 'Policy.php');
+        $filename = base_path(Arr::get($this->msConfig, 'policiesPath') . $this->model->model_class . 'Policy.php');
 
         if ($this->files->exists($filename)) {
             $this->files->delete($filename);
