@@ -13,7 +13,7 @@ use App\Http\Controllers\FoormActionController;
     ]);
 
     //PARAMETRI DA METTERE IN POST: ids (array)
-    Route::post('{foormaction}/{foorm}/{foormtype}/{foormpk?}', [FoormActionController::class,'postMultiDelete'])->where([
+    Route::post('{foormaction}/{foorm}/{foormtype}/{foormpk?}', [FoormActionController::class,'foormAction'])->where([
         'foorm' => $whereFoorm,
         'foormaction' => $whereFoormAction
     ]);

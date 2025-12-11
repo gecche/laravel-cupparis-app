@@ -26,10 +26,9 @@ class FoormActionController extends Controller
     ];
 
 
-    public function postSet($foormName, $foormType, $pk = null)
-    {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('set', $foormName, $foormType, $params);
+    public function foormAction($foormAction, $foorm, $foormType, $foormPk = null) {
+        $params = $foormPk ? ['id' => $foormPk] : [];
+        $this->buildAndGetFoormActionResult($foormAction, $foorm, $foormType, $params);
         return $this->_json();
     }
 
@@ -64,33 +63,33 @@ class FoormActionController extends Controller
         return $this->_json();
     }
 
-    public function postMultiDelete($foormName, $foormType, $pk = null)
+    public function foormCAction($foormcaction, $foorm, $foormType, $constraintField, $constraintValue, $foormPk = null)
     {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('multi-delete', $foormName, $foormType, $params);
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue, $foorm, $foormType);
+        if ($pk) {
+            $params['id'] = $pk;
+        }
+        $this->buildAndGetFoormActionResult($foormcaction, $foorm, $foormType, $params);
         return $this->_json();
     }
 
-    public function postAutocomplete($foormName, $foormType, $pk = null)
+    protected function prepareFixedConstraints($constraintField, $constraintValue, $foorm = null, $foormType = null)
     {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('autocomplete', $foormName, $foormType, $params);
-        return $this->_json();
+        switch ($foorm) {
+            default:
+                return [
+                    'fixed_constraints' => [
+                        [
+                            'field' => $constraintField,
+                            'value' => $constraintValue,
+                        ],
+                    ]
+                ];
+
+        }
+
     }
 
-    public function postUploadfile($foormName, $foormType, $pk = null)
-    {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('uploadfile', $foormName, $foormType, $params);
-        return $this->_json();
-    }
-
-    public function postCsvExport($foormName, $foormType, $pk = null)
-    {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('csv-export', $foormName, $foormType, $params);
-        return $this->_json();
-    }
 
     protected function buildAndGetFoormActionResult($action, $foormName, $foormType, $params)
     {
