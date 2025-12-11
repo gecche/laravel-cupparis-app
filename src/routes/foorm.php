@@ -7,13 +7,13 @@ use App\Http\Controllers\FoormController;
 
 Route::post('uploadfile', [FoormController::class,'uploadfile']);
 
-$configFoorms = config('foorm.foorms');
+$configFoorms = config('foorm.foorms',[]);
 $whereFoorm = join("|", $configFoorms);
 
-$configFoormActions = config('foorm.foorm-actions');
+$configFoormActions = config('foorm.foorm-actions',[]);
 $whereFoormAction = join("|", $configFoormActions);
 
-$configCFoormActions = config('foorm.foorm-c-actions');
+$configCFoormActions = config('foorm.foorm-c-actions',[]);
 $whereFoormCAction = join("|", $configCFoormActions);
 
 //print_r($cupparisJsonFoorms);die();
