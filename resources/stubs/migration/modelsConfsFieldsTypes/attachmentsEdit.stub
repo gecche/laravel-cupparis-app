@@ -22,7 +22,7 @@
                                 field: 'attachments|resource',
                                 //resource_type : 'attachment'
                             },
-                            modelName: <MODELNAME>,//'pagina',
+                            modelName: '{{$modelName}}',
                             previewConf: {
                                 iconSize: 'fa-3x'
                             },

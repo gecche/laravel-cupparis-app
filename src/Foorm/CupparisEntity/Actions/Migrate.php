@@ -464,6 +464,7 @@ class Migrate extends FoormAction
                     ];
                     break;
                 case 'id_integer':
+                    $relation = null;
                     if ($campo->relazione_tabella) {
                         $relation = Arr::get($relazioni, $campo->nome);
                     }
@@ -627,15 +628,21 @@ class Migrate extends FoormAction
 
 
         if ($this->model->has_foto) {
-            $editValues['nome'][] = 'fotos';
-            $editValues['type'][] = 'fotosEdit';
-            $listValues['nome'][] = 'fotos';
-            $listValues['type'][] = 'images';
-            $listValues['order'][] = 'no';
+            $editValues['fotos'] = [
+                'nome' => 'fotos',
+                'type' => 'fotosEdit',
+            ];
+            $listValues['fotos'] = [
+                'nome' => 'fotos',
+                'type' => 'w-images',
+                'order' => 0,
+            ];
         }
         if ($this->model->has_attachments) {
-            $editValues['nome'][] = 'attachments';
-            $editValues['type'][] = 'attachmentsEdit';
+            $editValues['attachments'] = [
+                'nome' => 'attachments',
+                'type' => 'attachmentsEdit',
+            ];
         }
 
         $variables['searchFields'] = $this->implodeArrayJsFields($searchValues);
