@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
  */
 trait UploadableTraits {
 
+    use ApiUploadableTrait;
 
     protected $nameField = 'nome';
 
