@@ -4,6 +4,7 @@ namespace Gecche\Cupparis\App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Str;
@@ -147,12 +148,12 @@ class UploadService {
 
     }
 
-    public function saveTempFile($type, $file) {
+    public function saveTempFile($type, $file, $content = false) {
 
         $methodName = 'saveTempFile' . Str::studly($type);
 
         if (method_exists($this,$methodName)) {
-            return $this->$methodName($file);
+            return $this->$methodName($file,$content);
         }
 
         $temp_dir = storage_temp_path();
@@ -169,27 +170,33 @@ class UploadService {
 
         $file->move($temp_dir, $tempFileName);
 
-        return $this->getTempFileArray($type,$file,$tempFileName);
+        return $this->getTempFileArray($type,$file,$tempFileName,$content);
 
 
     }
 
-    public function getTempFileArray($type,$file,$tempFileName) {
+    public function getTempFileArray($type,$file,$tempFileName,$content = false) {
 
         $methodName = 'getTempFileArray' . Str::studly($type);
 
         if (method_exists($this,$methodName)) {
-            return $this->$methodName($file,$tempFileName);
+            return $this->$methodName($file,$tempFileName,$content);
         }
 
 // TODO creare una copia per copy()
-        return [
+        $tempArray = [
             'id' => $tempFileName,
             'mimetype' => $file->getClientMimeType(),
             'filename' => $file->getClientOriginalName(),
 
             'url' => $this->getUrl($type,$tempFileName),
         ];
+
+        if ($content) {
+            $tempArray['content'] = base64_encode(File::get(storage_temp_path($tempFileName)));
+        }
+
+        return $tempArray;
     }
 
     public function getUrl($type,$tempFileName) {
