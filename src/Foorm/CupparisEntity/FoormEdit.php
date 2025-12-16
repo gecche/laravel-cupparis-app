@@ -3,9 +3,9 @@
 namespace Gecche\Cupparis\App\Foorm\CupparisEntity;
 
 
-use Gecche\Cupparis\App\Foorm\Base\FoormInsert as BaseFoormInsert;
+use Gecche\Cupparis\App\Foorm\Base\FoormEdit as BaseFoormEdit;
 
-class FoormEdit extends BaseFoormInsert
+class FoormEdit extends BaseFoormEdit
 {
 
     use CupparisEntityTrait;
