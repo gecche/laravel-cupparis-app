@@ -8,7 +8,6 @@ use Gecche\Cupparis\App\Foorm\Base\FoormList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use function App\Foorm\config;
 
 class FoormDatafileList extends FoormList
 {
