@@ -11,6 +11,10 @@ Route::get('{foorm}/new/{type?}', [FoormController::class,'getNew'])->where([
     'foorm' => $whereFoorm
 ]);
 
+Route::get('{foorm}/{datafileId}/datafile-list/{type?}', [FoormController::class,'getDatafileList'])->where([
+    'foorm' => $whereFoorm
+]);
+
 Route::get('{foorm}/list/{type}', [FoormController::class,'getList'])->where([
     'foorm' => $whereFoorm
 ]);

@@ -26,6 +26,7 @@ class FoormManager extends BaseFoormManager
             case 'form':
                 switch ($this->config['form_type']) {
 
+                    case 'datafile_list':
                     case 'list':
                     case 'report':
                         $input = $this->setInputForFormList($input);

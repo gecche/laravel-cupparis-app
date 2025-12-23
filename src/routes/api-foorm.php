@@ -20,25 +20,25 @@ $whereFoormCAction = join("|", $configCFoormActions);
 
 //print_r($cupparisJsonFoorms);die();
 
-Route::group(['prefix' => 'foormaction','middleware' => 'auth:sanctum'], function () use ($whereFoorm,$whereFoormAction) {
+Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foormaction'], function () use ($whereFoorm,$whereFoormAction) {
 
     require __DIR__ . '/foormaction-routes.php';
 
 });
 
-Route::group(['prefix' => 'foormcaction','middleware' => 'auth:sanctum'], function () use ($whereFoorm,$whereFoormCAction) {
+Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foormcaction'], function () use ($whereFoorm,$whereFoormCAction) {
 
     require __DIR__ . '/foormcaction-routes.php';
 
 });
 
-Route::group(['prefix' => 'foorm','middleware' => 'auth:sanctum'], function () use ($whereFoorm) {
+Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foorm'], function () use ($whereFoorm) {
 
     require __DIR__ . '/foorm-routes.php';
 
 });
 
-Route::group(['prefix' => 'foormc', 'as' => 'foormc','middleware' => 'auth:sanctum'], function () use ($whereFoorm) {
+Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foormc', 'as' => 'foormc'], function () use ($whereFoorm) {
 
     require __DIR__ . '/foormc-routes.php';
 
