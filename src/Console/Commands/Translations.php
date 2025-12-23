@@ -123,7 +123,16 @@ class Translations extends Command
                 $foormToTranslate = $foormEntity . '.' . $formType;
                 $this->comment($foormToTranslate);
 
-                $params = [];
+                switch ($formType) {
+                    case 'datafile_list':
+                        $params = [
+                            'datafile_id' => 1,
+                        ];
+                        break;
+                    default:
+                        $params = [];
+                        break;
+                }
 
                 try {
                     $foorm = Foorm::getFoorm($foormToTranslate, request(), $params);
@@ -496,6 +505,7 @@ class Translations extends Command
             'list',
             'search',
             'view',
+            'datafile_list',
         ];
     }
 
