@@ -5,10 +5,11 @@ namespace Gecche\Cupparis\App\Models;
 use Gecche\Cupparis\App\Breeze\Breeze;
 use Gecche\Cupparis\DatafileJson\Breeze\Concerns\BreezeDatafileJsonTrait;
 use Gecche\Cupparis\DatafileJson\Breeze\Concerns\HasDatafileJsonValidation;
+use Gecche\Cupparis\DatafileJson\Breeze\Contracts\BreezeDatafileJsonInterface;
 use Gecche\Cupparis\DatafileJson\Breeze\Contracts\HasDatafileJsonValidationInterface;
 use Gecche\Cupparis\DatafileJson\Models\Relations\DatafileJsonRowRelations;
 
-class DatafileJsonRow extends Breeze implements HasDatafileJsonValidationInterface {
+class DatafileJsonRow extends Breeze implements BreezeDatafileJsonInterface {
 
     use DatafileJsonRowRelations;
     use HasDatafileJsonValidation;

@@ -74,8 +74,7 @@ class FoormDatafileList extends FoormList
         $arrayDataData = Arr::get($arrayData,'data',[]);
 
         foreach ($arrayDataData as $key => $arrayDatum) {
-            $rowDataArray = Arr::pull($arrayDatum,'row_data',[]);
-            $rowData = Arr::get($rowDataArray,'row_data',[]);
+            $rowData = Arr::pull($arrayDatum,'row_data',[]);
             $rowDataValues = Arr::get($rowData,'values',[]);
             $rowDataErrors = Arr::get($rowData,'errors',[]);
             $arrayDatum = array_merge($arrayDatum,$rowDataValues);
