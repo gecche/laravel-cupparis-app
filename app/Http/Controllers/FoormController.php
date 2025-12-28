@@ -31,6 +31,12 @@ class FoormController extends Controller
         'msg' => '',
     ];
 
+    public function getDatafileList($foormName, $datafileId, $type = 'datafile_list')
+    {
+        $this->buildAndGetFoormResult($foormName, $type, null, ['datafile_id' => $datafileId]);
+        return $this->_json();
+    }
+
     public function getSearch($foormName, $type = 'search')
     {
         $this->buildAndGetFoormResult($foormName, $type);

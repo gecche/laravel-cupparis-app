@@ -182,13 +182,15 @@ return [
 
         'models_permissions_prefixes' => [
             'web' => [
-                'edit',
-                'create',
-                'view',
-                'list',
-                'delete',
-                'menu',
-                'tab',
+                0 => 'edit',
+                1 => 'create',
+                2 => 'view',
+                3 => 'list',
+                4 => 'delete',
+                5 => 'menu',
+                6 => 'tab',
+                7 => 'listing',
+                8 => 'datafile',
             ]
         ],
 
