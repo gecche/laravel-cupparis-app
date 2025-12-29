@@ -542,6 +542,7 @@ class Translations extends Command
             'model' => 'model',
             'pagination' => 'pagination',
             'validation' => 'validation',
+            'action' => 'action',
         ];
     }
 
