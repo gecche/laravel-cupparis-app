@@ -177,7 +177,7 @@ return [
 
         //I modelli su cui creare i permessi (potrebbero anche essere messi in breeze.php)
         'models' => [
-            'user',
+            'datafile_json_row',
         ],
 
         'models_permissions_prefixes' => [
@@ -201,5 +201,12 @@ return [
             ]
             //Altri permessi non correlati ai singoli modelli
         ],
-    ]
+    ],
+    'policies' => [
+        'models' => [
+            '\\App\\Models\\User' => '\\App\\Policies\\UserPolicy',
+            '\\App\\Models\\Role' => '\\App\\Policies\\RolePolicy',
+            '\\App\\Models\\DatafileJsonRow' => '\\App\\Policies\\DatafileJsonRowPolicy',
+        ],
+    ],
 ];

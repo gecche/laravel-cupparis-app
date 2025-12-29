@@ -211,6 +211,7 @@ class FoormController extends Controller
         switch ($foormType) {
             case 'search':
             case 'list':
+            case 'datafile_list':
                 $ability = 'listing';
                 break;
             case 'edit':
