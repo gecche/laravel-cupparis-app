@@ -62,7 +62,7 @@ class CupparisEntity extends Breeze
     public $columnsForSelectList = ['nome'];
     //['id','descrizione'];
 
-    public $defaultOrderColumns = ['nome' => 'ASC',];
+    public $defaultOrderColumns = ['updated_at' => 'DESC',];
     //['cognome' => 'ASC','nome' => 'ASC'];
 
     public $columnsSearchAutoComplete = ['nome'];

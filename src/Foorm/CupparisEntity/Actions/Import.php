@@ -41,6 +41,8 @@ class Import extends FoormAction
             'Role',
             'Permission',
             'User',
+            'DatafileJson',
+            'DatafileJsonRow',
         ];
         foreach ($this->getModelsList() as $modelName) {
             if (in_array($modelName, $modelsToExclude)) {
