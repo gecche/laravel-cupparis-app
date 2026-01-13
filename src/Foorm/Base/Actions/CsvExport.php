@@ -6,6 +6,7 @@ namespace Gecche\Cupparis\App\Foorm\Base\Actions;
 use App\Models\CupparisEntity;
 use App\Services\UploadService;
 use Gecche\Cupparis\App\Enums\CupparisTipiCampi;
+use Gecche\Cupparis\App\Services\FormatValues;
 use Gecche\Foorm\FoormAction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
@@ -47,6 +48,8 @@ class CsvExport extends FoormAction
         'a', 'i', 'e', 'e', 'o', 'u'
     ];
 
+    protected $dateFormat, $dateTimeFormat;
+
 
     protected function init()
     {
@@ -76,6 +79,8 @@ class CsvExport extends FoormAction
 
         $this->boolTrueLabel = $this->getBoolTrueLabel();
         $this->boolFalseLabel = $this->getBoolFalseLabel();
+        $this->dateFormat = $this->getStandardDateFormat();
+        $this->dateTimeFormat = $this->getStandardDateTimeFormat();
 
         $this->setCupparisEntity();
         $this->setFields();
@@ -95,6 +100,14 @@ class CsvExport extends FoormAction
     public function getBoolTrueLabel()
     {
         return $this->getBoolLabel('bool-true-label');
+    }
+
+    public function getStandardDateFormat() {
+        return Arr::get($this->csvSettings,'dateFormat','d/m/Y');
+    }
+
+    public function getStandardDateTimeFormat() {
+        return Arr::get($this->csvSettings,'dateTimeFormat','d/m/Y H:i:s');
     }
 
     protected function setCupparisEntity()
@@ -120,8 +133,11 @@ class CsvExport extends FoormAction
 
         $this->fieldsTypesGuessed = array_fill_keys($this->fields, 'string');
 
-        if ($this->cupparisEntity) {
-            foreach ($this->fields as $field) {
+        foreach ($this->fields as $field) {
+            $fieldParams = Arr::get($this->csvFieldsParams,$field,[]);
+            if (array_key_exists('type',$fieldParams)) {
+                $this->fieldsTypesGuessed[$field] = $fieldParams['type'];
+            } elseif ($this->cupparisEntity) {
                 $cupparisField = $this->cupparisEntity->fields->where('nome', $field)->first();
                 if ($cupparisField) {
                     $this->fieldsTypesGuessed[$field] = $cupparisField->tipo;
@@ -140,7 +156,7 @@ class CsvExport extends FoormAction
 
     public function getStandardBlacklist()
     {
-        return config('foorm.standard_export_blacklist',[
+        return config('foorm.standard_export_blacklist', [
             'id',
             'created_at',
             'updated_at',
@@ -161,7 +177,7 @@ class CsvExport extends FoormAction
         }
 
         $transUc = trans_choice_uc('model.' . $this->csvModelName, 2);
-        $relativeFilename = Str::replace([' ','/'], ['_','_'], $transUc)
+        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
             . '_' . date('Ymd_His') . ".csv";
         $filename = storage_temp_path($relativeFilename);
         File::append($filename, $csvStream);
@@ -191,7 +207,7 @@ class CsvExport extends FoormAction
 
     public function getApiFilename()
     {
-        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/","_",Str::snake($this->foorm->getModelRelativeName())));
+        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
 
         return $apiFilename . '_' . date("Ymd_His") . ".csv";
     }
@@ -321,6 +337,10 @@ class CsvExport extends FoormAction
                 return $value;
             case CupparisTipiCampi::BOOLEAN->value:
                 return $value ? $this->boolTrueLabel : $this->boolFalseLabel;
+            case CupparisTipiCampi::DATE->value:
+                return FormatValues::formatDate($value,$this->dateFormat);
+            case CupparisTipiCampi::DATETIME->value:
+                return FormatValues::formatDate($value,$this->dateTimeFormat);
             default:
                 if (is_array($value)) {
                     return cupparis_json_encode($value);
