@@ -85,6 +85,11 @@ class CsvExport extends FoormAction
         $this->setCupparisEntity();
         $this->setFields();
 
+        $this->guessFieldsTypes();
+
+        $this->guessRelationFieldsHeaders();
+
+
     }
 
     public function getBoolLabel($configEntry)
@@ -126,11 +131,21 @@ class CsvExport extends FoormAction
             return;
         }
 
-        $this->fields = $this->foorm->getFlatFields();
+        $this->fields = $this->getFlatFields();
 
         $blacklist = $this->getBlacklist();
         $this->fields = array_diff($this->fields, $blacklist);
 
+
+    }
+
+    public function getFlatFields() {
+        $fields = $this->foorm->getFlatFields('field');
+        $fields = array_merge($fields,$this->foorm->getFlatFields('relationfield'));
+        return $fields;
+    }
+
+    protected function guessFieldsTypes() {
         $this->fieldsTypesGuessed = array_fill_keys($this->fields, 'string');
 
         foreach ($this->fields as $field) {
@@ -144,9 +159,18 @@ class CsvExport extends FoormAction
                 }
             }
         }
+    }
 
+
+    protected function guessRelationFieldsHeaders() {
+
+
+        foreach ($this->fields as $field) {
+
+        }
 
     }
+
 
     public function getBlacklist()
     {
@@ -156,7 +180,8 @@ class CsvExport extends FoormAction
 
     public function getStandardBlacklist()
     {
-        return config('foorm.standard_export_blacklist', [
+
+        $blacklist = config('foorm.standard_export_blacklist', [
             'id',
             'created_at',
             'updated_at',
@@ -165,6 +190,14 @@ class CsvExport extends FoormAction
             'info',
             'status_history',
         ]);
+        if (config('foorm.standard_export_blacklist_relation_ids',true)) {
+            foreach ($this->fields as $field) {
+                if (Str::endsWith($field,'_id')) {
+                    $blacklist[] = $field;
+                }
+            }
+        }
+        return $blacklist;
     }
 
     public function performAction()
@@ -418,11 +451,21 @@ class CsvExport extends FoormAction
             if (count($fieldKeyParts) == 1) {
                 return Lang::getMFormField($fieldKey, $this->csvModelName);
             }
+
             $relation = $fieldKeyParts[0];
             $field = $fieldKeyParts[1];
             $relationModel = Arr::get($this->relations, $relation, $relation);
-            return trans_choice('model.' . $relationModel, 1) .
-                ' - ' . Lang::getMFormField($field, $relationModel);
+            $relationPrefix = $relation . '|';
+            $relationFields = array_filter($this->fields,function ($item) use ($relationPrefix)  {
+                return Str::startsWith($item,$relationPrefix);
+            });
+
+            if (count($relationFields) > 1) {
+                return trans_choice_uc('model.' . $relationModel, 1) .
+                    ' - ' . Lang::getMFormField($field, $relationModel);
+            } else {
+                return trans_choice_uc('model.' . $relationModel, 1);
+            }
         }, $this->fields);
     }
 

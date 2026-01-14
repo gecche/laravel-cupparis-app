@@ -56,6 +56,8 @@ class FoormDatafileList extends FoormList
             $fields[$header] = Arr::get($fields,$header,[]);
         }
 
+        $fields['row'] = [];
+
         $this->config['fields'] = $fields;
 
         $this->datafileId = Arr::get($this->params, 'datafile_id');
