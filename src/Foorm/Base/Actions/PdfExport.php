@@ -436,6 +436,24 @@ class PdfExport extends FoormAction
 
     }
 
+    public function getPdfTitle($type = null) {
+
+        if (Arr::get($this->pdfSettings,'documentTitle')) {
+            return $this->pdfSettings['documentTitle'];
+        }
+
+
+        switch ($type) {
+            case 'list':
+                return trans_choice_uc('model.' . $this->pdfModelName, 2);
+            case 'record':
+                return trans_choice_uc('model.' . $this->pdfModelName, 1) . ' - '
+                    . ucfirst($this->model->getKeyName()) . ': ' . $this->model->getKey();
+            default:
+                return "";
+        }
+
+    }
     /*
      * Fine metodi per esportazione CSV
     */

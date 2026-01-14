@@ -50,7 +50,6 @@
 
 <?php
 $fields = $foormAction->getFields();
-$pdfSettings = $foormAction->getPdfSettings();
 ?>
 
 <table width="100%">
@@ -62,7 +61,7 @@ $pdfSettings = $foormAction->getPdfSettings();
                 <tr>
                     {{--                <td width="100%" height="20"><img src="{{public_path().'/siges/images/logo-siges.png'}}" width="100%" /></td>--}}
                     <td width="100%" height="20" align="center">
-                        {{Arr::get($pdfSettings,'documentTitle',"")}}
+                        {{$foormAction->getPdfTitle('record')}}
                     </td>
                 </tr>
             </table>
