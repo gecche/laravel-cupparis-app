@@ -206,6 +206,14 @@ class PdfExport extends FoormAction
         return $this->builder;
     }
 
+    public function setBuilder() {
+        try {
+            $this->builder = $this->foorm->getFormBuilder();
+        } catch (\Throwable $e) {
+            $this->builder = $this->model->where($this->model->getKeyName(),$this->model->getKey());
+        }
+    }
+
 
     public function getFieldWidth($field)
     {
@@ -228,13 +236,13 @@ class PdfExport extends FoormAction
 
         $transUc = trans_choice_uc('model.' . $this->pdfModelName, 2);
         $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
-            . '_' . date('Ymd_His') . ".csv";
+            . '_' . date('Ymd_His') . ".pdf";
         $filename = storage_temp_path($relativeFilename);
 
         $viewName = $this->getPdfView();
         $pdfOptions = $this->getPdfOptions();
 
-        $this->builder = $this->foorm->getFormBuilder();
+        $this->setBuilder();
 
         $pdf = PDF::loadView($viewName, ['foormAction' => $this])->setOptions($pdfOptions)->output();
 
@@ -260,7 +268,7 @@ class PdfExport extends FoormAction
     {
         $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
 
-        return $apiFilename . '_' . date("Ymd_His") . ".csv";
+        return $apiFilename . '_' . date("Ymd_His") . ".pdf";
     }
 
     public function validateAction()
@@ -319,7 +327,7 @@ class PdfExport extends FoormAction
     }
 
 
-    public function getCsvFieldStandard($key, $value, $item = [], $itemObject = null)
+    public function getPdfFieldStandard($key, $value, $item = [], $itemObject = null)
     {
 
         $guessedType = Arr::get($this->fieldsTypesGuessed, $key, 'string');
@@ -351,7 +359,7 @@ class PdfExport extends FoormAction
     public function translitString($value, $chars = true)
     {
         $value = Str::replace(['"', "'", "\n", "\r"], '', $value);
-        $value = Str::replace($this->separator, $this->separatorReplacer, $value);
+//        $value = Str::replace($this->separator, $this->separatorReplacer, $value);
 
         if (!$chars) {
             return $value;
@@ -369,10 +377,14 @@ class PdfExport extends FoormAction
         }
     }
 
-    public function getPdfField($key,$itemDotted,$item)
+    public function getPdfField($key,$item)
     {
 
-        $itemValue = $this->guessItemValue($key,$itemDotted,$item);
+        $itemArray = $item->toArray();
+        $itemDotted = \Illuminate\Support\Arr::dot($itemArray);
+
+
+        $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
         $methodName = 'getPdfField' . Str::studly($key);
         if (method_exists($this, $methodName)) {
             return $this->$methodName($itemValue);
@@ -385,7 +397,7 @@ class PdfExport extends FoormAction
     {
 
         if (array_key_exists('header', Arr::get($this->pdfFieldsParams, $fieldKey, []))) {
-            return $this->pdfFieldsParams[$key]['header'];
+            return $this->pdfFieldsParams[$fieldKey]['header'];
         }
         $methodName = 'getPdfFieldLabel' . Str::studly($this->labelsMethod);
         return $this->$methodName($fieldKey);
@@ -396,17 +408,12 @@ class PdfExport extends FoormAction
 
     protected function getPdfFieldLabelPlain($fieldKey)
     {
-        $fieldHeader = $this->getPdfFieldLabel($fieldKey);
-        return $fieldHeader ?: $fieldKey;
+        return $fieldKey;
     }
 
     protected function getPdfFieldLabelTranslate($fieldKey)
     {
 
-        $fieldHeader = $this->getPdfFieldLabel($fieldKey);
-        if ($fieldHeader) {
-            return $fieldHeader;
-        }
         $fieldKeyParts = explode('|', $fieldKey);
         if (count($fieldKeyParts) == 1) {
             return Lang::getMFormField($fieldKey, $this->pdfModelName);
