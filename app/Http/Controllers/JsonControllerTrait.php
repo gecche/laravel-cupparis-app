@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Response;
 
 trait JsonControllerTrait
@@ -22,6 +23,7 @@ trait JsonControllerTrait
         if ($exit) {
             return $this->_json();
         }
+        return false;
     }
 
     protected function _errorAndExit($msg)
@@ -47,6 +49,10 @@ trait JsonControllerTrait
         if ($exit) {
             return $this->_json($msg);
         }
+    }
+
+    protected function _hasHerror() {
+        return Arr::get($this->json,'error');
     }
 
 }

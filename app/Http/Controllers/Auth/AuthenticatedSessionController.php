@@ -38,6 +38,13 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
+    public function storeWeb(LoginRequest $request)
+    {
+        $request->authenticate();
+        $request->session()->regenerate();
+        return $this->loginBySantum($request);
+    }
+
     /**
      * Destroy an authenticated session.
      *
@@ -63,13 +70,13 @@ class AuthenticatedSessionController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
         $request->session()->put('sanctum_token',$token);
 
-
-//        return response()->json([
-//            'access_token' => $token,
-//            'token_type' => 'Bearer',
-//            'name' => $user->name,
-//            'email' => $user->email,
-//            'role' => $user->mainrole
-//        ]);
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->mainrole,
+            'fotos' => $user->fotos,
+            'loggato_web' => 1,
+        ]);
     }
 }
