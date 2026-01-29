@@ -13,7 +13,7 @@ use Carbon\Carbon;
 trait AttachmentTrait {
     
 //    public function getNameExt() {
-//        $ext = $this->ext();
+//        $ext = $this->pointedExt();
 //        $name = $this->nome;
 //        $name = str_slug($name);
 //        if (Str::endsWith($name, $ext))

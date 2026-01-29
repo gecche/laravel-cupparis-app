@@ -35,8 +35,8 @@ trait UploadableTraits {
     public function getFullFilenameAttribute() {
         return $this->getStorageFilename(null,null, true);
     }
-    public function ext() {
-        return '.' . $this->ext;
+    public function pointedExt() {
+        return '.' . trim('.',$this->ext);
     }
     public function getResourcePathAttribute() {
         return $this->getStorageFilename(null,null, false);
@@ -48,7 +48,7 @@ trait UploadableTraits {
         $filename = $this->getStorageFilename($id);
         if (is_null($name)) {
             if ($this->{$this->nameField}) {
-                $name = $this->{$this->nameField} . $this->ext();
+                $name = $this->{$this->nameField} . $this->pointedExt();
             }
         }
         return Storage::disk($diskDriver)->response($filename,$name,$headers,$disposition);
@@ -58,7 +58,7 @@ trait UploadableTraits {
 
         $dt = new Carbon($this->created_at);
         $time = $dt->timestamp;
-        $relativePath = $this->getPrefixFile($id).$time.$this->ext();
+        $relativePath = $this->getPrefixFile($id).$time.$this->pointedExt();
         if ($relative) {
             return $relativePath;
         }
@@ -166,7 +166,7 @@ trait UploadableTraits {
 
 
     public function getNameExt($locale = 'it',$fieldName = 'nome') {
-        $ext = $this->ext();
+        $ext = $this->pointedExt();
 
         $fieldName = property_exists($this,$fieldName.'_'.$locale) ? $fieldName.'_'.$locale : $fieldName;
         $name = Str::slug($this->$fieldName);

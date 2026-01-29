@@ -15,7 +15,7 @@ trait ApiUploadableTrait {
         $filename = $this->getStorageFilename($id);
         if (is_null($name)) {
             if ($this->{$this->nameField}) {
-                $name = $this->{$this->nameField} . $this->ext();
+                $name = $this->{$this->nameField} . $this->pointedExt();
             }
         }
         $fileContent = Storage::disk($diskDriver)->get($filename);
