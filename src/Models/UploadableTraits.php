@@ -36,7 +36,7 @@ trait UploadableTraits {
         return $this->getStorageFilename(null,null, true);
     }
     public function pointedExt() {
-        return '.' . trim('.',$this->ext);
+        return '.' . trim($this->ext,'.');
     }
     public function getResourcePathAttribute() {
         return $this->getStorageFilename(null,null, false);
