@@ -14,17 +14,19 @@ use Illuminate\Support\Str;
  * Eloquent model for acl_groups table.
  * This is used by Eloquent permissions provider.
  */
-trait UploadableTraits {
+trait UploadableTraits
+{
 
     use ApiUploadableTrait;
 
     protected $nameField = 'nome';
 
-    public function getDir() {
+    public function getDir()
+    {
 
-        if (property_exists($this,'dirPolicy')) {
-            $methodName = 'getDirPolicy'.Str::studly($this->dirPolicy);
-            if (method_exists($this,$methodName)) {
+        if (property_exists($this, 'dirPolicy')) {
+            $methodName = 'getDirPolicy' . Str::studly($this->dirPolicy);
+            if (method_exists($this, $methodName)) {
                 return $this->$methodName();
             }
         }
@@ -32,54 +34,63 @@ trait UploadableTraits {
         return $this->dir;
     }
 
-    public function getFullFilenameAttribute() {
-        return $this->getStorageFilename(null,null, true);
+    public function getFullFilenameAttribute()
+    {
+        return $this->getStorageFilename(null, null, true);
     }
-    public function pointedExt() {
-        return '.' . trim($this->ext,'.');
+
+    public function pointedExt()
+    {
+        return '.' . trim($this->ext, '.');
     }
-    public function getResourcePathAttribute() {
-        return $this->getStorageFilename(null,null, false);
+
+    public function getResourcePathAttribute()
+    {
+        return $this->getStorageFilename(null, null, false);
     }
 
 
-    public function storageResponse($id = null,$name = null, $headers = [], $disposition = 'attachment') {
-        $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
+    public function storageResponse($id = null, $name = null, $headers = [], $disposition = 'attachment')
+    {
+        $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
         $filename = $this->getStorageFilename($id);
         if (is_null($name)) {
             if ($this->{$this->nameField}) {
                 $name = $this->{$this->nameField} . $this->pointedExt();
             }
         }
-        return Storage::disk($diskDriver)->response($filename,$name,$headers,$disposition);
+        return Storage::disk($diskDriver)->response($filename, $name, $headers, $disposition);
     }
 
-    public function getStorageFilename($id = null,$diskDriver = null,$relative = false) {
+    public function getStorageFilename($id = null, $diskDriver = null, $relative = false)
+    {
 
         $dt = new Carbon($this->created_at);
         $time = $dt->timestamp;
-        $relativePath = $this->getPrefixFile($id).$time.$this->pointedExt();
+        $relativePath = $this->getPrefixFile($id) . $time . $this->pointedExt();
         if ($relative) {
             return $relativePath;
         }
         if (is_null($diskDriver)) {
-            $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
+            $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
         }
         //$diskRootDir = Config::get('filesystems.disks.'.$diskDriver.'.relative_root','');
 
-        return 'files/'.$this->getDir().'/'.$relativePath;
+        return 'files/' . $this->getDir() . '/' . $relativePath;
 
     }
 
-    public function fileExists($id = null,$diskDriver = null) {
-        $filename = $this->getStorageFilename($id,$diskDriver);
+    public function fileExists($id = null, $diskDriver = null)
+    {
+        $filename = $this->getStorageFilename($id, $diskDriver);
         return Storage::exists($filename);
     }
 
-    public function getMimeType($id = null,$diskDriver = null) {
-        $filename = $this->getStorageFilename($id,$diskDriver);
+    public function getMimeType($id = null, $diskDriver = null)
+    {
+        $filename = $this->getStorageFilename($id, $diskDriver);
         if (is_null($diskDriver)) {
-            $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
+            $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
         }
         switch ($diskDriver) {
             case 'local':
@@ -89,74 +100,80 @@ trait UploadableTraits {
         }
     }
 
-    public function getPrefixFile($id) {
+    public function getPrefixFile($id)
+    {
         if ($id === null) {
             $id = $this->getKey();
         }
-        return $this->prefix.'_'.$id.'_';
+        return $this->prefix . '_' . $id . '_';
     }
 
-    public function delete($id = NULL) {
+    public function delete($id = NULL)
+    {
         if ($this->fileExists()) {
             Storage::delete($this->getStorageFilename());
         }
         return parent::delete($id);
     }
 
-    public function filesOps($inputArray = array(),$field = 'resource') {
-        $diskDriver = property_exists($this,'disk_driver') ? $this->disk_driver : 'local';
+    public function filesOps($inputArray = array(), $field = 'resource')
+    {
+        $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
 
-        $resource = json_decode(Arr::get($inputArray,$field,""),true);
+        $resource = json_decode(Arr::get($inputArray, $field, ""), true);
 
-        $tempfilename = Arr::get($resource,'id',false);
+        $tempfilename = Arr::get($resource, 'id', false);
         if ($tempfilename && !Storage::exists($tempfilename)) {
 
             $fulltempfilename = storage_temp_path($tempfilename);
 
             $this->deleteOldFiles();
 
-            $filename = $this->getStorageFilename(null,$diskDriver);
+            $filename = $this->getStorageFilename(null, $diskDriver);
 
             if ($diskDriver == 'local') {
-                File::ensureDirectoryExists(File::dirname(storage_path($filename)),0755,true);
-                File::move($fulltempfilename,storage_path($filename));
+                File::ensureDirectoryExists(File::dirname(storage_path($filename)), 0755, true);
+                File::move($fulltempfilename, storage_path($filename));
                 return;
             }
 
-            Storage::disk($diskDriver)->put($filename,File::get($fulltempfilename));
+            Storage::disk($diskDriver)->put($filename, File::get($fulltempfilename));
 
 
         }
 
     }
 
-    public function setFieldsFromResource($inputArray = array(),$field = 'resource') {
+    public function setFieldsFromResource($inputArray = array(), $field = 'resource')
+    {
 
-        $resource = json_decode(Arr::get($inputArray,$field,""),true);
+        $resource = json_decode(Arr::get($inputArray, $field, ""), true);
 
-        $resourceId = Arr::get($resource,'id',false);
+        $resourceId = Arr::get($resource, 'id', false);
 
         $this->ext = pathinfo($resourceId, PATHINFO_EXTENSION);
 
     }
 
-    public function deleteOldFiles($id = null) {
-        File::delete(File::glob(storage_path('files/'.$this->getDir()).'/'.$this->getPrefixFile($id).'*'));
+    public function deleteOldFiles($id = null)
+    {
+        File::delete(File::glob(storage_path('files/' . $this->getDir()) . '/' . $this->getPrefixFile($id) . '*'));
     }
 
-    public static function fullCreate($data = array(), $path = null) {
+    public static function fullCreate($data = array(), $path = null)
+    {
         $item = new static;
         $item->fill($data);
         $item->save();
 
         $item->deleteOldFiles();
         if ($path) {
-            $diskDriver = property_exists($item,'disk_driver') ? $item->disk_driver : 'local';
+            $diskDriver = property_exists($item, 'disk_driver') ? $item->disk_driver : 'local';
 
             if ($diskDriver == 'local') {
-                File::copy($path,storage_path($item->getStorageFilename()));
+                File::copy($path, storage_path($item->getStorageFilename()));
             } else {
-                Storage::disk($diskDriver)->put($item->getStorageFilename(),File::get($path));
+                Storage::disk($diskDriver)->put($item->getStorageFilename(), File::get($path));
 
             }
 
@@ -165,21 +182,41 @@ trait UploadableTraits {
     }
 
 
-    public function getNameExt($locale = 'it',$fieldName = 'nome') {
-        $ext = $this->pointedExt();
-
-        $fieldName = property_exists($this,$fieldName.'_'.$locale) ? $fieldName.'_'.$locale : $fieldName;
+    public function getName($locale = 'it', $fieldName = 'nome')
+    {
+        $fieldName = property_exists($this, $fieldName . '_' . $locale) ? $fieldName . '_' . $locale : $fieldName;
         $name = Str::slug($this->$fieldName);
+        return $name;
+    }
+
+    public function getNameExt($locale = 'it', $fieldName = 'nome')
+    {
+        $ext = $this->pointedExt();
+        $name = $this->getName($locale, $fieldName);
         if (Str::endsWith($name, $ext))
             return $name;
         return $name . $ext;
     }
 
-    public function getResourceAttribute() {
+    public function getDefaultName() {
+
+        $className = Str::snake(class_basename($this));
+        $prefix = trans_choice_uc('model.' . $className,1);
+        if ($this->getKey()) {
+            return $prefix . '_' . $this->getKey();
+        }
+        return $prefix;
+
+
+    }
+
+    public function getResourceAttribute()
+    {
         $defaultInfo = [
             'id' => null,
             'url' => '/imagecache/small/0',
-            'mimetype' => null
+            'mimetype' => null,
+            'name' => $this->getName() ?: $this->getDefaultName(),
         ];
 
         if (!$this->getKey()) {
@@ -187,11 +224,11 @@ trait UploadableTraits {
         }
 
         try {
-            $info =  [
+            $info = [
                 'id' => $this->getStorageFilename(),
                 'url' => $this->getUrl(),
                 'mimetype' => $this->getMimeType(),
-
+                'name' => $this->getName() ?: $this->getDefaultName(),
             ];
         } catch (\Exception $e) {
             $info = $defaultInfo;
