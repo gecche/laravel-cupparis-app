@@ -9,7 +9,7 @@ trait CupparisEntityTrait {
     use CupparisEntityCommonTrait;
 
 
-    public function createOptionsRelazioneTabella($fieldValue, $defaultOptionsValues, $relationName = null, $relationMetadata = [])
+    public function createOptionsFieldsRelazioneTabella($fieldValue, $defaultOptionsValues, $relationName = null, $relationMetadata = [])
     {
         return array_combine($this->modelsList,$this->modelsList);
     }
