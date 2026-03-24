@@ -59,5 +59,8 @@ trait EnumHelperTrait
         return in_array($value, $values);
     }
 
-
+    public static function stringValues(): string
+    {
+        return implode(',', static::values());
+    }
 }
