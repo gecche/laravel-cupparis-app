@@ -59,7 +59,21 @@ return [
     'foorms_defaults_namespace' => "Gecche\\Cupparis\\App\\Foorm\\Base\\",
 
     'foorms' => [
-        'user',
+        0 => 'user',
+        1 => 'cupparis_entity',
+    ],
+
+    'foorm-actions' => [
+        0 => 'multi-delete',
+        1 => 'set',
+        2 => 'autocomplete',
+        3 => 'uploadifle',
+        4 => 'pdf-export',
+        5 => 'csv-export',
+    ],
+
+    'foorm-c-actions' => [
+        0 => 'flush-datafile',
     ],
 
     'types_fallbacks' => [

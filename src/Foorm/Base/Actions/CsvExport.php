@@ -3,7 +3,10 @@
 namespace Gecche\Cupparis\App\Foorm\Base\Actions;
 
 
+use App\Models\CupparisEntity;
 use App\Services\UploadService;
+use Gecche\Cupparis\App\Enums\CupparisTipiCampi;
+use Gecche\Cupparis\App\Services\FormatValues;
 use Gecche\Foorm\FoormAction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
@@ -32,6 +35,22 @@ class CsvExport extends FoormAction
 
     protected $relations = [];
 
+    protected $cupparisEntity = null;
+
+    protected $fieldsTypesGuessed;
+
+    protected $boolTrueLabel, $boolFalseLabel;
+
+    protected $charsMappingIn = [
+        'à', 'ì', 'è', 'é', 'ò', 'ù'
+    ];
+    protected $charsMappingOut = [
+        'a', 'i', 'e', 'e', 'o', 'u'
+    ];
+
+    protected $dateFormat, $dateTimeFormat;
+
+
     protected function init()
     {
         parent::init();
@@ -51,16 +70,58 @@ class CsvExport extends FoormAction
         $relationsData = ($this->foorm->getModelName())::getRelationsData();
 
         foreach ($relationsData as $relationName => $relation) {
-            $relationModel = Str::replaceFirst($this->foorm->getModelsNamespace(),'',
-                trim(Arr::get($relation,'related',$relationName),"\\"));
+            $relationModel = Str::replaceFirst($this->foorm->getModelsNamespace(), '',
+                trim(Arr::get($relation, 'related', $relationName), "\\"));
 
             $this->relations[$relationName] = Str::snake($relationModel);
         }
 
+
+        $this->boolTrueLabel = $this->getBoolTrueLabel();
+        $this->boolFalseLabel = $this->getBoolFalseLabel();
+        $this->dateFormat = $this->getStandardDateFormat();
+        $this->dateTimeFormat = $this->getStandardDateTimeFormat();
+
+        $this->setCupparisEntity();
         $this->setFields();
+
+        $this->guessFieldsTypes();
+
+        $this->guessRelationFieldsHeaders();
+
 
     }
 
+    public function getBoolLabel($configEntry)
+    {
+        return Arr::get($this->csvSettings, $configEntry, strtoupper($this->translitString(config('foorm.' . $configEntry))));
+    }
+
+    public function getBoolFalseLabel()
+    {
+        return $this->getBoolLabel('bool-false-label');
+    }
+
+    public function getBoolTrueLabel()
+    {
+        return $this->getBoolLabel('bool-true-label');
+    }
+
+    public function getStandardDateFormat() {
+        return Arr::get($this->csvSettings,'dateFormat','d/m/Y');
+    }
+
+    public function getStandardDateTimeFormat() {
+        return Arr::get($this->csvSettings,'dateTimeFormat','d/m/Y H:i:s');
+    }
+
+    protected function setCupparisEntity()
+    {
+        $snakeModelName = Arr::get($this->foorm->getConfig(), 'model');
+        $relativeModelName = Str::studly($snakeModelName);
+        $this->cupparisEntity = CupparisEntity::with('fields')->where('model_class', $relativeModelName)->first();
+
+    }
 
     protected function setFields()
     {
@@ -70,15 +131,74 @@ class CsvExport extends FoormAction
             return;
         }
 
-        $this->fields = $this->foorm->getFlatFields();
+        $this->fields = $this->getFlatFields();
 
-//        Log::info(print_r($attributes,true));
-        if (is_array($this->csvSettings['blacklist'])) {
-            $this->fields = array_diff($this->fields, $this->csvSettings['blacklist']);
+        $blacklist = $this->getBlacklist();
+        $this->fields = array_diff($this->fields, $blacklist);
+
+
+    }
+
+    public function getFlatFields() {
+        $fields = $this->foorm->getFlatFields('field');
+        $fields = array_merge($fields,$this->foorm->getFlatFields('relationfield'));
+        return $fields;
+    }
+
+    protected function guessFieldsTypes() {
+        $this->fieldsTypesGuessed = array_fill_keys($this->fields, 'string');
+
+        foreach ($this->fields as $field) {
+            $fieldParams = Arr::get($this->csvFieldsParams,$field,[]);
+            if (array_key_exists('type',$fieldParams)) {
+                $this->fieldsTypesGuessed[$field] = $fieldParams['type'];
+            } elseif ($this->cupparisEntity) {
+                $cupparisField = $this->cupparisEntity->fields->where('nome', $field)->first();
+                if ($cupparisField) {
+                    $this->fieldsTypesGuessed[$field] = $cupparisField->tipo;
+                }
+            }
+        }
+    }
+
+
+    protected function guessRelationFieldsHeaders() {
+
+
+        foreach ($this->fields as $field) {
+
         }
 
     }
 
+
+    public function getBlacklist()
+    {
+        $settingsBlacklist = Arr::get($this->csvSettings, 'blacklist');
+        return is_array($settingsBlacklist) ? $settingsBlacklist : $this->getStandardBlacklist();
+    }
+
+    public function getStandardBlacklist()
+    {
+
+        $blacklist = config('foorm.standard_export_blacklist', [
+            'id',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'info',
+            'status_history',
+        ]);
+        if (config('foorm.standard_export_blacklist_relation_ids',true)) {
+            foreach ($this->fields as $field) {
+                if (Str::endsWith($field,'_id')) {
+                    $blacklist[] = $field;
+                }
+            }
+        }
+        return $blacklist;
+    }
 
     public function performAction()
     {
@@ -90,7 +210,7 @@ class CsvExport extends FoormAction
         }
 
         $transUc = trans_choice_uc('model.' . $this->csvModelName, 2);
-        $relativeFilename = str_replace(' ', '_', $transUc)
+        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
             . '_' . date('Ymd_His') . ".csv";
         $filename = storage_temp_path($relativeFilename);
         File::append($filename, $csvStream);
@@ -102,9 +222,27 @@ class CsvExport extends FoormAction
                 break;
         }
 
+        if ($this->isApi) {
+            $name = $this->getApiFilename();
+            $this->actionResult = [
+                'content' => base64_encode(File::get($filename)),
+                'mime' => 'text/csv',
+                'name' => $name,
+            ];
+            return $this->actionResult;
+        }
+
         $this->actionResult = ['link' => '/downloadtemp/' . $relativeFilename];
         return $this->actionResult;
 
+    }
+
+
+    public function getApiFilename()
+    {
+        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
+
+        return $apiFilename . '_' . date("Ymd_His") . ".csv";
     }
 
 
@@ -142,7 +280,8 @@ class CsvExport extends FoormAction
         return $csvStream;
     }
 
-    protected function getFoormBuilder() {
+    protected function getFoormBuilder()
+    {
         return $this->foorm->getFormBuilder();
     }
 
@@ -179,26 +318,27 @@ class CsvExport extends FoormAction
         foreach ($this->fields as $key) {
             $methodKey = str_replace('|', '', $key);
 
-            $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
+            $itemValue = $this->guessItemValue($key, $itemDotted, $itemArray, $item);
 
             $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
-                $row[] = $this->$methodName($itemValue,$itemArray,$item);
+                $row[] = $this->$methodName($itemValue, $itemArray, $item);
             } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue, $itemArray,$item);
+                $row[] = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
             }
         }
         return $row;
     }
 
-    protected function guessItemValue($key,$itemDotted,$item,$itemObject) {
+    protected function guessItemValue($key, $itemDotted, $item, $itemObject)
+    {
 
-        if (array_key_exists('item',Arr::get($this->csvFieldsParams,$key,[]))) {
+        if (array_key_exists('item', Arr::get($this->csvFieldsParams, $key, []))) {
             $itemKey = $this->csvFieldsParams[$key]['item'];
-            if (array_key_exists($itemKey,$item))
+            if (array_key_exists($itemKey, $item))
                 return $item[$itemKey];
             $itemKey = str_replace('|', '.', $itemKey);
-            if (array_key_exists($itemKey,$itemDotted))
+            if (array_key_exists($itemKey, $itemDotted))
                 return $itemDotted[$itemKey];
             return '';
 
@@ -206,7 +346,7 @@ class CsvExport extends FoormAction
 
         $fieldKey = str_replace('|', '.', $key);
         $itemValue = Arr::get($itemDotted, $fieldKey);
-        if (!$itemValue && array_key_exists($key,$item) && is_array($item[$key])) {
+        if (!$itemValue && array_key_exists($key, $item) && is_array($item[$key])) {
             $itemValue = $item[$key];
         }
 
@@ -214,21 +354,54 @@ class CsvExport extends FoormAction
     }
 
 
-    public function getCsvFieldStandard($key, $value, $item = [],$itemObject = null)
+    public function getCsvFieldStandard($key, $value, $item = [], $itemObject = null)
     {
-        if (is_numeric($value)) {
-            if ($this->csvSettings['decimalTo']) {
-                $value = str_replace($this->csvSettings['decimalFrom'],
-                    $this->csvSettings['decimalTo'],
-                    $value);
-            }
-        } else {
-            $value = str_replace(['"',"'","\n","\r"], '', $value);
-            $value = str_replace($this->separator, $this->separatorReplacer, $value);
-//            return str_replace($this->separator,'"'.$this->separator.'"',$value);
-        }
-        return $value;
 
+        $guessedType = Arr::get($this->fieldsTypesGuessed, $key, 'string');
+        switch ($guessedType) {
+
+            case CupparisTipiCampi::DECIMAL->value:
+            case CupparisTipiCampi::FLOAT->value:
+                if (Arr::get($this->csvSettings, 'decimalTo')) {
+                    $value = str_replace($this->csvSettings['decimalFrom'],
+                        $this->csvSettings['decimalTo'],
+                        $value);
+                }
+                return $value;
+            case CupparisTipiCampi::BOOLEAN->value:
+                return $value ? $this->boolTrueLabel : $this->boolFalseLabel;
+            case CupparisTipiCampi::DATE->value:
+                return FormatValues::formatDate($value,$this->dateFormat);
+            case CupparisTipiCampi::DATETIME->value:
+                return FormatValues::formatDate($value,$this->dateTimeFormat);
+            default:
+                if (is_array($value)) {
+                    return cupparis_json_encode($value);
+                }
+                return $this->translitString($value);
+        }
+
+    }
+
+    public function translitString($value, $chars = true)
+    {
+        $value = Str::replace(['"', "'", "\n", "\r"], '', $value);
+        $value = Str::replace($this->separator, $this->separatorReplacer, $value);
+
+        if (!$chars) {
+            return $value;
+        }
+
+        $value = Str::replace($this->charsMappingIn, $this->charsMappingOut, $value);
+
+        return $value;
+    }
+
+    public function getBoolValue($value)
+    {
+        if ($value) {
+            return Arr::get($this->csvSettings, 'bool-true-label', config('foorm.bool-true-label'));
+        }
     }
 
 
@@ -248,7 +421,7 @@ class CsvExport extends FoormAction
 
     public function checkHeaderMethod($key)
     {
-        if (array_key_exists('header',Arr::get($this->csvFieldsParams,$key,[]))) {
+        if (array_key_exists('header', Arr::get($this->csvFieldsParams, $key, []))) {
             return $this->csvFieldsParams[$key]['header'];
         }
         $methodName = 'getCsvHeader' . Str::studly($key);
@@ -261,7 +434,7 @@ class CsvExport extends FoormAction
 
     protected function getCsvRowHeadersPlain()
     {
-        return array_map(function ($fieldKey)  {
+        return array_map(function ($fieldKey) {
             $fieldHeader = $this->checkHeaderMethod($fieldKey);
             return $fieldHeader ?: $fieldKey;
         }, $this->fields);
@@ -269,28 +442,36 @@ class CsvExport extends FoormAction
 
     protected function getCsvRowHeadersTranslate()
     {
-        return array_map(function ($fieldKey)  {
+        return array_map(function ($fieldKey) {
             $fieldHeader = $this->checkHeaderMethod($fieldKey);
             if ($fieldHeader) {
                 return $fieldHeader;
             }
-            $fieldKeyParts = explode('|',$fieldKey);
+            $fieldKeyParts = explode('|', $fieldKey);
             if (count($fieldKeyParts) == 1) {
                 return Lang::getMFormField($fieldKey, $this->csvModelName);
             }
+
             $relation = $fieldKeyParts[0];
             $field = $fieldKeyParts[1];
-            $relationModel = Arr::get($this->relations,$relation,$relation);
-            return trans_choice('model.'.$relationModel,1) .
-                ' - ' . Lang::getMFormField($field, $relationModel);
+            $relationModel = Arr::get($this->relations, $relation, $relation);
+            $relationPrefix = $relation . '|';
+            $relationFields = array_filter($this->fields,function ($item) use ($relationPrefix)  {
+                return Str::startsWith($item,$relationPrefix);
+            });
+
+            if (count($relationFields) > 1) {
+                return trans_choice_uc('model.' . $relationModel, 1) .
+                    ' - ' . Lang::getMFormField($field, $relationModel);
+            } else {
+                return trans_choice_uc('model.' . $relationModel, 1);
+            }
         }, $this->fields);
     }
 
     /*
      * // METODI STANDARD PER HEADERS (PLAIN - TRANSLATE)
      */
-
-
 
 
 }

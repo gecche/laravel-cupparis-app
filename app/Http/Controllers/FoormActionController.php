@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use Gecche\Foorm\Facades\Foorm;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class FoormActionController extends Controller
@@ -25,10 +26,9 @@ class FoormActionController extends Controller
     ];
 
 
-    public function postSet($foormName, $foormType, $pk = null)
-    {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('set', $foormName, $foormType, $params);
+    public function foormAction($foormAction, $foorm, $foormType, $foormPk = null) {
+        $params = $foormPk ? ['id' => $foormPk] : [];
+        $this->buildAndGetFoormActionResult($foormAction, $foorm, $foormType, $params);
         return $this->_json();
     }
 
@@ -39,33 +39,57 @@ class FoormActionController extends Controller
         return $this->_json();
     }
 
-    public function postMultiDelete($foormName, $foormType, $pk = null)
+    public function migrate($pk = null)
     {
+
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('multi-delete', $foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('migrate', 'cupparis_entity', 'list', $params);
         return $this->_json();
     }
 
-    public function postAutocomplete($foormName, $foormType, $pk = null)
+    public function rollback($pk = null)
     {
+
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('autocomplete', $foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('rollback', 'cupparis_entity', 'list', $params);
         return $this->_json();
     }
 
-    public function postUploadfile($foormName, $foormType, $pk = null)
+    public function import($pk = null)
     {
+
         $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('uploadfile', $foormName, $foormType, $params);
+        $this->buildAndGetFoormActionResult('import', 'cupparis_entity', 'list', $params);
         return $this->_json();
     }
 
-    public function postCsvExport($foormName, $foormType, $pk = null)
+    public function foormCAction($foormcaction, $foorm, $foormType, $constraintField, $constraintValue, $foormPk = null)
     {
-        $params = $pk ? ['id' => $pk] : [];
-        $this->buildAndGetFoormActionResult('csv-export', $foormName, $foormType, $params);
+        $params = $this->prepareFixedConstraints($constraintField, $constraintValue, $foorm, $foormType);
+        if ($pk) {
+            $params['id'] = $pk;
+        }
+        $this->buildAndGetFoormActionResult($foormcaction, $foorm, $foormType, $params);
         return $this->_json();
     }
+
+    protected function prepareFixedConstraints($constraintField, $constraintValue, $foorm = null, $foormType = null)
+    {
+        switch ($foorm) {
+            default:
+                return [
+                    'fixed_constraints' => [
+                        [
+                            'field' => $constraintField,
+                            'value' => $constraintValue,
+                        ],
+                    ]
+                ];
+
+        }
+
+    }
+
 
     protected function buildAndGetFoormActionResult($action, $foormName, $foormType, $params)
     {
@@ -74,6 +98,9 @@ class FoormActionController extends Controller
             $this->buildFoormAction($action, $foormName, $foormType, $params);
             $this->getFoormActionResult();
         } catch (\Exception $e) {
+            Log::info("FOORM ACTION CONTROLLER EXCEPTION");
+            Log::info($e->getMessage());
+            Log::info($e->getTraceAsString());
             $this->_error($e->getMessage());
         }
     }

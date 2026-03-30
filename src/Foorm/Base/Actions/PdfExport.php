@@ -3,6 +3,10 @@
 namespace Gecche\Cupparis\App\Foorm\Base\Actions;
 
 
+use App\Models\CupparisEntity;
+use App\Services\UploadService;
+use Gecche\Cupparis\App\Enums\CupparisTipiCampi;
+use Gecche\Cupparis\App\Services\FormatValues;
 use Gecche\Foorm\FoormAction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -29,6 +33,20 @@ class PdfExport extends FoormAction
 
     protected $relations = [];
 
+    protected $cupparisEntity = null;
+
+    protected $fieldsTypesGuessed;
+
+    protected $boolTrueLabel, $boolFalseLabel;
+
+    protected $charsMappingIn = [
+        'à', 'ì', 'è', 'é', 'ò', 'ù'
+    ];
+    protected $charsMappingOut = [
+        'a', 'i', 'e', 'e', 'o', 'u'
+    ];
+
+    protected $dateFormat, $dateTimeFormat;
     protected $builder;
 
     protected $fieldsWidths;
@@ -58,14 +76,52 @@ class PdfExport extends FoormAction
             $this->relations[$relationName] = Str::snake($relationModel);
         }
 
+
+        $this->boolTrueLabel = $this->getBoolTrueLabel();
+        $this->boolFalseLabel = $this->getBoolFalseLabel();
+        $this->dateFormat = $this->getStandardDateFormat();
+        $this->dateTimeFormat = $this->getStandardDateTimeFormat();
+
+        $this->setCupparisEntity();
         $this->setFields();
 
+        $this->guessFieldsTypes();
         $this->fieldsWidths = Arr::get($this->pdfSettings, 'fieldsWidths', []);
         $this->fieldsStyles = Arr::get($this->pdfSettings, 'fieldsStyles', []);
 
         $this->labelsMethod = Arr::get($this->pdfSettings, 'labelsMethod', 'translate');
     }
 
+    public function getBoolLabel($configEntry)
+    {
+        return Arr::get($this->pdfSettings, $configEntry, strtoupper($this->translitString(config('foorm.' . $configEntry))));
+    }
+
+    public function getBoolFalseLabel()
+    {
+        return $this->getBoolLabel('bool-false-label');
+    }
+
+    public function getBoolTrueLabel()
+    {
+        return $this->getBoolLabel('bool-true-label');
+    }
+
+    public function getStandardDateFormat() {
+        return Arr::get($this->pdfSettings,'dateFormat','d/m/Y');
+    }
+
+    public function getStandardDateTimeFormat() {
+        return Arr::get($this->pdfSettings,'dateTimeFormat','d/m/Y H:i:s');
+    }
+
+    protected function setCupparisEntity()
+    {
+        $snakeModelName = Arr::get($this->foorm->getConfig(), 'model');
+        $relativeModelName = Str::studly($snakeModelName);
+        $this->cupparisEntity = CupparisEntity::with('fields')->where('model_class', $relativeModelName)->first();
+
+    }
 
     protected function setFields()
     {
@@ -75,15 +131,64 @@ class PdfExport extends FoormAction
             return;
         }
 
-        $this->fields = $this->foorm->getFlatFields();
+        $this->fields = $this->getFlatFields();
 
-//        Log::info(print_r($attributes,true));
-        if (is_array($this->pdfSettings['blacklist'])) {
-            $this->fields = array_diff($this->fields, $this->pdfSettings['blacklist']);
-        }
+        $blacklist = $this->getBlacklist();
+        $this->fields = array_diff($this->fields, $blacklist);
+
 
     }
 
+    public function getFlatFields() {
+        $fields = $this->foorm->getFlatFields('field');
+        $fields = array_merge($fields,$this->foorm->getFlatFields('relationfield'));
+        return $fields;
+    }
+
+    protected function guessFieldsTypes() {
+        $this->fieldsTypesGuessed = array_fill_keys($this->fields, 'string');
+
+        foreach ($this->fields as $field) {
+            $fieldParams = Arr::get($this->pdfFieldsParams,$field,[]);
+            if (array_key_exists('type',$fieldParams)) {
+                $this->fieldsTypesGuessed[$field] = $fieldParams['type'];
+            } elseif ($this->cupparisEntity) {
+                $cupparisField = $this->cupparisEntity->fields->where('nome', $field)->first();
+                if ($cupparisField) {
+                    $this->fieldsTypesGuessed[$field] = $cupparisField->tipo;
+                }
+            }
+        }
+    }
+
+
+    public function getBlacklist()
+    {
+        $settingsBlacklist = Arr::get($this->pdfSettings, 'blacklist');
+        return is_array($settingsBlacklist) ? $settingsBlacklist : $this->getStandardBlacklist();
+    }
+
+    public function getStandardBlacklist()
+    {
+
+        $blacklist = config('foorm.standard_export_blacklist', [
+            'id',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'info',
+            'status_history',
+        ]);
+        if (config('foorm.standard_export_blacklist_relation_ids',true)) {
+            foreach ($this->fields as $field) {
+                if (Str::endsWith($field,'_id')) {
+                    $blacklist[] = $field;
+                }
+            }
+        }
+        return $blacklist;
+    }
     public function getFields()
     {
         if (is_null($this->fields)) {
@@ -99,6 +204,14 @@ class PdfExport extends FoormAction
 
     public function getBuilder() {
         return $this->builder;
+    }
+
+    public function setBuilder() {
+        try {
+            $this->builder = $this->foorm->getFormBuilder();
+        } catch (\Throwable $e) {
+            $this->builder = $this->model->where($this->model->getKeyName(),$this->model->getKey());
+        }
     }
 
 
@@ -122,24 +235,41 @@ class PdfExport extends FoormAction
 
 
         $transUc = trans_choice_uc('model.' . $this->pdfModelName, 2);
-        $relativeFilename = str_replace(' ', '_', $transUc)
+        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
             . '_' . date('Ymd_His') . ".pdf";
         $filename = storage_temp_path($relativeFilename);
 
         $viewName = $this->getPdfView();
         $pdfOptions = $this->getPdfOptions();
 
-        $this->builder = $this->foorm->getFormBuilder();
+        $this->setBuilder();
 
         $pdf = PDF::loadView($viewName, ['foormAction' => $this])->setOptions($pdfOptions)->output();
 
         File::append($filename, $pdf);
+
+        if ($this->isApi) {
+            $name = $this->getApiFilename();
+            $this->actionResult = [
+                'content' => base64_encode(File::get($filename)),
+                'mime' => 'application/pdf',
+                'name' => $name,
+            ];
+            return $this->actionResult;
+        }
 
         $this->actionResult = ['link' => '/downloadtemp/' . $relativeFilename];
         return $this->actionResult;
 
     }
 
+
+    public function getApiFilename()
+    {
+        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
+
+        return $apiFilename . '_' . date("Ymd_His") . ".pdf";
+    }
 
     public function validateAction()
     {
@@ -173,25 +303,18 @@ class PdfExport extends FoormAction
          * Metodi per esportazione CSV
          */
 
-    public function getPdfFieldStandard($key, $value)
+    protected function guessItemValue($key, $itemDotted, $item, $itemObject)
     {
-        if (is_numeric($value)) {
-            if ($this->pdfSettings['decimalTo']) {
-                $value = str_replace($this->pdfSettings['decimalFrom'],
-                    $this->pdfSettings['decimalTo'],
-                    $value);
-            }
-        } else {
-            $value = str_replace(['"', "'", "\n", "\r"], '', $value);
-        }
-        return $value;
 
-    }
+        if (array_key_exists('item', Arr::get($this->pdfFieldsParams, $key, []))) {
+            $itemKey = $this->pdfFieldsParams[$key]['item'];
+            if (array_key_exists($itemKey, $item))
+                return $item[$itemKey];
+            $itemKey = str_replace('|', '.', $itemKey);
+            if (array_key_exists($itemKey, $itemDotted))
+                return $itemDotted[$itemKey];
+            return '';
 
-    protected function guessItemValue($key,$itemDotted,$item) {
-
-        if (array_key_exists('item',Arr::get($this->pdfFieldsParams,$key,[]))) {
-            return $item[$this->pdfFieldsParams[$key]['item']];
         }
 
         $fieldKey = str_replace('|', '.', $key);
@@ -203,24 +326,84 @@ class PdfExport extends FoormAction
         return $itemValue;
     }
 
-    public function getPdfField($key,$itemDotted,$item)
+
+    public function getPdfFieldStandard($key, $value, $item = [], $itemObject = null)
     {
 
-            $itemValue = $this->guessItemValue($key,$itemDotted,$item);
-            $methodName = 'getPdfField' . Str::studly($key);
-            if (method_exists($this, $methodName)) {
-                return $this->$methodName($itemValue);
-            }
-            return $this->getPdfFieldStandard($key, $itemValue);
+        $guessedType = Arr::get($this->fieldsTypesGuessed, $key, 'string');
+        switch ($guessedType) {
+
+            case CupparisTipiCampi::DECIMAL->value:
+            case CupparisTipiCampi::FLOAT->value:
+                if (Arr::get($this->pdfSettings, 'decimalTo')) {
+                    $value = str_replace($this->pdfSettings['decimalFrom'],
+                        $this->pdfSettings['decimalTo'],
+                        $value);
+                }
+                return $value;
+            case CupparisTipiCampi::BOOLEAN->value:
+                return $value ? $this->boolTrueLabel : $this->boolFalseLabel;
+            case CupparisTipiCampi::DATE->value:
+                return FormatValues::formatDate($value,$this->dateFormat);
+            case CupparisTipiCampi::DATETIME->value:
+                return FormatValues::formatDate($value,$this->dateTimeFormat);
+            default:
+                if (is_array($value)) {
+                    return cupparis_json_encode($value);
+                }
+                return $this->translitString($value);
+        }
+
+    }
+
+    public function translitString($value, $chars = true)
+    {
+        $value = Str::replace(['"', "'", "\n", "\r"], '', $value);
+//        $value = Str::replace($this->separator, $this->separatorReplacer, $value);
+
+        if (!$chars) {
+            return $value;
+        }
+
+        $value = Str::replace($this->charsMappingIn, $this->charsMappingOut, $value);
+
+        return $value;
+    }
+
+    public function getBoolValue($value)
+    {
+        if ($value) {
+            return Arr::get($this->pdfSettings, 'bool-true-label', config('foorm.bool-true-label'));
+        }
+    }
+
+    public function getPdfField($key,$item)
+    {
+
+        $itemArray = $item->toArray();
+        $itemDotted = \Illuminate\Support\Arr::dot($itemArray);
+
+
+        $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
+        $methodName = 'getPdfField' . Str::studly($key);
+        if (method_exists($this, $methodName)) {
+            return $this->$methodName($itemValue);
+        }
+        return $this->getPdfFieldStandard($key, $itemValue);
     }
 
 
     public function getPdfFieldLabel($fieldKey)
     {
 
+        if (array_key_exists('header', Arr::get($this->pdfFieldsParams, $fieldKey, []))) {
+            return $this->pdfFieldsParams[$fieldKey]['header'];
+        }
         $methodName = 'getPdfFieldLabel' . Str::studly($this->labelsMethod);
         return $this->$methodName($fieldKey);
     }
+
+
 
 
     protected function getPdfFieldLabelPlain($fieldKey)
@@ -230,17 +413,47 @@ class PdfExport extends FoormAction
 
     protected function getPdfFieldLabelTranslate($fieldKey)
     {
+
         $fieldKeyParts = explode('|', $fieldKey);
         if (count($fieldKeyParts) == 1) {
             return Lang::getMFormField($fieldKey, $this->pdfModelName);
         }
+
         $relation = $fieldKeyParts[0];
         $field = $fieldKeyParts[1];
         $relationModel = Arr::get($this->relations, $relation, $relation);
-        return trans_choice_uc('model.' . $relationModel, 1) .
-            ' - ' . Lang::getMFormField($field, $relationModel);
+        $relationPrefix = $relation . '|';
+        $relationFields = array_filter($this->fields,function ($item) use ($relationPrefix)  {
+            return Str::startsWith($item,$relationPrefix);
+        });
+
+        if (count($relationFields) > 1) {
+            return trans_choice_uc('model.' . $relationModel, 1) .
+                ' - ' . Lang::getMFormField($field, $relationModel);
+        } else {
+            return trans_choice_uc('model.' . $relationModel, 1);
+        }
+
     }
 
+    public function getPdfTitle($type = null) {
+
+        if (Arr::get($this->pdfSettings,'documentTitle')) {
+            return $this->pdfSettings['documentTitle'];
+        }
+
+
+        switch ($type) {
+            case 'list':
+                return trans_choice_uc('model.' . $this->pdfModelName, 2);
+            case 'record':
+                return trans_choice_uc('model.' . $this->pdfModelName, 1) . ' - '
+                    . ucfirst($this->model->getKeyName()) . ': ' . $this->model->getKey();
+            default:
+                return "";
+        }
+
+    }
     /*
      * Fine metodi per esportazione CSV
     */

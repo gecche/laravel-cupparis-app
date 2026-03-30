@@ -43,7 +43,7 @@ class Uploadfile extends FoormAction
 
     protected function uploadFile() {
 
-        return $this->uploadService->saveTempFile($this->resourceType, $this->file);
+        return $this->uploadService->saveTempFile($this->resourceType, $this->file, true);
 
     }
 

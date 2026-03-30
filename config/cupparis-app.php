@@ -38,4 +38,45 @@ return [
      *
      */
 
+
+    /*
+     *
+     */
+
+    'cupparis_entity' => [
+
+
+        'namespace' => 'App\\Http\\Controllers',
+
+        'modelsPath' => 'app/Models/',
+        'policiesPath' => 'app/Policies/',
+
+        'models_namespace' => 'App\\Models\\',
+        'policies_namespace' => 'App\\Policies\\',
+
+        'vueApplicationPath' => 'resources/vue-application-v4/src/application/',
+        'vueApplicationModelsConfPath' => 'ModelConfs/',
+        'vueApplicationConfigPath' => 'config/',
+
+        'langs' => [
+            'model' => [
+                'lang/it/model.php',
+            ],
+            'fields' => [
+                'lang/it/fields.php',
+            ],
+        ],
+
+        'stubs' => [
+            'migration' => 'stubs/migration/migration.stub',
+            'model' => 'stubs/migration/model.stub',
+            'modelconf' => 'stubs/migration/modelconf.stub',
+            'config' => 'stubs/migration/config.stub',
+            'fieldsTypesPath' => 'stubs/migration/modelsConfsFieldsTypes/',
+            'policy' => 'stubs/migration/policy.stub',
+            'foorm' => 'stubs/migration/foorm.stub',
+        ],
+    ],
+
+
 ];

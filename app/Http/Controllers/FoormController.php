@@ -14,6 +14,7 @@ use Gecche\Foorm\Facades\Foorm;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Response;
@@ -29,6 +30,12 @@ class FoormController extends Controller
         'error' => 0,
         'msg' => '',
     ];
+
+    public function getDatafileList($foormName, $datafileId, $type = 'datafile_list')
+    {
+        $this->buildAndGetFoormResult($foormName, $type, null, ['datafile_id' => $datafileId]);
+        return $this->_json();
+    }
 
     public function getSearch($foormName, $type = 'search')
     {
@@ -178,6 +185,9 @@ class FoormController extends Controller
         } catch (ValidationException $e) {
             $this->_error($e->errors());
         } catch (\Exception $e) {
+            Log::info("FOORM CONTROLLER EXCEPTION");
+            Log::info($e->getMessage());
+            Log::info($e->getTraceAsString());
             $this->_error($e->getMessage());
         }
     }
@@ -201,6 +211,7 @@ class FoormController extends Controller
         switch ($foormType) {
             case 'search':
             case 'list':
+            case 'datafile_list':
                 $ability = 'listing';
                 break;
             case 'edit':

@@ -1,0 +1,9 @@
+                type : "w-date-picker",
+                format : "numeric",
+                //active : [
+                //   "day",
+                //   "month",
+                //   "year"
+                //],
+                //startYear : null,
+                //endYear : null,

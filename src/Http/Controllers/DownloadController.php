@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller as BaseController;
 
+use App\Http\Controllers\JsonControllerTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
 
 class DownloadController extends BaseController
 {
+    use JsonControllerTrait;
 
 
     public function viewMediableFile($mediableModelName, $mediablePk, $template = null)
@@ -48,20 +50,20 @@ class DownloadController extends BaseController
         return Route::dispatch($request);
     }
 
-    public function openMediableFile($mediableModelName, $mediablePk)
+    public function openMediableFile(Request $request, $mediableModelName, $mediablePk)
     {
 
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
-        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk, 'inline');
+        return $this->getResponseUploadableModelFile($request, $mediableModelName, $mediablePk, 'inline');
     }
 
-    public function downloadMediableFile($mediableModelName, $mediablePk)
+    public function downloadMediableFile(Request $request, $mediableModelName, $mediablePk)
     {
 
         $this->redirectIfNotAuthorizedFile($mediableModelName, $mediablePk);
 
-        return $this->getResponseUploadableModelFile($mediableModelName, $mediablePk, 'attachment');
+        return $this->getResponseUploadableModelFile($request, $mediableModelName, $mediablePk, 'attachment');
     }
 
     protected function redirectIfNotAuthorizedFile($mediableModelName, $mediablePk)
@@ -75,9 +77,18 @@ class DownloadController extends BaseController
         //
     }
 
-    protected function getResponseUploadableModelFile($mediableModelName, $mediablePk, $disposition)
+    protected function getResponseUploadableModelFile(Request $request, $mediableModelName, $mediablePk, $disposition)
     {
         $mediableModel = $this->getMediableModel($mediableModelName, $mediablePk);
+
+        if (!$mediableModel->fileExists()) {
+            return $this->_errorAndExit("File not found");
+        }
+
+        if ($this->checkIfIsApi($request)) {
+            $data = $mediableModel->storageResponseApi(null, null);
+            return $this->_result($data,null,true);
+        }
         return $mediableModel->storageResponse(null, null, [], $disposition);
     }
 
@@ -126,6 +137,19 @@ class DownloadController extends BaseController
         $diskDriver = property_exists($this, 'disk_driver') ? $this->disk_driver : 'local';
         $filename = 'files/uploads/' . $filename;
         return Storage::disk($diskDriver)->response($filename, $filename, [], $disposition);
+    }
+
+    public function checkIfIsApi(Request $request)
+    {
+
+        if ($request->wantsJson()
+            || $request->is('*api/*')
+            || $request->routeIs('api.*')
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
 }

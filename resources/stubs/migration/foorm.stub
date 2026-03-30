@@ -1,0 +1,39 @@
+<?php
+
+return [
+
+    'view' => [
+        'fields' => {{$fields}},
+    ],
+    'search' => [
+        'fields' => {{$fieldsSearch}},
+    ],
+    'list' => [
+        'basic_query_fields' => ['id'],
+        'dependencies' => [
+            'search' => 'search',
+        ],
+
+        'pagination' => [
+            'per_page' => 20,
+            'pagination_steps' => [10,20,50],
+        ],
+
+        'fields' => {{$fields}},
+        'relations' => {{$relations}},
+        'params' => [
+
+        ],
+    ],
+    'edit' => [
+        'fields' => {{$fieldsEdit}},
+        'relations' => {{$relationsEdit}},
+        'params' => [
+
+        ],
+    ],
+//    'insert' => [
+//
+//    ],
+
+];

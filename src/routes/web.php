@@ -17,18 +17,6 @@ Route::group([
     'middleware' => ['web']
 ], function () {
 
-// route to access template applied image file
-    Route::get('imagecache/{template}/{filename}', [
-        'uses' => '\Intervention\Image\ImageCacheController@getResponse',
-        'as' => 'imagecache'
-    ])->where(['filename' => '[ \w\\.\\/\\-\\@\(\)]+']);
-
-    Route::get('viewmediable/{model}/{pk}/{template?}', 'DownloadController@viewMediableFile');
-    Route::get('downloadtemp/{nome}', 'DownloadController@downloadtemp');
-    Route::get('downloadmediable/{model}/{pk}', 'DownloadController@downloadMediableFile');
-    Route::get('openmediable/{model}/{pk}', 'DownloadController@openMediableFile');
-
-    Route::get('viewuploadable/{filename}/{template?}', 'DownloadController@viewUploadableFile');
-    Route::get('downloaduploadable/{filename}/{disposition?}', 'DownloadController@downloadUploadableFile');
+    require __DIR__ . '/general-routes.php';
 
 });

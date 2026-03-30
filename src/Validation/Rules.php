@@ -44,23 +44,23 @@ class Rules
         return false;
     }
 
-    public function captcha($attribute, $value, $parameters, $validator)
+    public function captcha($attribute, $value)
     {
         return captcha_check($value);
     }
 
 
-    public function partitaIva($attribute, $value, $parameters, $validator)
+    public function partitaIva($attribute, $value)
     {
         return $this->checkPartitaIva($value);
     }
 
-    public function codiceFiscale($attribute, $value, $parameters, $validator)
+    public function codiceFiscale($attribute, $value)
     {
         return $this->checkCodiceFiscale($value);
     }
 
-    public function codiceFiscaleProfessional($attribute, $value, $parameters, $validator)
+    public function codiceFiscaleProfessional($attribute, $value)
     {
         return ($this->checkPartitaIva($value) || $this->checkCodiceFiscale($value));
     }
@@ -222,6 +222,9 @@ class Rules
         return true;
     }
 
+    /*
+     * SE LO USERNAME E' UNA EMIAL DEVE ESSERE UGUALE AL CAMPO EMAIL
+     */
     public function usernameEmail($attribute, $value, $parameters, $validator)
     {
 
