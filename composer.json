@@ -53,35 +53,35 @@
         }
     ],
     "require": {
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^13.0",
 
         "barryvdh/laravel-snappy": "^1.0",
 
         "igaster/laravel-theme": "^2",
         "intervention/image": "2.*",
-        "intervention/imagecache": "^14.0",
+        "intervention/imagecache": "^15.0",
 
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.0",
 
-        "gecche/laravel-cupparis-helpers": "^12.0",
-        "gecche/laravel-cupparis-datafile": "^12.0",
-        "gecche/laravel-cupparis-datafile-json": "^12.0",
-        "gecche/laravel-cupparis-menus": "^12.0",
-        "gecche/laravel-cupparis-localization": "^12.0",
+        "gecche/laravel-cupparis-helpers": "^13.0",
+        "gecche/laravel-cupparis-datafile": "^13.0",
+        "gecche/laravel-cupparis-datafile-json": "^13.0",
+        "gecche/laravel-cupparis-menus": "^13.0",
+        "gecche/laravel-cupparis-localization": "^13.0",
 
-        "gecche/laravel-foorm": "^12.0",
+        "gecche/laravel-foorm": "^13.0",
 
-        "gecche/laravel-policy-builder": "^12.0",
-        "gecche/laravel-multidomain": "^12.0",
-        "gecche/laravel-bannable": "^12.0"
+        "gecche/laravel-policy-builder": "^13.0",
+        "gecche/laravel-multidomain": "^13.0",
+        "gecche/laravel-bannable": "^13.0"
 
     },
     "require-dev": {
         "mockery/mockery": "^1.6",
-        "phpunit/phpunit": "^11.5",
-        "orchestra/testbench": "^10.0",
-        "orchestra/testbench-browser-kit": "^10.0",
+        "phpunit/phpunit": "^12.0",
+        "orchestra/testbench": "^11.0",
+        "orchestra/testbench-browser-kit": "^11.0",
         "codedungeon/phpunit-result-printer": "^0.1.0"
     },
     "autoload": {
