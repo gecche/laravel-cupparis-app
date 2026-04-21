@@ -61,6 +61,7 @@ return [
     'foorms' => [
         0 => 'user',
         1 => 'cupparis_entity',
+        2 => 'queue',
     ],
 
     'foorm-actions' => [

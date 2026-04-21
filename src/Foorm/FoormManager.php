@@ -57,6 +57,7 @@ class FoormManager extends BaseFoormManager
         $searchInputs = preg_grep_keys('/^s_/', $input);
 
         foreach ($searchInputs as $searchInputKey => $searchInputValue) {
+            $searchInputKey = Str::rtrim($searchInputKey, '[]');
             unset($input[$searchInputKey]);
             if (Str::endsWith($searchInputKey, '_operator')) {
                 continue;
