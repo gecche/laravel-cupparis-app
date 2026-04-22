@@ -2,12 +2,12 @@
 
 namespace Gecche\Cupparis\App\Foorm;
 
-use Gecche\Foorm\FoormManager as BaseFoormManager;
+use Gecche\Foorm\FoormQueueManager as BaseFoormManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class FoormManager extends BaseFoormManager
+class FoormQueueManager extends BaseFoormManager
 {
     use FoormManagerTrait;
 

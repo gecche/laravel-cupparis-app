@@ -18,6 +18,8 @@ return array(
     'queues' => [
         'test' => \Gecche\Cupparis\Queue\TestQueue::class,
         'datafile' => \Gecche\Cupparis\Datafile\DatafileQueue::class,
+        'datafile-json' => \Gecche\Cupparis\DatafileJson\DatafileJsonQueue::class,
+        'foorm-action' => \App\Queue\FoormActionQueue::class,
     ],
 );
 

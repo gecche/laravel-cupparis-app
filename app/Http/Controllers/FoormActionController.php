@@ -14,16 +14,14 @@ use Illuminate\Support\Facades\Response;
 
 class FoormActionController extends Controller
 {
+
+    use JsonControllerTrait;
+
     protected $foorm;
 
     protected $foormAction;
 
     protected $foormManager;
-
-    protected $json = [
-        'error' => 0,
-        'msg' => '',
-    ];
 
 
     public function foormAction($foormAction, $foorm, $foormType, $foormPk = null) {
@@ -66,8 +64,8 @@ class FoormActionController extends Controller
     public function foormCAction($foormcaction, $foorm, $foormType, $constraintField, $constraintValue, $foormPk = null)
     {
         $params = $this->prepareFixedConstraints($constraintField, $constraintValue, $foorm, $foormType);
-        if ($pk) {
-            $params['id'] = $pk;
+        if ($foormPk) {
+            $params['id'] = $foormPk;
         }
         $this->buildAndGetFoormActionResult($foormcaction, $foorm, $foormType, $params);
         return $this->_json();
@@ -120,14 +118,4 @@ class FoormActionController extends Controller
     }
 
 
-    protected function _error($msg)
-    {
-        $this->json['error'] = 1;
-        $this->json['msg'] = $msg;
-    }
-
-    protected function _json()
-    {
-        return Response::json($this->json);
-    }
 }

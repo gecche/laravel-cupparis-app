@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FoormActionController;
 
+    Route::post('queue/{foormaction}/{foorm}/{foormtype}/{foormpk?}', [\App\Http\Controllers\FoormActionQueueController::class,'foormAction'])->where([
+        'foorm' => $whereFoorm,
+        'foormaction' => $whereFoormAction
+    ]);
     //PARAMETRI DA METTERE IN POST: id
     Route::post('migrate/cupparis_entity/list/{foormpk?}', [FoormActionController::class,'migrate']);
     Route::post('rollback/cupparis_entity/list/{foormpk?}', [FoormActionController::class,'rollback']);
