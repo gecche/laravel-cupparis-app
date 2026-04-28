@@ -50,6 +50,8 @@ class CsvExport extends FoormAction
 
     protected $dateFormat, $dateTimeFormat;
 
+    protected $fieldsPrefixes = [];
+
 
     protected function init()
     {
@@ -88,6 +90,8 @@ class CsvExport extends FoormAction
         $this->guessFieldsTypes();
 
         $this->guessRelationFieldsHeaders();
+
+        $this->setFieldsPrefixes();
 
 
     }
@@ -322,12 +326,34 @@ class CsvExport extends FoormAction
 
             $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
-                $row[] = $this->$methodName($itemValue, $itemArray, $item);
+                $rowValue = $this->$methodName($itemValue, $itemArray, $item);
             } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
+                $rowValue = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
             }
+            $row[] = $this->checkAndSetPrefix($key,$rowValue);
         }
         return $row;
+    }
+
+    protected function setFieldsPrefixes() {
+
+        foreach ($this->fields as $key) {
+            if (array_key_exists($key,$this->csvFieldsParams) &&
+                array_key_exists('prefix',$this->csvFieldsParams[$key])) {
+                $this->fieldsPrefixes[$key] = $this->csvFieldsParams[$key]['prefix'];
+            } else {
+                $this->fieldsPrefixes[$key] = null;
+            }
+        }
+
+    }
+
+    protected function checkAndSetPrefix($key,$itemValue) {
+
+        if ($itemValue && !is_null($this->fieldsPrefixes[$key])) {
+            $itemValue = $this->csvFieldsParams[$key]['prefix'] . $itemValue;
+        }
+        return $itemValue;
     }
 
     protected function guessItemValue($key, $itemDotted, $item, $itemObject)
