@@ -225,7 +225,7 @@ class CsvExport extends FoormAction
         }
 
         if ($this->isApi) {
-            $name = $this->getApiFilename();
+            $name = $this->getRelativeExportFilename(true);
             $this->actionResult = [
                 'content' => base64_encode(File::get($filename)),
                 'mime' => 'text/csv',
@@ -243,23 +243,19 @@ class CsvExport extends FoormAction
         return Arr::get($this->csvSettings, 'filename',trans_choice_uc('model.' . $this->csvModelName, 2));
     }
 
-    public function getRelativeExportFilename() {
-        return Str::replace([' ', '/'], ['_', '_'], $this->getRelativeExportFilenamePrefix())
+    protected function getRelativeExportApiFilenamePrefix() {
+        return Arr::get($this->csvSettings, 'apiFilename',$this->getRelativeExportFilenamePrefix());
+    }
+
+    public function getRelativeExportFilename($api = false) {
+        $prefix = $api ? $this->getRelativeExportApiFilenamePrefix() : $this->getRelativeExportFilenamePrefix();
+        return Str::replace([' ', '/'], ['_', '_'], $prefix)
             . '_' . date('Ymd_His') . ".csv";
     }
 
     public function getAbsoluteExportFilename($relativeFilename) {
         return storage_temp_path($relativeFilename);
     }
-
-
-    public function getApiFilename()
-    {
-        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
-
-        return $apiFilename . '_' . date("Ymd_His") . ".csv";
-    }
-
 
     protected function performActionList($csvStream, $filename = null)
     {
