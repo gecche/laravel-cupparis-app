@@ -234,10 +234,9 @@ class PdfExport extends FoormAction
     {
 
 
-        $transUc = trans_choice_uc('model.' . $this->pdfModelName, 2);
-        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
-            . '_' . date('Ymd_His') . ".pdf";
-        $filename = storage_temp_path($relativeFilename);
+
+        $relativeFilename = $this->getRelativeExportFilename();
+        $filename = $this->getAbsoluteExportFilename($relativeFilename);
 
         $viewName = $this->getPdfView();
         $pdfOptions = $this->getPdfOptions();
@@ -263,6 +262,18 @@ class PdfExport extends FoormAction
 
     }
 
+    protected function getRelativeExportFilenamePrefix() {
+        return Arr::get($this->pdfSettings, 'filename',trans_choice_uc('model.' . $this->pdfModelName, 2));
+    }
+
+    public function getRelativeExportFilename() {
+        return Str::replace([' ', '/'], ['_', '_'], $this->getRelativeExportFilenamePrefix())
+            . '_' . date('Ymd_His') . ".pdf";
+    }
+
+    public function getAbsoluteExportFilename($relativeFilename) {
+        return storage_temp_path($relativeFilename);
+    }
 
     public function getApiFilename()
     {

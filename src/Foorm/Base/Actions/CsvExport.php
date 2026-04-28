@@ -213,10 +213,8 @@ class CsvExport extends FoormAction
             $csvStream .= $this->getCsvRowHeaders();
         }
 
-        $transUc = trans_choice_uc('model.' . $this->csvModelName, 2);
-        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
-            . '_' . date('Ymd_His') . ".csv";
-        $filename = storage_temp_path($relativeFilename);
+        $relativeFilename = $this->getRelativeExportFilename();
+        $filename = $this->getAbsoluteExportFilename($relativeFilename);
         File::append($filename, $csvStream);
         switch ($this->formType) {
             case 'list':
@@ -239,6 +237,19 @@ class CsvExport extends FoormAction
         $this->actionResult = ['link' => '/downloadtemp/' . $relativeFilename];
         return $this->actionResult;
 
+    }
+
+    protected function getRelativeExportFilenamePrefix() {
+        return Arr::get($this->csvSettings, 'filename',trans_choice_uc('model.' . $this->csvModelName, 2));
+    }
+
+    public function getRelativeExportFilename() {
+        return Str::replace([' ', '/'], ['_', '_'], $this->getRelativeExportFilenamePrefix())
+            . '_' . date('Ymd_His') . ".csv";
+    }
+
+    public function getAbsoluteExportFilename($relativeFilename) {
+        return storage_temp_path($relativeFilename);
     }
 
 
