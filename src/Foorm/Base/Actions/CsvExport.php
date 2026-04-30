@@ -51,6 +51,7 @@ class CsvExport extends FoormAction
     protected $dateFormat, $dateTimeFormat;
 
     protected $fieldsPrefixes = [];
+    protected $fieldsSuffixes = [];
 
 
     protected function init()
@@ -91,7 +92,7 @@ class CsvExport extends FoormAction
 
         $this->guessRelationFieldsHeaders();
 
-        $this->setFieldsPrefixes();
+        $this->setFieldsPrefixesSuffixes();
 
 
     }
@@ -337,28 +338,35 @@ class CsvExport extends FoormAction
             } else {
                 $rowValue = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
             }
-            $row[] = $this->checkAndSetPrefix($key,$rowValue);
+            $row[] = $this->checkAndSetPrefixSuffix($key,$rowValue);
         }
         return $row;
     }
 
-    protected function setFieldsPrefixes() {
+    protected function setFieldsPrefixesSuffixes() {
 
         foreach ($this->fields as $key) {
-            if (array_key_exists($key,$this->csvFieldsParams) &&
-                array_key_exists('prefix',$this->csvFieldsParams[$key])) {
-                $this->fieldsPrefixes[$key] = $this->csvFieldsParams[$key]['prefix'];
-            } else {
-                $this->fieldsPrefixes[$key] = null;
+            $fieldsParams = Arr::get($this->csvFieldsParams, $key, []);
+            foreach (['prefix' => 'fieldsPrefixes','suffix' => 'fieldsSuffixes'] as $mutator => $mutatorsArray) {
+                if (array_key_exists($mutator,$fieldsParams)) {
+                    $this->$mutatorsArray[$key] = $fieldsParams[$mutator];
+                } else {
+                    $this->$mutatorsArray[$key] = null;
+                }
             }
         }
 
     }
 
-    protected function checkAndSetPrefix($key,$itemValue) {
+    protected function checkAndSetPrefixSuffix($key,$itemValue) {
 
-        if ($itemValue && !is_null($this->fieldsPrefixes[$key])) {
-            $itemValue = $this->csvFieldsParams[$key]['prefix'] . $itemValue;
+        if ($itemValue) {
+            if (!is_null($this->fieldsPrefixes[$key])) {
+                $itemValue = $this->fieldsPrefixes[$key] . $itemValue;
+            }
+            if (!is_null($this->fieldsSuffixes[$key])) {
+                $itemValue = $itemValue . $this->fieldsSuffixes[$key];
+            }
         }
         return $itemValue;
     }
@@ -401,7 +409,7 @@ class CsvExport extends FoormAction
             case CupparisTipiCampi::DECIMAL->value:
             case CupparisTipiCampi::FLOAT->value:
                 if (Arr::get($this->csvSettings, 'decimalTo')) {
-                    $value = str_replace($this->csvSettings['decimalFrom'],
+                    $value = str_replace(Arr::get($this->csvSettings, 'decimalFrom', '.'),
                         $this->csvSettings['decimalTo'],
                         $value);
                 }

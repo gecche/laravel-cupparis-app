@@ -47,6 +47,11 @@ class PdfExport extends FoormAction
     ];
 
     protected $dateFormat, $dateTimeFormat;
+
+    protected $fieldsPrefixes = [];
+    protected $fieldsSuffixes = [];
+
+
     protected $builder;
 
     protected $fieldsWidths;
@@ -86,6 +91,9 @@ class PdfExport extends FoormAction
         $this->setFields();
 
         $this->guessFieldsTypes();
+
+        $this->setFieldsPrefixesSuffixes();
+
         $this->fieldsWidths = Arr::get($this->pdfSettings, 'fieldsWidths', []);
         $this->fieldsStyles = Arr::get($this->pdfSettings, 'fieldsStyles', []);
 
@@ -350,7 +358,7 @@ class PdfExport extends FoormAction
             case CupparisTipiCampi::DECIMAL->value:
             case CupparisTipiCampi::FLOAT->value:
                 if (Arr::get($this->pdfSettings, 'decimalTo')) {
-                    $value = str_replace($this->pdfSettings['decimalFrom'],
+                    $value = str_replace(Arr::get($this->csvSettings, 'decimalFrom', '.'),
                         $this->pdfSettings['decimalTo'],
                         $value);
                 }
@@ -401,10 +409,42 @@ class PdfExport extends FoormAction
         $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
         $methodName = 'getPdfField' . Str::studly($key);
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($itemValue);
+            $pdfFieldValue = $this->$methodName($itemValue);
+        } else {
+            $pdfFieldValue = $this->getPdfFieldStandard($key, $itemValue);
         }
-        return $this->getPdfFieldStandard($key, $itemValue);
+
+        return $this->checkAndSetPrefixSuffix($key,$pdfFieldValue);
     }
+
+    protected function setFieldsPrefixesSuffixes() {
+
+        foreach ($this->fields as $key) {
+            $fieldsParams = Arr::get($this->pdfFieldsParams, $key, []);
+            foreach (['prefix' => 'fieldsPrefixes','suffix' => 'fieldsSuffixes'] as $mutator => $mutatorsArray) {
+                if (array_key_exists($mutator,$fieldsParams)) {
+                    $this->$mutatorsArray[$key] = $fieldsParams[$mutator];
+                } else {
+                    $this->$mutatorsArray[$key] = null;
+                }
+            }
+        }
+
+    }
+
+    protected function checkAndSetPrefixSuffix($key,$itemValue) {
+
+        if ($itemValue) {
+            if (!is_null($this->fieldsPrefixes[$key])) {
+                $itemValue = $this->fieldsPrefixes[$key] . $itemValue;
+            }
+            if (!is_null($this->fieldsSuffixes[$key])) {
+                $itemValue = $itemValue . $this->fieldsSuffixes[$key];
+            }
+        }
+        return $itemValue;
+    }
+
 
 
     public function getPdfFieldLabel($fieldKey)
