@@ -317,7 +317,7 @@ class PdfExport extends FoormAction
     }
 
     /*
-         * Metodi per esportazione CSV
+         * Metodi per esportazione PDF
          */
 
     protected function guessItemValue($key, $itemDotted, $item, $itemObject)
@@ -358,7 +358,7 @@ class PdfExport extends FoormAction
             case CupparisTipiCampi::DECIMAL->value:
             case CupparisTipiCampi::FLOAT->value:
                 if (Arr::get($this->pdfSettings, 'decimalTo')) {
-                    $value = str_replace(Arr::get($this->csvSettings, 'decimalFrom', '.'),
+                    $value = str_replace(Arr::get($this->pdfSettings, 'decimalFrom', '.'),
                         $this->pdfSettings['decimalTo'],
                         $value);
                 }
@@ -509,7 +509,7 @@ class PdfExport extends FoormAction
 
     }
     /*
-     * Fine metodi per esportazione CSV
+     * Fine metodi per esportazione PDF
     */
 
 
