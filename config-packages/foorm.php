@@ -186,4 +186,7 @@ return [
         ],
     ],
 
+    'guest_foorms' => [
+        //'user.insert',
+    ]
 ];
