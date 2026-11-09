@@ -158,6 +158,7 @@ return [
 
             'allowed_actions' => [
                 'delete' => true,
+                'duplicate' => true,
                 'multi-delete' => true,
                 'set' => true,
             ],
