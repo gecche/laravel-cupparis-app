@@ -96,19 +96,21 @@ class Import extends FoormAction
                 is_array($model->columnsForSelectList) && count($model->columnsForSelectList) > 0
                     ? $model->columnsForSelectList : ['id'];
 
+            $columnsOrder = [];
             if (is_array($model->defaultOrderColumns) && count($model->defaultOrderColumns) > 0) {
-                $entity->columns_order = ['id_asc'];
+                $columnsOrder = ['id_asc'];
             }  else {
-                $entity->columns_order = [];
                 foreach ($model->defaultOrderColumns as $orderColumn => $orderDir) {
-                    $entity->columns_order[] = $orderColumn . '_' . strtolower($orderDir);
+                    $columnsOrder[] = $orderColumn . '_' . strtolower($orderDir);
                 }
             }
 
+            $entity->setInformazioniField('columns_order',$columnsOrder);
+
             $langEntry = Lang::get('model.'.Str::snake($modelName));
             $langEntryArray = explode('|',$langEntry);
-            $entity->lang_singolare = Arr::get($langEntryArray,0,Str::snake($modelName));
-            $entity->lang_plurale = Arr::get($langEntryArray,1,Str::snake($tableName));
+            $entity->setInformazioniField('lang_singolare', Arr::get($langEntryArray,0,Str::snake($modelName)));
+            $entity->setInformazioniField('lang_plurale', Arr::get($langEntryArray,1,Str::snake($tableName)));
 
             $entity->save();
             $columnsToExclude = [

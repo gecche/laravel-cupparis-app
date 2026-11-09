@@ -29,7 +29,7 @@ class Translations extends Command
      *
      * @var string
      */
-    protected $description = 'Creazione del file js di translations';
+    protected $description = 'Creazione del file json di translations';
 
     /**
      * The filesystem instance.
@@ -165,10 +165,10 @@ class Translations extends Command
 
         $translations = Arr::dot($translations);
 
-        $filename = public_path($this->dirjs . "/" . $lang . '-translations.js');
+        $filename = public_path($this->dirjs . "/" . $lang . '-translations.json');
 
 //        $this->files->put($filename, "crud.lang = " . cupparis_json_encode($translations));
-        $this->files->put($filename, "crud.lang = " . json_encode($translations,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        $this->files->put($filename, json_encode($translations,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
         $this->comment('Traduzioni completate');
 

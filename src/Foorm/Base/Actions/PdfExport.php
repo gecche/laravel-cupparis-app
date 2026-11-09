@@ -47,6 +47,11 @@ class PdfExport extends FoormAction
     ];
 
     protected $dateFormat, $dateTimeFormat;
+
+    protected $fieldsPrefixes = [];
+    protected $fieldsSuffixes = [];
+
+
     protected $builder;
 
     protected $fieldsWidths;
@@ -86,6 +91,9 @@ class PdfExport extends FoormAction
         $this->setFields();
 
         $this->guessFieldsTypes();
+
+        $this->setFieldsPrefixesSuffixes();
+
         $this->fieldsWidths = Arr::get($this->pdfSettings, 'fieldsWidths', []);
         $this->fieldsStyles = Arr::get($this->pdfSettings, 'fieldsStyles', []);
 
@@ -234,10 +242,9 @@ class PdfExport extends FoormAction
     {
 
 
-        $transUc = trans_choice_uc('model.' . $this->pdfModelName, 2);
-        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
-            . '_' . date('Ymd_His') . ".pdf";
-        $filename = storage_temp_path($relativeFilename);
+
+        $relativeFilename = $this->getRelativeExportFilename();
+        $filename = $this->getAbsoluteExportFilename($relativeFilename);
 
         $viewName = $this->getPdfView();
         $pdfOptions = $this->getPdfOptions();
@@ -249,7 +256,7 @@ class PdfExport extends FoormAction
         File::append($filename, $pdf);
 
         if ($this->isApi) {
-            $name = $this->getApiFilename();
+            $name = $this->getRelativeExportFilename(true);
             $this->actionResult = [
                 'content' => base64_encode(File::get($filename)),
                 'mime' => 'application/pdf',
@@ -263,12 +270,22 @@ class PdfExport extends FoormAction
 
     }
 
+    protected function getRelativeExportFilenamePrefix() {
+        return Arr::get($this->pdfSettings, 'filename',trans_choice_uc('model.' . $this->pdfModelName, 2));
+    }
 
-    public function getApiFilename()
-    {
-        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
+    protected function getRelativeExportApiFilenamePrefix() {
+        return Arr::get($this->pdfSettings, 'apiFilename',$this->getRelativeExportFilenamePrefix());
+    }
 
-        return $apiFilename . '_' . date("Ymd_His") . ".pdf";
+    public function getRelativeExportFilename($api = false) {
+        $prefix = $api ? $this->getRelativeExportApiFilenamePrefix() : $this->getRelativeExportFilenamePrefix();
+        return Str::replace([' ', '/'], ['_', '_'], $prefix)
+            . '_' . date('Ymd_His') . ".pdf";
+    }
+
+    public function getAbsoluteExportFilename($relativeFilename) {
+        return storage_temp_path($relativeFilename);
     }
 
     public function validateAction()
@@ -300,14 +317,19 @@ class PdfExport extends FoormAction
     }
 
     /*
-         * Metodi per esportazione CSV
+         * Metodi per esportazione PDF
          */
 
     protected function guessItemValue($key, $itemDotted, $item, $itemObject)
     {
 
-        if (array_key_exists('item', Arr::get($this->pdfFieldsParams, $key, []))) {
-            $itemKey = $this->pdfFieldsParams[$key]['item'];
+        $fieldsParams = Arr::get($this->pdfFieldsParams, $key, []);
+        if (array_key_exists('fixed', $fieldsParams)) {
+            return  $fieldsParams['fixed'];
+        }
+
+        if (array_key_exists('item', $fieldsParams)) {
+            $itemKey = $fieldsParams['item'];
             if (array_key_exists($itemKey, $item))
                 return $item[$itemKey];
             $itemKey = str_replace('|', '.', $itemKey);
@@ -336,7 +358,7 @@ class PdfExport extends FoormAction
             case CupparisTipiCampi::DECIMAL->value:
             case CupparisTipiCampi::FLOAT->value:
                 if (Arr::get($this->pdfSettings, 'decimalTo')) {
-                    $value = str_replace($this->pdfSettings['decimalFrom'],
+                    $value = str_replace(Arr::get($this->pdfSettings, 'decimalFrom', '.'),
                         $this->pdfSettings['decimalTo'],
                         $value);
                 }
@@ -387,10 +409,42 @@ class PdfExport extends FoormAction
         $itemValue = $this->guessItemValue($key,$itemDotted,$itemArray,$item);
         $methodName = 'getPdfField' . Str::studly($key);
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($itemValue);
+            $pdfFieldValue = $this->$methodName($itemValue);
+        } else {
+            $pdfFieldValue = $this->getPdfFieldStandard($key, $itemValue);
         }
-        return $this->getPdfFieldStandard($key, $itemValue);
+
+        return $this->checkAndSetPrefixSuffix($key,$pdfFieldValue);
     }
+
+    protected function setFieldsPrefixesSuffixes() {
+
+        foreach ($this->fields as $key) {
+            $fieldsParams = Arr::get($this->pdfFieldsParams, $key, []);
+            foreach (['prefix' => 'fieldsPrefixes','suffix' => 'fieldsSuffixes'] as $mutator => $mutatorsArray) {
+                if (array_key_exists($mutator,$fieldsParams)) {
+                    $this->$mutatorsArray[$key] = $fieldsParams[$mutator];
+                } else {
+                    $this->$mutatorsArray[$key] = null;
+                }
+            }
+        }
+
+    }
+
+    protected function checkAndSetPrefixSuffix($key,$itemValue) {
+
+        if ($itemValue) {
+            if (!is_null($this->fieldsPrefixes[$key])) {
+                $itemValue = $this->fieldsPrefixes[$key] . $itemValue;
+            }
+            if (!is_null($this->fieldsSuffixes[$key])) {
+                $itemValue = $itemValue . $this->fieldsSuffixes[$key];
+            }
+        }
+        return $itemValue;
+    }
+
 
 
     public function getPdfFieldLabel($fieldKey)
@@ -455,7 +509,7 @@ class PdfExport extends FoormAction
 
     }
     /*
-     * Fine metodi per esportazione CSV
+     * Fine metodi per esportazione PDF
     */
 
 

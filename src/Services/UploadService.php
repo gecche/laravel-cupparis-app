@@ -190,6 +190,7 @@ class UploadService {
             'filename' => $file->getClientOriginalName(),
 
             'url' => $this->getUrl($type,$tempFileName),
+            'dim' => FormatValues::filesize(storage_temp_path($tempFileName)),
         ];
 
         if ($content) {

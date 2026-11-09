@@ -2,6 +2,7 @@
 
 use Gecche\Cupparis\App\CupparisAppManager;
 use Gecche\Cupparis\App\Foorm\FoormManager;
+use Gecche\Cupparis\App\Foorm\FoormQueueManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
@@ -66,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
             $rootDir . 'app/Foorm' => app_path('Foorm'),
             $rootDir . 'app/Models' => app_path('Models'),
             $rootDir . 'app/Policies' => app_path('Policies'),
+            $rootDir . 'app/Queue' => app_path('Queue'),
             $rootDir . 'app/Services' => app_path('Services'),
             $rootDir . 'app/Validation' => app_path('Validation'),
             $rootDir . 'app/Providers/AppServiceProvider.php' => app_path('Providers/AppServiceProvider.php'),
@@ -125,6 +127,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->extend('foorm', function ($service, $app) {
             return new FoormManager($app['config']->get('foorm'));
+        });
+        $this->app->extend('foorm-queue', function ($service, $app) {
+            return new FoormQueueManager($app['config']->get('foorm'));
         });
 
     }

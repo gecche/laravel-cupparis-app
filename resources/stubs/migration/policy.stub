@@ -18,7 +18,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\{{$modelClass}}  $model
      * @return mixed
      */
-    public function view(User $user, {{$modelClass}} $model)
+    public function view(User|null $user, {{$modelClass}} $model)
     {
         //
         if ($user && $user->can('{{$viewPermission}}')) {
@@ -35,7 +35,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User|null $user)
     {
         //
         if ($user && $user->can('{{$createPermission}}')) {
@@ -52,7 +52,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\{{$modelClass}}  $model
      * @return mixed
      */
-    public function update(User $user, {{$modelClass}} $model)
+    public function update(User|null $user, {{$modelClass}} $model)
     {
         //
         if ($user && $user->can('{{$updatePermission}}')) {
@@ -69,7 +69,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\{{$modelClass}}  $model
      * @return mixed
      */
-    public function delete(User $user, {{$modelClass}} $model)
+    public function delete(User|null $user, {{$modelClass}} $model)
     {
         //
         if ($user && $user->can('{{$deletePermission}}')) {
@@ -85,7 +85,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function listing(User $user)
+    public function listing(User|null $user)
     {
         //
         if ($user && $user->can('{{$listingPermission}}')) {
@@ -101,7 +101,7 @@ class {{$modelClass}}Policy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function acl(User $user, $builder)
+    public function acl(User|null $user, $builder)
     {
 
         if ($user && $user->can('{{$viewPermission}}')) {

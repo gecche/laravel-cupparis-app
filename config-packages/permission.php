@@ -178,6 +178,8 @@ return [
         //I modelli su cui creare i permessi (potrebbero anche essere messi in breeze.php)
         'models' => [
             'datafile_json_row',
+            'user',
+            'queue',
         ],
 
         'models_permissions_prefixes' => [

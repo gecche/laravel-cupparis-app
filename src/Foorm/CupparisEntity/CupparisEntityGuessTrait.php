@@ -121,7 +121,7 @@ trait CupparisEntityGuessTrait
             'numero',
             'quantita',
         ];
-        if (in_array($fieldName, $integerFieldNames)) {
+        if (in_array($fieldName, $integerFieldNames)  || Str::startsWith($fieldName, ['n_','tot_'])) {
             return [CupparisTipiCampi::INTEGER->value, null];
         }
 
@@ -161,6 +161,15 @@ trait CupparisEntityGuessTrait
         ];
         if (in_array($fieldName, $decimalFieldName)) {
             return [CupparisTipiCampi::DECIMAL->value, "10,2"];
+        }
+
+        $decimalFieldName = [
+            'perc_',
+            '%',
+            'percentuale',
+        ];
+        if (Str::contains($fieldName, $decimalFieldName)) {
+            return [CupparisTipiCampi::DECIMAL->value, "5,2"];
         }
 
         $coordFieldName = [

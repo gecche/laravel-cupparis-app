@@ -37,6 +37,43 @@ class FoormController extends Controller
         return $this->_json();
     }
 
+
+    protected $isGuestFoorm = false;
+
+
+//    public static function middleware(): array
+//    {
+//        return [
+//            'auth:sanctum',
+////            new Middleware('log', only: ['index']),
+////            new Middleware('subscribed', except: ['store']),
+//        ];
+//    }
+    /**
+     * @param $foorm
+     */
+    public function __construct()
+    {
+
+
+        $foorm = request()->route()->parameter('foorm');
+        $type = request()->route()->parameter('type', function () {
+            switch (request()->route()->getActionMethod()) {
+                case 'getNew':
+                    return 'insert';
+                default:
+                    return 'pippo';
+            }
+        });
+
+        $guestFoorms = config('foorm.guest_foorms');
+        $this->isGuestFoorm = in_array($foorm.'.'.$type, $guestFoorms);
+        if (!$this->isGuestFoorm) {
+            $this->middleware('auth:sanctum');
+        }
+
+    }
+
     public function getSearch($foormName, $type = 'search')
     {
         $this->buildAndGetFoormResult($foormName, $type);
@@ -178,7 +215,9 @@ class FoormController extends Controller
                 $params['id'] = $pk;
             }
             $this->buildFoorm($foormName, $type, $params);
-            $this->foormAuthorization($pk);
+            if (!$this->isGuestFoorm) {
+                $this->foormAuthorization($pk);
+            }
             $this->performFurtherActionsOnFoorm($furtherActions);
             $this->getFoormResult();
             $this->addExtrasToResult();

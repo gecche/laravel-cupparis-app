@@ -61,6 +61,7 @@ return [
     'foorms' => [
         0 => 'user',
         1 => 'cupparis_entity',
+        2 => 'queue',
     ],
 
     'foorm-actions' => [
@@ -185,4 +186,7 @@ return [
         ],
     ],
 
+    'guest_foorms' => [
+        //'user.insert',
+    ]
 ];

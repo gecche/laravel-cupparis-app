@@ -32,13 +32,13 @@ Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foormcaction']
 
 });
 
-Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foorm'], function () use ($whereFoorm) {
+Route::group(['middleware' => ['api'],'prefix' => 'foorm'], function () use ($whereFoorm) {
 
     require __DIR__ . '/foorm-routes.php';
 
 });
 
-Route::group(['middleware' => ['api','auth:sanctum'],'prefix' => 'foormc', 'as' => 'foormc'], function () use ($whereFoorm) {
+Route::group(['middleware' => ['api'],'prefix' => 'foormc', 'as' => 'foormc'], function () use ($whereFoorm) {
 
     require __DIR__ . '/foormc-routes.php';
 

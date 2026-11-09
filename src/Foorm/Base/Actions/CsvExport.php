@@ -50,6 +50,9 @@ class CsvExport extends FoormAction
 
     protected $dateFormat, $dateTimeFormat;
 
+    protected $fieldsPrefixes = [];
+    protected $fieldsSuffixes = [];
+
 
     protected function init()
     {
@@ -88,6 +91,8 @@ class CsvExport extends FoormAction
         $this->guessFieldsTypes();
 
         $this->guessRelationFieldsHeaders();
+
+        $this->setFieldsPrefixesSuffixes();
 
 
     }
@@ -209,10 +214,8 @@ class CsvExport extends FoormAction
             $csvStream .= $this->getCsvRowHeaders();
         }
 
-        $transUc = trans_choice_uc('model.' . $this->csvModelName, 2);
-        $relativeFilename = Str::replace([' ', '/'], ['_', '_'], $transUc)
-            . '_' . date('Ymd_His') . ".csv";
-        $filename = storage_temp_path($relativeFilename);
+        $relativeFilename = $this->getRelativeExportFilename();
+        $filename = $this->getAbsoluteExportFilename($relativeFilename);
         File::append($filename, $csvStream);
         switch ($this->formType) {
             case 'list':
@@ -223,7 +226,7 @@ class CsvExport extends FoormAction
         }
 
         if ($this->isApi) {
-            $name = $this->getApiFilename();
+            $name = $this->getRelativeExportFilename(true);
             $this->actionResult = [
                 'content' => base64_encode(File::get($filename)),
                 'mime' => 'text/csv',
@@ -237,14 +240,23 @@ class CsvExport extends FoormAction
 
     }
 
-
-    public function getApiFilename()
-    {
-        $apiFilename = Arr::get($this->config, 'apiFilename', Str::replace("/", "_", Str::snake($this->foorm->getModelRelativeName())));
-
-        return $apiFilename . '_' . date("Ymd_His") . ".csv";
+    protected function getRelativeExportFilenamePrefix() {
+        return Arr::get($this->csvSettings, 'filename',trans_choice_uc('model.' . $this->csvModelName, 2));
     }
 
+    protected function getRelativeExportApiFilenamePrefix() {
+        return Arr::get($this->csvSettings, 'apiFilename',$this->getRelativeExportFilenamePrefix());
+    }
+
+    public function getRelativeExportFilename($api = false) {
+        $prefix = $api ? $this->getRelativeExportApiFilenamePrefix() : $this->getRelativeExportFilenamePrefix();
+        return Str::replace([' ', '/'], ['_', '_'], $prefix)
+            . '_' . date('Ymd_His') . ".csv";
+    }
+
+    public function getAbsoluteExportFilename($relativeFilename) {
+        return storage_temp_path($relativeFilename);
+    }
 
     protected function performActionList($csvStream, $filename = null)
     {
@@ -322,19 +334,53 @@ class CsvExport extends FoormAction
 
             $methodName = 'getCsvField' . Str::studly($methodKey);
             if (method_exists($this, $methodName)) {
-                $row[] = $this->$methodName($itemValue, $itemArray, $item);
+                $rowValue = $this->$methodName($itemValue, $itemArray, $item);
             } else {
-                $row[] = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
+                $rowValue = $this->getCsvFieldStandard($key, $itemValue, $itemArray, $item);
             }
+            $row[] = $this->checkAndSetPrefixSuffix($key,$rowValue);
         }
         return $row;
+    }
+
+    protected function setFieldsPrefixesSuffixes() {
+
+        foreach ($this->fields as $key) {
+            $fieldsParams = Arr::get($this->csvFieldsParams, $key, []);
+            foreach (['prefix' => 'fieldsPrefixes','suffix' => 'fieldsSuffixes'] as $mutator => $mutatorsArray) {
+                if (array_key_exists($mutator,$fieldsParams)) {
+                    $this->$mutatorsArray[$key] = $fieldsParams[$mutator];
+                } else {
+                    $this->$mutatorsArray[$key] = null;
+                }
+            }
+        }
+
+    }
+
+    protected function checkAndSetPrefixSuffix($key,$itemValue) {
+
+        if ($itemValue) {
+            if (!is_null($this->fieldsPrefixes[$key])) {
+                $itemValue = $this->fieldsPrefixes[$key] . $itemValue;
+            }
+            if (!is_null($this->fieldsSuffixes[$key])) {
+                $itemValue = $itemValue . $this->fieldsSuffixes[$key];
+            }
+        }
+        return $itemValue;
     }
 
     protected function guessItemValue($key, $itemDotted, $item, $itemObject)
     {
 
-        if (array_key_exists('item', Arr::get($this->csvFieldsParams, $key, []))) {
-            $itemKey = $this->csvFieldsParams[$key]['item'];
+        $fieldsParams = Arr::get($this->csvFieldsParams, $key, []);
+        if (array_key_exists('fixed', $fieldsParams)) {
+            return  $fieldsParams['fixed'];
+        }
+
+        if (array_key_exists('item', $fieldsParams)) {
+            $itemKey = $fieldsParams['item'];
             if (array_key_exists($itemKey, $item))
                 return $item[$itemKey];
             $itemKey = str_replace('|', '.', $itemKey);
@@ -363,7 +409,7 @@ class CsvExport extends FoormAction
             case CupparisTipiCampi::DECIMAL->value:
             case CupparisTipiCampi::FLOAT->value:
                 if (Arr::get($this->csvSettings, 'decimalTo')) {
-                    $value = str_replace($this->csvSettings['decimalFrom'],
+                    $value = str_replace(Arr::get($this->csvSettings, 'decimalFrom', '.'),
                         $this->csvSettings['decimalTo'],
                         $value);
                 }
